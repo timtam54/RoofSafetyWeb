@@ -1,0 +1,126 @@
+﻿@model   RoofSafety.Models.EquipTypeTestAll
+@{
+    ViewData["Title"] = "Tests for " + @ViewBag.EquipTypeDesc;
+}
+<h1>Tests for @ViewBag.EquipTypeDesc</h1>
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.EquipTypeID">Add New Tests</a><br />
+    @if (Model.ETID != -1)
+        {
+        <table style="background-color:red" width="100%">
+    <tr>
+            <td>
+                Copy From
+            </td>
+            <td>
+                <select asp-for="ETCopyID" class="form-control"  asp-items="@(new SelectList(ViewBag.ETCopy, "id", "EquipTypeDesc"))"></select>
+            </td>
+            <td>
+                <button class="btn btn-primary"  onclick="copyTest(@Model.ETID)">Copy Tests</button>
+                    <button class="btn btn-primary" onclick="copyTestHazFail(@Model.ETID)">Copy Tests (with Hazards & Fail Reasons)</button>
+                </td>
+    </tr>
+   </table>
+   }
+</p>
+<script type="text/javascript">
+    function copyTest(ETID) {
+     
+        var SourceETID = $("#ETCopyID").val();
+        if (SourceETID == -1) {
+            alert('Select a source');
+            return;
+        }
+        if (SourceETID == 0) {
+            alert('Select a source');
+            return;
+        }
+        
+        $.ajax({
+            url: '@Url.Action("Copy", "EquipTypeTests")?id=' + ETID + '&WithHazFail=0&sourceid=' + SourceETID,
+            type: 'POST',
+            success: function () {
+                alert('successfully added');
+                location.reload();
+            }
+        });
+        alert('successfully added');
+        location.reload();
+        var url = '@Url.Action("HazardsForEquipTypeTestHazards", "EquipTypeTestHazards")' + "?id=" + @ViewBag.id;
+        window.location.href = url;
+   }
+
+    function copyTestHazFail(ETID) {
+
+        var SourceETID = $("#ETCopyID").val();
+        if (SourceETID == -1) {
+            alert('Select a source');
+            return;
+        }
+        if (SourceETID == 0) {
+            alert('Select a source');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Copy", "EquipTypeTests")?id=' + ETID + '&WithHazFail=1&sourceid=' + SourceETID,
+            type: 'POST',
+            success: function () {
+                alert('successfully added');
+                location.reload();
+            }
+        });
+
+
+    }
+</script>
+<table class="table">
+    <thead>
+        <tr>
+            <th hidden="hidden">
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().EquipTypeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().Test)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().Severity)
+            </th>
+            <th>Fail Reasons</th>
+            <th>Hazards</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Tests) {
+        <tr>
+            <td hidden="hidden">
+                @Html.DisplayFor(modelItem => item.EquipTypeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Test)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Severity)
+            </td>
+            <td>
+                <a asp-action="Index" asp-controller="EquipTypeTestFails" asp-route-id="@item.id">Reasons</a>
+            </td>
+            <td>
+                <a asp-action="HazardsForEquipTypeTestHazards" asp-controller="EquipTypeTestHazards" asp-route-id="@item.id">Hazards</a>
+            </td>
+            <td>
+                <!--a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> -->
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+<tr>
+    <td>
+
+        <a asp-action="Index" asp-controller="EquipTypes">Back to Equipment/Item Types</a>
+    </td>
+        </tr>
+    </tbody>
+</table>

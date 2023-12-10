@@ -1,0 +1,203 @@
+﻿@model RoofSafety.Models.EquipTypeTestHazardMatrix
+
+@{
+    Layout = "";
+    ViewData["Title"] = "Matrix of Tests vs Hazards";
+
+}
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript">
+    function chkClick(ettid, hzid, val) {
+        var data = { hzid: hzid, ettid: ettid };
+        if (val) {
+           
+            $.post('@Url.Action("Add", "EquipTypeTestHazards")', data,
+                function (data) {
+                    alert(data.msg);
+                    //                return false;
+                });
+        }
+        else {
+            $.post('@Url.Action("Del", "EquipTypeTestHazards")', data,
+                function (data) {
+                    alert(data.msg);
+                    //                return false;
+                });
+        }
+    }
+
+</script>
+<style>
+    #link {
+        color: #FF0000;
+    }
+
+    #club_plan {
+        clear: both;
+        overflow-x: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%)
+    }
+
+    thead tr {
+        position: relative;
+    }
+
+    tbody {
+        display: block;
+        max-height: 380px;
+        overflow-x: auto;
+        width: 100%
+    }
+
+    thead {
+        display: inline-block;
+        width: 100%;
+    }
+
+
+    /* decoration*/
+
+    table {
+        font: 12px Verdana;
+        border-collapse: collapse;
+        border-spacing: 1px
+    }
+
+    th {
+        padding: 5px;
+        border: 1px solid #888888;
+    }
+
+    td {
+        padding: 5px;
+        border-style: solid;
+        border-width: 0px 1px 1px 1px;
+        border-color: #888888;
+    }
+        
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Title</title>
+</head>
+
+    
+<body>
+    <div id="club_plan" style="display: block; overflow-x: auto;">
+        <table border="0" cellpadding="0" cellspacing="0" class="result-set" id="club_plan_table">
+            <thead>
+                <tr>
+                    <th height="250px" width="320px" style="width:320px;background-color:black;color:white"><a style="color:white;" target="_blank" href="Index">Equip Type/Test</a></th>
+
+                    @foreach (var item in Model.Hazards)
+                    {
+                        <th title="@item.Detail" height="250px" style="background-color:black;writing-mode: vertical-rl;text-orientation: mixed;">
+                            <a href="../Hazards/Edit/@item.id" style="color:white" target="_blank">@RoofSafety.Controllers.EquipTypeTestHazardsController.Max20(item.Detail,60)</a>
+                        </th>
+                    }
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string prev = "";
+                    foreach (var item in Model.EquipTypeTests)
+                    {
+                                  
+                                 if (prev != item.EquipTypeName)
+                                {
+                            <tr>
+                                <td title="@item.EquipTypeName" style="background-color:black;color:white">
+                                    <a href="../EquipTypes/Edit?id=@item.EquipTypeID" style="color:white;" target="_blank">@RoofSafety.Controllers.EquipTypeTestHazardsController.Max20(item.EquipTypeName,50)</a>
+                                </td>
+                                @foreach (var hz in Model.Hazards)
+                                {
+                                    <td style="background-color:black;color:white">
+                                    </td>
+                                }
+                            </tr>
+                            }
+                            <tr>
+                              <td title="@item.Test">
+                                <a href="../EquipTypeTests/Edit?id=@item.id" style="color:red;" target="_blank">  @RoofSafety.Controllers.EquipTypeTestHazardsController.Max20(item.Test,50)</a>
+                                 </td>
+                                            @foreach (var hz in Model.Hazards)
+                            {
+                                                <td>
+                                                    <input  onclick="chkClick('@item.id','@hz.id',this.checked);" title="Hazard:@hz.Detail EquipType:@item.EquipTypeName Test:@item.Test" type="checkbox" checked="@RoofSafety.Controllers.EquipTypeTestHazardsController.Checked(hz.id,item.id,Model.EquipTypeTestHazards)">
+                                                </td>
+                            }
+                                        </tr>
+                        { prev = item.EquipTypeName!; }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+   @*  <table width="100%">
+    <tr style="z-index: 1;position: fixed;">
+        <td height="100px" width="200px" colspan="2" style="width:200px;background-color:black;color:white">Equip Types</td>
+        @foreach (var item in Model.Hazards)
+        {
+                <td height="100px" width="40px" style="word-wrap: break-word; border:solid;background-color:white;writing-mode: vertical-rl;text-orientation: mixed;">
+                @item.Detail
+            </td>
+        }
+    </tr>
+   
+        @{
+        string prev = "";
+        foreach (var item in Model.EquipTypeTests)
+    {
+        <tr>
+                @if (prev == item.EquipTypeName)
+                {
+                    <td></td>
+                }
+                else
+                {
+                        <td style="border:solid" width="80px">
+                @item.EquipTypeName
+            </td>
+                }
+
+                    <td style="border:solid" width="120px">
+            @item.Test
+        </td>
+                @foreach (var hz in Model.Hazards)
+                {
+                        <td style="border:solid" width="40px">
+                        <input title="Haard:@hz.Detail EquipType:@item.EquipTypeName Test:@item.Test" type="checkbox" checked="@RoofSafety.Controllers.EquipTypeTestHazardsController.Checked(hz.id,item.id,Model.EquipTypeTestHazards)">
+                    </td>
+                }
+        </tr>
+        {                prev=item.EquipTypeName;}
+    }
+    }
+</table> *@
+</body>
+</html>
+<script type="text/javascript">
+    const thElements = document.getElementsByTagName('th'),
+        tdElements = document.getElementsByTagName('td');
+
+    for (let i = 0; i < thElements.length; i++) {
+        const widerElement = thElements[i].offsetWidth > tdElements[i].offsetWidth ? thElements[i] : tdElements[i],
+            width = window.getComputedStyle(widerElement).width;
+
+        thElements[i].style.width = tdElements[i].style.width = width;
+    }
+</script>

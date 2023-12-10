@@ -1,0 +1,44 @@
+﻿@model IEnumerable<RoofSafety.Models.EquipTypeTestFail>
+@{
+    ViewData["Title"] = "Fail Reason for Test: " + @ViewBag.EquipTypeTestDesc + " for " + @ViewBag.EquipTypeDesc;
+}
+<h1>Fail Reason for Test: @ViewBag.EquipTypeTestDesc for @ViewBag.EquipTypeDesc</h1>
+<p>
+    <a asp-action="Create" asp-controller="EquipTypeTestFails" asp-route-id="@ViewBag.ettid">Add New Fail reason</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th hidden="hidden">
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FailReason)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td hidden="hidden">
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FailReason)
+            </td>
+           
+            <td>
+                <!--a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></!--a> |-->
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+<tr>
+    <td>
+        
+        <a asp-action="TestsForEquipType" asp-controller="EquipTypeTests" asp-route-id="@ViewBag.etid">Back to Test for @ViewBag.EquipTypeDesc</a>
+    </td>
+        </tr>
+    </tbody>
+</table>

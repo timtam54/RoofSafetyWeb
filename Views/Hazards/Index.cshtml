@@ -1,0 +1,41 @@
+﻿@model IEnumerable<RoofSafety.Models.Hazard>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (ViewBag.Error != null)
+{
+    <h1 style="color:red">@ViewBag.Error</h1>
+}
+<p>
+    <a asp-action="Create">Add new Items Types</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Detail)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Detail)
+            </td>
+                <td>
+                    <a asp-action="TestsForEquipType" asp-controller="EquipTypeTests" asp-route-id="@item.id">Test</a>
+                </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

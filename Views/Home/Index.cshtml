@@ -1,0 +1,38 @@
+﻿@model ImageModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">File Upload</h1>
+
+    @using (Html.BeginForm("SavePicture", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <div class="form-label">
+                Upload your file
+            </div>
+            <div>
+                @Html.EditorFor(m => m.File, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-label">
+                Description
+            </div>
+            <div>
+                @Html.EditorFor(m => m.description, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-label">
+                InspEquipID
+            </div>
+            <div>
+                @Html.EditorFor(m => m.InspEquipID, new { @class = "form-control" })
+            </div>
+        </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+            }
+        </div>

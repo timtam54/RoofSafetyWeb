@@ -1,0 +1,134 @@
+﻿@model IEnumerable<RoofSafety.Models.Client>
+
+@{
+    ViewData["Title"] = "Clients";
+ //   Layout = null;
+}
+
+
+<form class="form">
+    <h1>Clients</h1>
+
+    <p>
+        <a asp-action="Create">Add New Client</a>
+        <input type="button" id="btnExport" value="Export" />|
+        <a href="../EquipTypeTestHazards/EquipTypeTestHazardMat">Equip Type Test / Hazard matrix</a>|
+        <a href="../EquipTypeTests/EquipTypeTestMat">Equip Type Test matrix</a>|
+        <a href="../EquipTypes">Equip Types</a>|
+        <a href="../Employees">Inspectors</a>|
+        <a href="../Inspections">All Inspections</a>
+    </p>
+    <div id="editor"></div>
+    <div id="content">
+        <table class="table" id="tblCustomers">
+            <thead>
+
+                <tr>
+                    <td>
+                        <img width="400" src="@ViewBag.imgsrc" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ContactName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmailAddress)
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContactName)
+                        </td>
+                        <td>
+                            @item.StartedDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmailAddress)
+                        </td>
+                        <td>
+                            <a asp-action="BuildingsForClient" asp-controller="Buildings" asp-route-id="@item.id">Buildings</a>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                            <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+                background-color: #111;
+                color: white;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #dddddd;
+            }
+        </style>
+    </div>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+
+    <script type="text/javascript">$("body").on("click", "#btnExport", function () {
+            html2canvas($('#tblCustomers')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("customer-details.pdf");
+                }
+            });
+        });</script>
+</form>

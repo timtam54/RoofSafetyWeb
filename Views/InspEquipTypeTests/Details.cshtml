@@ -1,0 +1,40 @@
+﻿@model RoofSafety.Models.InspEquipTypeTest
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Test</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2" hidden="hidden">
+            @Html.DisplayNameFor(model => model.InspEquipID)
+        </dt>
+        <dd class="col-sm-10" hidden="hidden">
+            @Html.DisplayFor(model => model.InspEquipID)
+        </dd>
+        <dt class="col-sm-2" hidden="hidden">
+            @Html.DisplayNameFor(model => model.EquipTypeTestID)
+        </dt>
+        <dd class="col-sm-10" hidden="hidden">
+            @Html.DisplayFor(model => model.EquipTypeTestID)
+        </dd>
+        @* <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pass)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pass)
+        </dd> *@
+        <!--dt@Html.DisplayNameFor(model => model.Reason)
+    </!--dt>
+    <dd class = "col-sm-1@Html.DisplayFor(model => model.Reason)
+    </dd -->
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

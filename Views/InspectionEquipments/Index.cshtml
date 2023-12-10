@@ -1,0 +1,69 @@
+﻿@model IEnumerable<RoofSafety.Models.InspEquip>
+
+@{
+    ViewData["Title"] = "Equipment for " + @ViewBag.InspectionDesc;
+}
+
+<h1>Inspection Items for @ViewBag.InspectionDesc</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.InspectionID">Add New Items for Inspection</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EquipType.EquipTypeDesc)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+@*            <td>
+                @Html.DisplayFor(modelItem => item.Inspection.InspectionDate)
+            </td>*@
+  @*              <td>
+                    @Html.DisplayFor(modelItem => item.EquipName)
+                </td>*@
+                <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.EquipType.EquipTypeDesc)
+            </td>
+                    <td>
+                    <a asp-action="TestsForEquip" asp-controller="InspEquipTypeTests" asp-route-id="@item.id">Test</a>
+                    </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+<tr>
+            <td>
+                <a asp-action="InspectionsForBuilding" asp-controller="Inspections" asp-route-id="@ViewBag.BuildingID">Back to Inspections</a>
+            </td>
+            <td>
+                <a asp-action="EquipForInspectionsAll" asp-route-hpw="h" asp-controller="InspectionEquipments" asp-route-id="@ViewBag.InspectionID">Inspection Report html</a>
+            </td>
+            <td>
+                <a asp-action="EquipForInspectionsAll" asp-route-hpw="p" asp-controller="InspectionEquipments" asp-route-id="@ViewBag.InspectionID">Inspection Report pdf</a>
+            </td>
+
+</tr>
+    </tbody>
+</table>

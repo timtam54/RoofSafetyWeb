@@ -1,0 +1,107 @@
+﻿@model IEnumerable<RoofSafety.Models.Inspection>
+@{
+    ViewData["Title"] = "Inspections for Buiding " + @ViewBag.BuildingDesc;
+}
+<h1>Inspections for @ViewBag.BuildingDesc</h1>
+@if (ViewBag.BuildingID != 0)
+{
+    <p>
+        <a asp-action="Create" asp-route-id="@ViewBag.BuildingID">Add New Inspections</a>
+    </p>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<div>
+    <button id="download-button">Download as PDF</button>
+</div>
+<table class="table" id="invoice">
+   
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.InspectionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Areas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Building.BuildingName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inspector.Given)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Inspector.Surname)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InspectionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Areas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Building.BuildingName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Inspector.Given)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Inspector.Surname)
+                </td>
+                <td>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="p" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report pdf</a>
+                </td>
+                <td>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="h" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report html</a>
+                </td>
+                <td>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="w" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report word</a>
+                </td>
+                <td>
+                    <a asp-action="EquipForInspections" asp-controller="InspectionEquipments" asp-route-id="@item.id">Edit Items</a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                    <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+                </td>
+            </tr>
+        }
+        <tr>
+
+            <td>
+
+                <a asp-action="BuildingsForClient" asp-controller="Buildings" asp-route-id="@ViewBag.ClientID">Back to Buildings</a>
+            </td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+<script>const button = document.getElementById('download-button');
+
+    function generatePDFold() {
+        // Choose the element that your content will be rendered to.
+        const element = document.getElementById('invoice');
+        // Choose the element and save the PDF for your user.
+        html2pdf().from(element).save();
+    }
+    function generatePDF() {
+        // Choose the element that your invoice is rendered in.
+        const element = document.getElementById('invoice');
+        // Choose the element and save the PDF for your user.
+        html2pdf()
+            .set({ html2canvas: { scale: 4 } })
+            .from(element)
+            .save();
+    }
+    button.addEventListener('click', generatePDF);</script>

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<RoofSafety.Models.EquipTypeTestHazards>
+
+@{
+    
+    ViewData["Title"] = "Hazards for Equip Type Test" + @ViewBag.EquipTypeTest;
+}
+
+<h1>Hazards for Equip Type Test @ViewBag.EquipTypeTest</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.EquipTypeTestID">Add new Hazards for this Test</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Hazard.Detail)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hazard.Detail)
+                </td>
+                <td>
+                    <button onclick="Deleteetth(@item.id);return false;"><img src="~/Image/delete.png" /></button>
+                </td>
+            </tr>
+        }
+
+
+    </tbody>
+    <tr>
+        <td>
+
+            <a asp-action="TestsForEquipType" asp-controller="EquipTypeTests" asp-route-id="@ViewBag.EquipTypeID">Back to Test for @ViewBag.EquipTypeDesc</a>
+        </td>
+    </tr>
+
+</table>
+<script type="text/javascript">
+
+    function Deleteetth(id) {
+        var dt = { id: id };
+        $.post('@Url.Action("Delete", "EquipTypeTestHazards")',dt,
+            function (data) {
+                try
+                {
+                alert(data.error);
+                render();
+                }
+                catch (ex)
+                {
+                    alert(ex.message);
+                }
+                return false;
+            });
+      //  render();
+
+    }
+
+    function render() {
+        alert('successfully deleted record');
+        try
+        {
+        location.reload();
+        }
+        catch (ex)
+        {
+            alert(ex.message);
+        }
+       
+        var url = '@Url.Action("HazardsForEquipTypeTestHazards", "EquipTypeTestHazards")' + "?id=" + @ViewBag.id;
+        window.location.href = url;
+    }
+</script>

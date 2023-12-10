@@ -1,0 +1,962 @@
+﻿@model RoofSafety.Models.InspectionRpt
+
+@{
+
+    Layout = null;
+}
+<html>
+
+<body class="body" style="margin-left:5px;margin-right:5px;">
+    <style>
+        body {
+            background-image: url('~/Image/rsslogo.png');
+            width: 550px
+        }
+    </style>
+
+
+<table align="center" style="align-content:center;width:@RoofSafety.Controllers.HomeController.WidthRow;margin-left:20px;margin-right:20px">
+@*     <tr><td><img src="~/Image/rsslogo.png" /></td></tr> *@
+        <tr width="100%">
+            <td align="center" width="100%">
+        <h3>Height and Safety Audit Report for @ViewBag.InspectionDesc @Model.Title</h3>
+            </td>
+        </tr>
+
+        <tr style="align-content:center;width:100%">
+            <td align="center" style="align-content:center;width:100%">
+                <img  src="@Model.Photo" style="align-content:center;width:@RoofSafety.Controllers.HomeController.WidthImage" />
+            </td>
+        </tr>
+     <tr>
+        <td>
+            Roof Safety Solutions Pty Ltd
+        </td>
+    </tr>
+    <tr>
+        <td>
+            38 Radius Loop, Bayswater WA 6053
+        </td>
+    </tr>
+    <tr>
+        <td>
+            p: 08 9477 4884
+        </td>
+    </tr>
+    <tr>
+        <td>
+            f: 08 9277 3009
+        </td>
+    </tr>
+    <tr>
+        <td>
+            e:  admin@roofsafetysolutions.com.au
+        </td>
+    </tr>
+
+  
+
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr  style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+    <tr >
+        <td style="width:100%">
+            <h2 style="color:cornflowerblue;width:100%">
+                Contents
+            </h2>
+        </td>
+    </tr>
+    <tr>
+            <td style="width:100%">
+
+                <table style="width:100%">
+                    <tr >
+                        <td style="width:10%">1.</td>
+                        <td style="width:80%">Version History</td>
+                        <td style="width:10%">2</td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Executive Summary</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Inspection Details</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td>Introduction</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5.</td>
+                    <td>Risk Assessment</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6.</td>
+                    <td>Inspection Report</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>7.</td>
+                    <td>Summary</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>8.</td>
+                    <td>Conclusion</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>9.</td>
+                    <td>Disclaimer</td>
+                    <td></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+        <tr>
+        <td>
+            <h2 style="color:cornflowerblue;width:100%">
+                1. Version History
+            </h2>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+
+            <table border="1" cellpadding="1" cellspacing="1" class="mytable">
+                <tr style="background-color:lightgray;width:100%">
+                    <th>
+                        <b>Version</b>
+                    </th>
+                    <th>
+                        <b>Description</b>
+                    </th>
+                    <th>
+                        <b>Author</b>
+                    </th>
+                    <th>
+                        <b>Information</b>
+                    </th>
+                </tr>
+                @foreach (var item in Model.Versions)
+                {
+                    <tr style="width:100%">
+                        <td>
+                            @item.VersionNo
+                        </td>
+                        @if (item.VersionType == "C")
+                        {
+                            <td>
+                                Created
+                            </td>
+                        }
+                        else if (item.VersionType == "R")
+                        {
+                            <td>
+                                Reviewed
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @item.VersionType
+                            </td>
+                        }
+                        <td>
+                            @item.Author
+                        </td>
+                        @if (item.Information == "FD")
+                        {
+                            <td>
+                                First Draft
+                            </td>
+                        }
+                        else if (item.Information == "IR")
+                        {
+                            <td>
+                                Issued For Review
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @item.Information
+                            </td>
+                        }
+                    </tr>
+
+                }
+            </table>
+        </td>
+    </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+    <tr>
+        <td style="width:100%">
+            <h2 style="color:cornflowerblue">
+                2. Executive Summary
+            </h2>
+        </td>
+    </tr>
+       <tr>
+        <td style="width:100%">
+                            Roof Safety Solutions were contracted to perform the routine audit of @Model.Title.
+                            </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+                            The following existing height safety equipment is installed on site:
+        </td>
+    </tr> 
+     <tr>
+        <td style="width:100%">
+            
+                            <ul>
+                                @foreach (var item in Model.InspItems)
+                                {
+                                    <li>@item</li>
+
+                                }
+
+                            </ul>
+
+
+        </td>
+    </tr> 
+   
+    <tr>
+        <td style="width:100%">
+                            The inspection was carried out on the @Model.InspDate.ToLongDateString() by height safety inspectors from Roof Safety Solutions Pty Ltd. The inspection identifies any risks and reports on compliance in relation to the Australian Standards, Acts and Regulations that form the basis for height safety in Australia.
+        </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+                            This report contains:
+        </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+           <ul>
+                    <li>An inventory of installed height safety equipment,</li>
+                    <li>
+                        Compliant items.
+                    </li>
+                    <li>
+                        Non-compliant items,
+                    </li>
+                    <li>Recommendations to rectify any non-compliant issues.</li>
+                    
+            </ul>
+            </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+                            All recommendations have been made in the report to reduce risk of injury as outlined and required by:
+        </td>
+    </tr> 
+     <tr>
+        <td style="width:100%">
+                            <ul>
+                                <li>
+                                    Work Health & Safety Act 2020 (WA).
+                                </li>
+                                <li>
+                                    Work Health & Safety Regulations 2022 (WA) relevant to Fall Prevention.
+                                </li>
+                                <li>
+                                    Code of Practice – Prevention of Falls at Workplaces 2020 (WA).
+                                </li>
+                                <li>
+                                    AS 1657:2018 - Fixed platforms, walkways, stairways and ladders.
+
+                                </li>
+                                <li>
+                                    AS/NZS 1891.4:2009 - Industrial fall-arrest systems and devices –selection, use and
+                                    maintenance.
+                                </li>
+                                <li>
+                                    AS/NZS 4488.2:1997 – Industrial rope access systems – selection use and
+                                    maintenance.
+                                </li>
+                            </ul>
+                        </td>
+                        </tr>
+
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+    <tr>
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue;width:100%">
+                3. Inspection Details
+            </h2>
+        </td>
+    </tr> 
+
+
+
+
+
+    <tr>
+                    <td style="width:100%">
+
+          
+
+
+
+              
+                <table style="width:100%">
+                    <tr style="width:100%">
+                        <td style="width:20%">
+                            <b>Inspection Date:</b>
+                        </td>
+                        <td style="width:80%">
+                            @Model.InspDate.ToString("dd-MMM-yyyy")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Areas Inspected:</b>
+                        </td>
+                        <td>
+                            @Model.Areas
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Inspector:</b>
+                        </td>
+                        <td>
+                            @Model.Inspector
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Testing Instrument:</b>
+                        </td>
+                        <td>
+                            @Model.Instrument
+                        </td>
+                    </tr>
+                </table>
+                </td>
+        </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+        <tr >
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue">
+                    4.	Introduction
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100%">
+                Roof Safety Solutions has been commissioned to:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1.	Supply an inventory of all height safety equipment installed on site.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                2.	Carry out an inspection of all existing assets, in accordance with:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	Work Health & Safety Act 2020 (WA).
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	Work Health & Safety Regulations 2022 (WA)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	Code of Practice – Prevention of Falls at Workplaces 2020 (WA).
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	AS 1657:2018 - Fixed platforms, walkways, stairways and ladders.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	AS/NZS 1891.4:2009 - Industrial fall-arrest systems and devices –selection, use and maintenance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	AS/NZS 4488.2:1997 – Industrial rope access systems – selection use and maintenance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                •	AS/NZS 1891.4:2009 - Industrial fall-arrest systems and devices –selection, use and maintenance.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                3.	Report on findings, identify existing hazards and provide suitable recommendations in cases of non-compliance.
+
+            </td>
+        </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+        <tr>
+            <td width="100%">
+                <h2 style="color:cornflowerblue">
+                    5.Risk Assessment Matrix
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                This report will use the following risk assessment matrix to show the severity of any identified hazards.
+            </td>
+        </tr>
+                 <tr>
+                    <td> 
+              
+             
+             
+                <style>
+                    .mytable table, .mytable th, .mytable td {
+                        border: 1px solid black;
+                    }
+                </style>
+                <table border="1" cellpadding="1" cellspacing="1" class="mytable">
+                    <tr>
+
+                        <td rowspan="2">
+                        </td>
+                        <td colspan="5" style="background-color:gray">
+                            <b>Consequence</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Injuries not requiring First Aid
+                        </td>
+                        <td style="background-color:gray">
+                            First Aid Treatment Case.
+                        </td>
+                        <td style="background-color:gray">
+                            Serious injury, medical treatment or hospitalisation.
+                        </td>
+                        <td style="background-color:gray">
+                            Multiple serious injuries causing hospitalisation.
+                        </td>
+                        <td style="background-color:gray">
+                            Death or multiple life threatening injuries.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Likelihood
+                        </td>
+                        <td style="background-color:gray">
+                            <b>Negligible</b>
+                        </td>
+                        <td style="background-color:gray">
+                            <b>Minor</b>
+                        </td>
+                        <td style="background-color:gray">
+                            <b>Moderate</b>
+                        </td>
+                        <td style="background-color:gray">
+                            Major.
+                        </td>
+                        <td style="background-color:gray">
+                            Catastrophic
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Almost Certain
+                        </td>
+                        <td style="background-color:royalblue">
+                            5
+                        </td>
+                        <td style="background-color:yellow">
+                            10
+                        </td>
+                        <td style="background-color:red">
+                            15
+                        </td>
+                        <td style="background-color:red">
+                            20
+                        </td>
+                        <td style="background-color:red">
+                            25
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Likely
+                        </td>
+                        <td style="background-color:royalblue">
+                            4
+                        </td>
+                        <td style="background-color:yellow">
+                            8
+                        </td>
+                        <td style="background-color:yellow">
+                            12
+                        </td>
+                        <td style="background-color:red">
+                            16
+                        </td>
+                        <td style="background-color:red">
+                            20
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Occassionally
+                        </td>
+                        <td style="background-color:limegreen">
+                            3
+                        </td>
+                        <td style="background-color:royalblue">
+                            6
+                        </td>
+                        <td style="background-color:yellow">
+                            9
+                        </td>
+                        <td style="background-color:yellow">
+                            12
+                        </td>
+                        <td style="background-color:red">
+                            15
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Unlikely
+                        </td>
+                        <td style="background-color:limegreen">
+                            2
+                        </td>
+                        <td style="background-color:royalblue">
+                            4
+                        </td>
+                        <td style="background-color:royalblue">
+                            6
+                        </td>
+                        <td style="background-color:yellow">
+                            8
+                        </td>
+                        <td style="background-color:yellow">
+                            10
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td style="background-color:gray">
+                            Rare
+                        </td>
+                        <td style="background-color:limegreen">
+                            1
+                        </td>
+                        <td style="background-color:limegreen">
+                            2
+                        </td>
+                        <td style="background-color:limegreen">
+                            3
+                        </td>
+                        <td style="background-color:royalblue">
+                            4
+                        </td>
+                        <td style="background-color:royalblue">
+                            5
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background-color:red">
+                            Extreme (15-25)
+                        </td>
+                        <td colspan="5">
+                            Immediate Management Action is required
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:yellow">
+                            High (8-14)
+                        </td>
+                        <td colspan="5">
+                            Management attention is required with the implementation of formal controls
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:royalblue">
+                            Medium (4-7)
+                        </td>
+                        <td colspan="5">
+                            Requires active monitoring or action
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:limegreen">
+                            Low (1-3)
+                        </td>
+                        <td colspan="5">
+                            Does not require active management
+                        </td>
+                    </tr>
+
+                </table>
+                </td>
+                </tr>
+                <tr>
+                    <td><br/></td>
+                </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+        <tr>
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue">
+                    6. Inspection Report
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100%">
+                <table style="width:100%">
+                    <tbody>
+
+                        @{
+                            int itemno = 0;
+                        }
+                        @foreach (var item in Model.Items)
+                        {
+                            itemno = itemno + 1;
+                            <tr style="width:100%">
+                                <td>
+                                    <h4 style="color:cornflowerblue">
+                                        Item 1.@itemno
+                                    </h4>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="color:navy">
+                                    <h4>Risk:</h4>
+                                </td>
+                                <td width="100%">
+                                    @if (item.Risk == "Maintained")
+                                    {
+                                        <table border="1" class="mytable" width="100%" style="background-color:gray;border-width:thick;text-align:center">
+                                            <tr>
+                                                <td width="100%" align="center">
+                                                    <b>@item.Risk</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <table class="mytable" width="100%" style="background-color:@RoofSafety.Models.InspEquipTest.getcolour( item.MaxRisk);border-width:thick;text-align:center">
+                                            <tr>
+                                                <td width="100%" align="center">
+                                                    <b>@item.Risk</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:navy">
+                                    <h4>Description:</h4>
+                                </td>
+                                <td>
+                                    @item.EquipName
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:navy">
+                                    <h4>Location:</h4>
+                                </td>
+                                <td>
+                                    @item.Location
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4 style="color:navy">Result:</h4>
+                                </td>
+                                @if (@item.Result == "Compliant")
+                                {
+                                    <td style="color:green">
+                                        <b>
+                                            &#9745; @item.Result
+                                        </b>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color:red">
+                                        <b>
+                                            &#9744; @item.Result
+                                        </b>
+                                    </td>
+                                }
+
+                            </tr>
+                            @if (@item.Result != "Compliant")
+                            {
+                                <tr>
+                                    <td>
+                                        <h4 style="color:navy">Explanation:</h4>
+                                    </td>
+                                    <td>
+                                        <table>
+
+                                            @foreach (var ep in item.Explanation.Eps)
+                                            {
+                                                <tr>
+                                                    <td style="color:Black">
+                                                        <b>@ep.ASTest</b>
+                                                    </td>
+                                                    <td>
+                                                        <i> @ep.P2</i>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td style="color:navy">
+                                    @item.Notes
+                                </td>
+                            </tr>
+                            @if (@item.Result == "Compliant")
+                            {
+                                <tr>
+                                    <td style="color:navy">Compliant</td>
+                                    <td>@item.EquipType.CompliantInfo </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <h4 style="color:navy">Hazards:</h4>
+                                    </td>
+                                    <td>
+                                        @if (item.Hazards != null)
+                                        {
+                                            foreach (var hz in item.Hazards)
+                                            {
+                                                <b>@hz</b>
+
+                                                <br />
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <h4 style="color:navy">Required Controls:</h4>
+                                    </td>
+                                    <td>
+                                        <b>@item.RequiredControls:</b>
+                                    </td>
+                                </tr>
+                            }
+                            <tr align="center">
+                                <td colspan="2" align="center" style="width:@RoofSafety.Controllers.HomeController.WidthImage">
+                                  
+                                        @foreach (var phot in item.Photos)
+                                        {
+           
+                                                    <img align="center" src="@phot.photoname" style="width:@RoofSafety.Controllers.HomeController.WidthImage" />
+          
+                                        }
+                                   
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+        <tr>
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue">
+                    7. Summary
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100%">
+                <table cellpadding="1" border="1" cellspacing="1" class="mytable">
+                    <tr>
+                        <th>Equip Name</th>
+                        <th>Manufacturer</th>
+                        <th>Inspection Date</th>
+                        <th>Status</th>
+                        <th>Installer</th>
+                        <th>Rating</th>
+                        <th>Asset ID</th>
+                    </tr>
+                    @foreach (var item in Model.Items)
+                    {
+
+                        if (item.Pass)
+                        {
+                            <tr>
+                                <td>@item.EquipName</td>
+                                <td>@item.Manufacturer</td>
+                                <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>
+                                <td>Compliant</td>
+                                <td>@item.Installer</td>
+                                <td>@item.Rating</td>
+                                <td>@item.SerialNos.FirstOrDefault()</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="color:red">
+                                <td>@item.EquipName</td>
+                                <td>@item.Manufacturer</td>
+                                <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>
+                                <td>Non-Compliant</td>
+                                <td>@item.Installer</td>
+                                <td>@item.Rating</td>
+                                <td>@item.SerialNos.FirstOrDefault()</td>
+                            </tr>
+                        }
+
+
+                        @if (item.SerialNos.Count() > 1)
+                        {
+
+                            for (int i = 1; i < item.SerialNos.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@item.EquipName</td>
+                                    <td>@item.Manufacturer</td>
+                                    <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>
+                                    @if (item.Pass)
+                                    {
+                                        <td>@item.Result</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color:red">@item.Result</td>
+                                    }
+                                    <td>@item.Installer</td>
+                                    <td>@item.Rating</td>
+                                    <td>@item.SerialNos[i]</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </table>
+
+            </td>
+        </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+        <tr >
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue">
+                    8. Conclusion
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                All recommendations within this report will enable personnel to carry out their work in a safe manner when working on the roof and will ensure that the systems are ready for everyday maintenance tasks.
+                All Purlin fixed anchor points have been re-tensioned to the sub-structure, all signage has been updated to reflect inspection dates and all height safety equipment has been tagged to reflect inspection dates and load ratings.
+                All Friction Mounted Anchors have been subject to load testing under the guidance given by the relevant Australian Standard and its mechanical testing requirements for fall prevention anchors.
+                If you have any questions, please do not hesitate to contact the undersigned.
+                Kind Regards,
+            </td>
+        </tr>
+        <tr style="width:100%;">
+            <td style="width:100%;">
+                <hr style="color:red; width:100%;height:2px;border-top:2px solid red; border-top-color:red">
+            </td>
+        </tr>
+
+        <tr >
+            <td style="width:100%">
+                <h2 style="color:cornflowerblue">
+                    9. Disclaimer
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100%">
+                This report was prepared solely for the purpose set out herein and it is not intended for any use. Whilst this report is accurate to the best of our knowledge and belief, we cannot guarantee completeness or accuracy of any descriptions or conclusions based on information supplied by other parties during site surveys, visits and interviews. Responsibility is disclaimed for any loss or damage, including but not limited to, any loss or damage suffered arising from the use of this report or suffered by any other person for any reason whatsoever.
+                Recommendations to minimise the risk associated with roof safety are solely based on the assumption that all roofs have been built according to all current and relevant guidelines, acts, standards, codes of practice and regulations. No assessment or comment is made or implied in reference to the structural soundness of any structure or building. Structural soundness of all buildings should be referred to a qualified structural engineer prior to any installations.
+                The certification procedure includes a visual inspection of the system to assess structural integrity and does not certify the system layout and or usage. If any component is damaged or subjected to a fall load, the system must not be used until checked and recertified by a competent person.
+                It remains the building owner’s responsibility to ensure the system is used in accordance with current Occupational Health and Safety requirements and the system usage guidelines as noted by the system manufacturer.
+                To ensure its contextual integrity, the report must be read in its entirety and should not be copied, distributed or referred to in part only.
+                Information published in this report is confidential.
+            </td>
+        </tr>
+      
+    
+    </table>
+</body>
+</html>

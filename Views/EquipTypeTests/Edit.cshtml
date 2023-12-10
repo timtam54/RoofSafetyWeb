@@ -1,0 +1,74 @@
+﻿@model RoofSafety.Models.EquipTypeTest
+
+@{
+    ViewData["Title"] = "Equip Type Test " + @ViewBag.EquipTypeTest;
+}
+
+<h4>Equip Type Test @ViewBag.EquipTypeTest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-route-iettid="@ViewBag.iettid">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group" hidden="hidden">
+                <label asp-for="EquipTypeID" class="control-label"></label>
+                <input asp-for="EquipTypeID" class="form-control" />
+                <span asp-validation-for="EquipTypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Test" class="control-label"></label>
+                <textarea asp-for="Test" wrap="hard" style="width:600px;height:80px" rows="3" spellcheck="true" class="form-control" ></textarea>
+                <span asp-validation-for="Test" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Severity" class="control-label"></label>
+                <input asp-for="Severity" class="form-control" />
+                <span asp-validation-for="Severity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button onclick="addnew();return false;">Add new</button>
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div id="subform">
+    poop
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<td>
+    <a asp-action="TestsForEquipType" asp-controller="EquipTypeTests" asp-route-id="@ViewBag.EquipTypeID">Back to equipment type List.</a>
+</td>
+<script type="text/javascript">
+    
+function render()
+{
+    $('#subform').load('@Url.Action("HazardsForEquipTypeTestHazards","EquipTypeTestHazards")?id=' + @Model.id);
+}
+render();
+
+    function addnew() {
+        $('#subform').load('@Url.Action("Create","EquipTypeTestHazards")?id=' + @Model.id);
+    }
+
+    function Deleteetth(id)
+    {
+//        alert(id);
+
+             $.post('@Url.Action("Delete", "EquipTypeTestHazards")', {id:id},
+                   function (data) {
+                            render();
+                    }
+                    , 'json');
+                    render();
+  
+    }
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<RoofSafety.Models.InspEquipTypeTest>
+
+@{
+    ViewData["Title"] = "Test(s) for Equipment" + @ViewBag.EquipDesc;
+}
+
+<h1>Test(s) for Item @ViewBag.EquipDesc</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.InspEquipID">Add New Test for @ViewBag.EquipDesc</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.EquipTypeTest.Test)
+            </th>
+       @*      <th>
+                @Html.DisplayNameFor(model => model.Pass)
+            </th> *@
+            <!--th@Html.DisplayNameFor(model => model.Reason)    </th -->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipTypeTest.Test)
+            </td>
+           @*  <td>
+                @Html.DisplayFor(modelItem => item.Pass)
+            </td> *@
+            <!--td@Html.DisplayFor(modelItem => item.Reason    </td-->
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id" asp-route-inspequipid="@ViewBag.InspEquipID"><img src="~/Image/Edit.png" /></a> |
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+        <tr>
+            <td>
+                <a asp-action="EquipForInspections" asp-controller="InspectionEquipments" asp-route-id="@ViewBag.InspectionID">Back to Inspection Items</a>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

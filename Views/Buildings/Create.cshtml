@@ -1,0 +1,95 @@
+﻿@model RoofSafety.Models.Building
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Building</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BuildingName" class="control-label"></label>
+                <input asp-for="BuildingName" class="form-control" />
+                <span asp-validation-for="BuildingName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" width="300" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+               
+                  
+
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientID" class="control-label"></label>
+                <select asp-for="ClientID" class="form-control" asp-items="@(new SelectList(ViewBag.ClientID, "Value", "Text"))"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyAG6a1wcVG4vCjQATf6g1vP9vn5AeRPjTc&v=3.exp"></script>
+
+<script type="text/javascript">
+
+     google.maps.event.addDomListener(window, 'load', function () {
+                    var options = {
+                        componentRestrictions: { country: "au" }
+                    };
+         var places = new google.maps.places.Autocomplete(document.getElementById('Address'), options);
+                    google.maps.event.addListener(places, 'place_changed', function () {
+                        var place = places.getPlace();
+                        var address = place.formatted_address;
+                        var addressParts = place.address_components;//.
+                        var streetno = '';
+                        var streetname = '';
+                        var postcode = '';
+                        var suburb = '';
+                        var state = '';
+                        for (var i = 0; i < addressParts.length; i++) {
+                            var addressType = addressParts[i].types[0];
+                            var val = addressParts[i].long_name;
+                            //alert(addressType+' '+val);
+                            if (addressType == "postal_code") {
+                                postcode = val;
+                            }
+                            else if (addressType == "street_number") {
+                                streetno = val;
+                            }
+                            else if (addressType == "route") {
+                                streetname = val;
+                            }
+                            else if (addressType == "locality") {
+                                suburb = val;
+                            }
+                            else if (addressType == "administrative_area_level_1") {
+                                state = val;
+                            }
+                            
+                            //alert(val);
+                        }
+                        $('#Address').val(streetno + ' ' + streetname + ', ' + suburb + ', '+ postcode + ', ' + state);
+                        var latitude = place.geometry.location.lat();
+                        var longitude = place.geometry.location.lng();
+                        var mesg = "Address: " + address;
+                        mesg += "\nLatitude: " + latitude;
+                        mesg += "\nLongitude: " + longitude;
+                        alert(mesg);
+                    });
+                });
+</script>
+<div>
+    <a asp-action="BuildingsForClient" asp-route-id="@Model.ClientID">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

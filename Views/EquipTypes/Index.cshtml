@@ -1,0 +1,43 @@
+﻿@model IEnumerable<RoofSafety.Models.EquipType>
+
+@{
+    ViewData["Title"] = "Index";
+   
+}
+
+
+
+<p>
+    <a asp-action="Create">Add new Equipment/Item Types</a>
+  
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EquipTypeDesc)
+            </th>
+            <th># of tests</th>
+      
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipTypeDesc)
+            </td>
+
+                <td>
+                    <a asp-action="TestsForEquipType" asp-controller="EquipTypeTests" asp-route-id="@item.id"> @Html.DisplayFor(modelItem => item.Tests)</a>
+                </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

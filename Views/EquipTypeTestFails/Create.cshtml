@@ -1,0 +1,37 @@
+﻿@model RoofSafety.Models.EquipTypeTestFail
+
+@{
+    //Layout    = null;
+    ViewData["Title"] = "Add Fail Reason";
+}
+<h1>Add Fail Reason</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="ETTH">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden="hidden">
+                <label asp-for="id" class="control-label"></label>
+                <input asp-for="id" class="form-control" />
+            </div>
+
+            <div class="form-group" hidden="hidden">
+                <label asp-for="EquipTypeTestID" class="control-label"></label>
+                <input asp-for="EquipTypeTestID" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="FailReason" class="control-label"></label>
+                <textarea asp-for="FailReason" wrap="hard" style="width:600px;height:80px" rows="3" spellcheck="true" class="form-control"></textarea>
+
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

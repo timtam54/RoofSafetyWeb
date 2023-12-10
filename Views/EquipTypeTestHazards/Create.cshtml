@@ -1,0 +1,151 @@
+﻿@model RoofSafety.Models.EquipTypeTestHazards
+
+@{
+    
+    ViewData["Title"] = "Add Hazard ";
+}
+<h1>Add Hazard</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="ETTH">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden="hidden">
+                <label asp-for="id" class="control-label"></label>
+                <input asp-for="id" class="form-control" />
+            </div>
+
+            <div class="form-group" hidden="hidden">
+                <label asp-for="EquipTypeTestID" class="control-label"></label>
+                <input asp-for="EquipTypeTestID" class="form-control" />
+            </div>
+            <div class="form-group" hidden="hidden">
+                <label asp-for="HazardID" class="control-label"></label>
+                <input asp-for="HazardID" class="form-control" />
+
+@*                <select asp-for="HazardID" class="form-control" asp-items="@(new SelectList(ViewBag.HazardID, "Value", "Text"))"></select>
+*@            </div>
+            <div>
+                <input onkeyup="autosearch();" width="600" type="text" autocomplete="off" name="Haz" id="Haz" class="form-control" value="" />
+                <br />
+                <div id="results">
+                    <br />
+                    <div id="searchresults"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <!--button onclick="SaveHazard();return false;" class="btn btn-primary">Create</button-->
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript">
+
+    function autosearch() {
+        try {
+//            alert('hzd');
+            $('#results').show();
+            var searchString = $('#Haz').val();
+  //          alert(searchString);
+
+            var data = { searchString: searchString }
+            $.post('@Url.Action("HazardSearch","EquipTypeTestHazards")', data,
+                function (data) {
+                    ;
+                    if (data.results == null) {
+                  ;//      $('#results').hide();
+
+                    }
+                    else {
+                        if (data.results.length == 0) {
+                          ;//  $('#results').hide();
+                        }
+                        else {
+                            var divstring = '';
+                            divstring = '';
+                            for (var i = 0; i < data.results.length; i++) {
+//                                alert(data.results[i]);
+                                const myarr = data.results[i].split("-");
+                                divstring = divstring + "<a id='" + data.results[i] + "' href='' onclick='selecty(" + myarr[0] + ",\"" + myarr[1] + "\");return false;'>" + data.results[i] + "</a><br/>"
+                            }
+                            $("#searchresults").html(divstring);
+                        }
+                    }
+
+                });
+        }
+        catch (ex) {
+            alert(ex.message);
+        }
+    }
+    function SelectExisting(num) {
+         $('#HazardID').val(num);
+
+        var data = { id: num }
+        $.post('@Url.Action("Get", "Hazards")', data,
+            function (data) {
+                $('#Haz').val(data.results);
+                $('#results').hide();
+                return false;
+            });
+    }
+    function selecty(num,text) {
+        try{
+            //alert(num);
+            if (num == 0) {
+                var data = { text: text }
+        $.post('@Url.Action("Add", "Hazards")', data,
+            function (data) {
+                SelectExisting(data.num);
+//                return false;
+            });
+            }
+            else {
+                SelectExisting(num);
+            }
+}
+catch (ex)
+{
+    alert(ex.message);
+}
+                            return false;
+    }
+
+    var myData = $('#ETTH');
+
+    function SaveHazard() {
+        try {
+            try {
+
+
+                $.post('@Url.Action("Create", "EquipTypeTestHazards")', myData.serialize(),
+                    function (data) {
+try{
+                        alert(data.error);
+
+                            render();
+}
+catch (ex)
+{
+    alert(ex.message);
+}
+                    }
+                    , 'json');
+            }
+            catch (ex) {
+                alert('clockoff2:' + ex.message);
+            }
+        }
+        catch (ex) {
+            alert('clockoff:' + ex.message);
+        }
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

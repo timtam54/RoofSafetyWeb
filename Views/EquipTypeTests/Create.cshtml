@@ -1,0 +1,51 @@
+﻿@model RoofSafety.Models.EquipTypeTest
+
+@{
+    ViewData["Title"] = "Add Test " + @ViewBag.EquipTypeDesc;
+}
+
+<h1>Add Test @ViewBag.EquipTypeDesc</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-route-inspequipid="@ViewBag.inspequipid">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden="hidden">
+                <label asp-for="EquipTypeID" class="control-label"></label>
+                <input asp-for="EquipTypeID" class="form-control" />
+                <span asp-validation-for="EquipTypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Test" class="control-label"></label>
+                <input asp-for="Test" class="form-control" />
+                <span asp-validation-for="Test" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Severity" class="control-label"></label>
+                <input asp-for="Severity" class="form-control" />
+                <span asp-validation-for="Severity" class="text-danger"></span>
+            </div>
+          @*  <div class="form-group">
+                <label asp-for="HazardIfNonCompliant" class="control-label"></label>
+                <input asp-for="HazardIfNonCompliant" class="form-control" />
+                <span asp-validation-for="HazardIfNonCompliant" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@*<td>
+    <a asp-action="TestsForEquipType" asp-controller="EquipTypeTestHazards" asp-route-id="@Model.EquipTypeID">Back to equipment type List</a>
+</td>*@
+<td>
+    
+    <a asp-action="Create" asp-controller="InspEquipTypeTestHazards" asp-route-id="@ViewBag.inspequipid">Back to equipment type List</a>
+</td>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
