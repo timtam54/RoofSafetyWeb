@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3DL2E3qs3qztOLnLe/PWQ2TFOsOrK3yaZRaqCkARhY5KvIu/TAq8JpfAJ9p0Fq7+Z/682s2wlQ3rBOarfy6rpQ==",
+  "dgSpecHash": "I3tKompu+aypyZ9Uy8pAX4ebbcW1wrEHS8y/3EurJXtFhbsjM+3daP3A9iPF8amFYFV2r+2/mYYpwG82OuhQvA==",
   "success": true,
-  "projectFilePath": "C:\\RSS\\RSSWebMac\\RoofSafety\\RoofSafety.csproj",
+  "projectFilePath": "C:\\RSS\\RoofSafetyWeb\\RoofSafety.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bubbles\\.nuget\\packages\\azure.core\\1.28.0\\azure.core.1.28.0.nupkg.sha512",
     "C:\\Users\\Bubbles\\.nuget\\packages\\azure.storage.blobs\\12.15.0\\azure.storage.blobs.12.15.0.nupkg.sha512",

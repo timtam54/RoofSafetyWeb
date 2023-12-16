@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoofSafety", "RoofSafety.csproj", "{09F68FC6-A497-4BD6-A0CD-171EBE21E7CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSSTests", "..\RSSTests\RSSTests.csproj", "{A141576E-77F7-4BFC-850F-09CC7D97341C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{09F68FC6-A497-4BD6-A0CD-171EBE21E7CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F68FC6-A497-4BD6-A0CD-171EBE21E7CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F68FC6-A497-4BD6-A0CD-171EBE21E7CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A141576E-77F7-4BFC-850F-09CC7D97341C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A141576E-77F7-4BFC-850F-09CC7D97341C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A141576E-77F7-4BFC-850F-09CC7D97341C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A141576E-77F7-4BFC-850F-09CC7D97341C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
