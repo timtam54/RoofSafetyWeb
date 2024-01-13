@@ -48,6 +48,6 @@ app.UseEndpoints(endpoints=>endpoints.MapControllers());
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Clients}/{action=Index}/{id?}");
+    pattern: "{controller=Inspections}/{action=Index}/{id?}");
 
 app.Run();

@@ -269,7 +269,10 @@ namespace RoofSafety.Controllers
             
             ret.Title = (from bd in _context.Building where bd.id == insp.BuildingID select bd.BuildingName).FirstOrDefault();
             ret.Items = (from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id where ie.InspectionID == id select new InspEquipTest { Qty=(ie.Qty==null)?1:ie.Qty.Value, RequiredControls=ie.RequiredControls, Pass=true, Manufacturer =ie.Manufacturer, SNSuffix=ie.SNSuffix, SerialNo=ie.SerialNo, Rating=ie.Rating, Installer=ie.Installer ,EquipName = et.EquipTypeDesc,  Notes = ie.Notes, Location = ie.Location, id = ie.id, EquipType = et, ETID=et.id }).ToList();//.Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType)=efe
-            ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
+            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { id = ins.id, Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
+            //  ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
+           
             using (var client = new HttpClient())
             {
                 if (insp.Photo != null)
@@ -426,24 +429,24 @@ namespace RoofSafety.Controllers
 
                             bold4.Val = OnOffValue.FromBoolean(true);
                             runp2.AppendChild(bold4);
-                            runp2.AppendChild(new Text("1.Version History"));
+                            runp2.AppendChild(new Text("1. Version History"));
                             runp2.AppendChild(new Break());
 
-                            runp2.AppendChild(new Text("2.Executive Summary"));
+                            runp2.AppendChild(new Text("2. Executive Summary"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("3.Inspection Details"));
+                            runp2.AppendChild(new Text("3. Inspection Details"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("4.Introduction"));
+                            runp2.AppendChild(new Text("4. Introduction"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("5.Risk Assessment"));
+                            runp2.AppendChild(new Text("5. Risk Assessment"));
                             runp2.AppendChild(new Break());
                             runp2.AppendChild(new Text("6.Inspection Report"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("7.Summary"));
+                            runp2.AppendChild(new Text("7. Summary"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("8.Conclusion"));
+                            runp2.AppendChild(new Text("8. Conclusion"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("9.Disclaimer"));
+                            runp2.AppendChild(new Text("9. Disclaimer"));
                             runp2.AppendChild(new Break());
 
                             Break pgbrk2 = new Break();
@@ -494,10 +497,10 @@ namespace RoofSafety.Controllers
                             //tc1.Append(new Paragraph(rn));//     new Run(new Text("Version"))));
                             //  tr.Append(tc1);
 
-                                tr.Append(CellFont("Version",36));
-                            tr.Append(CellFont("Description", 36));
-                            tr.Append(CellFont("Author", 36));
-                            tr.Append(CellFont("Information",36));
+                                tr.Append(CellFont("Version",32,true));
+                            tr.Append(CellFont("Status", 32, true));
+                            tr.Append(CellFont("Author", 32, true));
+                            tr.Append(CellFont("Inspection Date",32, true));
            
                             body4.AppendChild(table);
 
@@ -506,10 +509,11 @@ namespace RoofSafety.Controllers
                             {
                                 TableRow trx = new TableRow();
                                 table.Append(trx);
-                                trx.Append(CellFont(item.VersionNo?.ToString(), 28));
-                                trx.Append(CellFont((item.VersionType == "C") ? "Created" : "Reviewed", 28));
-                                trx.Append(CellFont(item.Author, 28));
-                                trx.Append(CellFont((item.Information == "FD") ? "First Draft" : "Issued for review", 28));
+                                trx.Append(CellFont(item.VersionNo?.ToString(), 28, false));
+                                trx.Append(CellFont((item.VersionType), 28, false));
+                                trx.Append(CellFont(item.Author, 28, false));
+                                trx.Append(CellFont((item.Information), 28, false));
+                                //trx.Append(CellFont((item.da), 28));
                             }
                         }
 
@@ -534,18 +538,18 @@ namespace RoofSafety.Controllers
                         Paragraph paraeh = bodyeh.AppendChild(new Paragraph());
                         Run runeh = paraeh.AppendChild(new Run());
                         RunProperties runPropertieseh = runeh.AppendChild(new RunProperties());
-                        FontSize fontSizepeh = new FontSize() { Val = "24" };
+                        FontSize fontSizepeh = new FontSize() { Val = "30" };
                         runPropertieseh.Append(fontSizepeh);
                         //Bold bold4 = new Bold();
 
                         // bold4.Val = OnOffValue.FromBoolean(true);
                         // runp2.AppendChild(bold4);
                         runeh.AppendChild(new Text("Roof Safety Solutions were contracted to perform the routine audit of " + ret.Title + "."));
-                        runeh.AppendChild(new Break());
+                        runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The following existing height safety equipment is installed on site:"));
-                        runeh.AppendChild(new Break());
+                        runeh.AppendChild(new Break()); 
                         runeh.AppendChild(new Text("The inspection was carried out on the " + ret.InspDate.ToLongDateString() + " by height safety inspectors from Roof Safety Solutions Pty Ltd. The inspection identifies any risks and reports on compliance in relation to the Australian Standards, Acts and Regulations that form the basis for height safety in Australia."));
-                        runeh.AppendChild(new Break());
+                        runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("This report contains:"));
                         runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("- An inventory of installed height safety equipment,"));
@@ -593,82 +597,54 @@ namespace RoofSafety.Controllers
                             tableInsp.AppendChild<TableProperties>(tblPropInsp);
                             {
                                 TableRow trInsp = new TableRow();
-                                TableCell tcInspDteLbl = new TableCell();
 
-                                Bold boldinsp = new Bold();
-
-                                boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                                Run runInsp = new Run();
-                                runInsp.AppendChild(boldinsp);
-                                runInsp.Append(new Text("Inspection Date:"));
-                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+               
+                                TableCell tcInspDteLbl = CellFont("Inspection Date:", 30, true);
                                 trInsp.Append(tcInspDteLbl);
 
 
-                                TableCell tcInspDte = new TableCell();
-                                tcInspDte.Append(new Paragraph(new Run(new Text(ret.InspDate.ToString("dd-MMM-yyyy")))));
+                                TableCell tcInspDte = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 30, false);
+                                trInsp.Append(tcInspDte);
+                                tableInsp.Append(trInsp);
+
+
+                            }
+                            {
+                                
+                                TableRow trInsp = new TableRow();
+                                TableCell tcInspDteLbl = CellFont("Areas Inspected:",30,true);
+                                trInsp.Append(tcInspDteLbl);
+
+
+                                TableCell tcInspDte = CellFont(ret.Areas, 30, false);
                                 trInsp.Append(tcInspDte);
                                 tableInsp.Append(trInsp);
                             }
                             {
                                 TableRow trInsp = new TableRow();
-                                TableCell tcInspDteLbl = new TableCell();
 
-                                Bold boldinsp = new Bold();
-
-                                boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                                Run runInsp = new Run(new Text("Areas Inspected:"));
-                                runInsp.AppendChild(boldinsp);
-                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                TableCell tcInspDteLbl = CellFont("Inspector:", 30, true);
                                 trInsp.Append(tcInspDteLbl);
 
 
-                                TableCell tcInspDte = new TableCell();
-                                tcInspDte.Append(new Paragraph(new Run(new Text(ret.Areas))));
+                                TableCell tcInspDte = CellFont(ret.Inspector, 30, false);
                                 trInsp.Append(tcInspDte);
                                 tableInsp.Append(trInsp);
+
+
                             }
                             {
                                 TableRow trInsp = new TableRow();
-                                TableCell tcInspDteLbl = new TableCell();
 
-                                Bold boldinsp = new Bold();
-
-                                boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                                Run runInsp = new Run();
-                                runInsp.AppendChild(boldinsp);
-                                runInsp.Append(new Text("Inspector:"));
-                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                TableCell tcInspDteLbl = CellFont("Testing Instrument:", 30, true);
                                 trInsp.Append(tcInspDteLbl);
 
 
-                                TableCell tcInspDte = new TableCell();
-                                tcInspDte.Append(new Paragraph(new Run(new Text(ret.Inspector))));
+                                TableCell tcInspDte = CellFont(ret.Instrument, 30, false);
                                 trInsp.Append(tcInspDte);
                                 tableInsp.Append(trInsp);
-                            }
-                            {
-                                TableRow trInsp = new TableRow();
-                                TableCell tcInspDteLbl = new TableCell();
-
-                                Bold boldinsp = new Bold();
-
-                                boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                                Run runInsp = new Run();
-                                runInsp.AppendChild(boldinsp);
-                                runInsp.Append(new Text("Testing Instrument:"));
-                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
-                                trInsp.Append(tcInspDteLbl);
 
 
-                                TableCell tcInspDte = new TableCell();
-                                tcInspDte.Append(new Paragraph(new Run(new Text(ret.Instrument))));
-                                trInsp.Append(tcInspDte);
-                                tableInsp.Append(trInsp);
                             }
 
 
@@ -694,16 +670,16 @@ namespace RoofSafety.Controllers
                             Paragraph paraintro1 = bodyintro1.AppendChild(new Paragraph());
                             Run runintro1 = paraintro1.AppendChild(new Run());
                             RunProperties runPropintro1 = runintro1.AppendChild(new RunProperties());
-                            FontSize fontSizeintro1 = new FontSize() { Val = "24" };
+                            FontSize fontSizeintro1 = new FontSize() { Val = "30" };
                             runPropintro1.Append(fontSizeintro1);
                             //Bold bold4 = new Bold();
 
                             // bold4.Val = OnOffValue.FromBoolean(true);
                             // runp2.AppendChild(bold4);
                             runintro1.AppendChild(new Text("Roof Safety Solutions has been commissioned to:"));
-                            runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("1. Supply an inventory of all height safety equipment installed on site."));
-                            runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("2. Carry out an inspection of all existing assets, in accordance with:"));
                             runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("•  Work Health & Safety Act 2020 (WA)."));
@@ -721,7 +697,7 @@ namespace RoofSafety.Controllers
                             runintro1.AppendChild(new Text("• AS/NZS 1891.4:2009 - Industrial fall-arrest systems and devices –selection, use and maintenance."));
 
 
-                            runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("3. Report on findings, identify existing hazards and provide suitable recommendations in cases of non-compliance."));
 
                         }
@@ -742,7 +718,7 @@ namespace RoofSafety.Controllers
                             Paragraph paraintro1 = bodyintro1.AppendChild(new Paragraph());
                             Run runintro1 = paraintro1.AppendChild(new Run());
                             RunProperties runPropintro1 = runintro1.AppendChild(new RunProperties());
-                            FontSize fontSizeintro1 = new FontSize() { Val = "24" };
+                            FontSize fontSizeintro1 = new FontSize() { Val = "30" };
                             runPropintro1.Append(fontSizeintro1);
                             runintro1.AppendChild(new Text("This report will use the following risk assessment matrix to show the severity of any identified hazards."));
 
@@ -1125,7 +1101,7 @@ namespace RoofSafety.Controllers
                                         TableCell tcInspDte = new TableCell();
                                         string colour;
                                         if (item.Risk == "Maintained")
-                                            colour = "gray";
+                                            colour = "#D3D3D3";
                                         else
                                             colour =RoofSafety.Models.InspEquipTest.getcolour(item.MaxRisk);
                                         tcInspDte.Append(SetColor(colour));
@@ -1198,8 +1174,8 @@ namespace RoofSafety.Controllers
                                           else
                                               colour = "#FF5733";
                                           TableCell tcInspDte = CellForeColor(text, colour);
-                                        tcInspDte.Append(new GridSpan { Val = 2 });
-                                        trInsp.Append(tcInspDte);
+                                          tcInspDte.Append(new GridSpan { Val = 2 });
+                                          trInsp.Append(tcInspDte);
                                           tableInsp.Append(trInsp);
                                       }
                                       if (item.Result != "Compliant")
@@ -1466,45 +1442,29 @@ namespace RoofSafety.Controllers
                             
                             foreach (var item in ret.Items)
                             {
+                                string colour = item.Pass ? "Green" : "Black";
                                 {
                                     TableRow trx = new TableRow();
                                     table.Append(trx);
-                                    TableCell t1 = new TableCell();
-                                    t1.Append(new Paragraph(new Run(new Text(item.EquipName?.ToString()))));
+                                    TableCell t1 = CellFont(item.EquipName?.ToString(), 24, false, colour);
+//                                    t1.Append(new Paragraph(new Run(new Text(item.EquipName?.ToString()))));
                                     trx.Append(t1);
-                                    TableCell t2 = new TableCell();
-                                    t2.Append(new Paragraph(new Run(new Text(item.Manufacturer))));
+                                    TableCell t2 = CellFont(item.Manufacturer?.ToString(), 24, false, colour);
+                              
                                     trx.Append(t2);
-                                    TableCell t3 = new TableCell();
-                                    t3.Append(new Paragraph(new Run(new Text(ret.InspDate.ToString("dd-MMM-yyyy")))));
+                                    TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, colour);
                                     trx.Append(t3);
 
-                                    TableCell t4 = new TableCell();
-                                    t4.Append(new Paragraph(new Run(new Text((item.Pass) ? "Compliant" : "Non-Compliant"))));
-
-
-
-                                    string col;
-                                    if (item.Pass)
-                                    {
-                                        col = "#0BDA51";
-                                    }
-                                    else
-                                        col = "#FF5733";
-
-                                    t4.Append(SetColor(col));
-
-
+                                    TableCell t4 = CellFont((item.Pass) ? "Compliant" : "Non-Compliant", 24, false, colour);
+                  
                                     trx.Append(t4);
-                                    TableCell t5 = new TableCell();
-                                    t5.Append(new Paragraph(new Run(new Text(item.Installer))));
+                                    TableCell t5 = CellFont(item.Installer, 24, false, colour);
+ 
                                     trx.Append(t5);
-                                    TableCell t6 = new TableCell();
-                                    t6.Append(new Paragraph(new Run(new Text(item.Rating))));
+                                    TableCell t6 = CellFont(item.Rating, 24, false, colour);
                                     trx.Append(t6);
-                                    TableCell t7 = new TableCell();
-                                    t7.Append(new Paragraph(new Run(new Text(item.SerialNo))));
-                                    trx.Append(t7);
+                                    TableCell t7 = CellFont(item.SerialNo, 24, false, colour);
+                                     trx.Append(t7);
 
                                 }
 
@@ -1516,41 +1476,22 @@ namespace RoofSafety.Controllers
                                     {
                                         TableRow trx = new TableRow();
                                         table.Append(trx);
-                                        TableCell t1 = new TableCell();
-                                        t1.Append(new Paragraph(new Run(new Text(item.EquipName?.ToString()))));
+                                        TableCell t1 = CellFont(item.EquipName, 24, false, colour);
                                         trx.Append(t1);
-                                        TableCell t2 = new TableCell();
-                                        t2.Append(new Paragraph(new Run(new Text(item.Manufacturer))));
+                                        TableCell t2 = CellFont(item.Manufacturer, 24, false, colour);
                                         trx.Append(t2);
 
-                                        TableCell t3 = new TableCell();
-                                        t3.Append(new Paragraph(new Run(new Text(ret.InspDate.ToString("dd-MMM-yyyy")))));
+                                        TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, colour);
                                         trx.Append(t3);
 
-                                        TableCell t4 = new TableCell();
-                                        t4.Append(new Paragraph(new Run(new Text(@item.Result))));
-
-
-
-                                        string col;
-                                        if (item.Pass)
-                                        {
-                                            col = "#0BDA51";
-                                        }
-                                        else
-                                            col = "#FF5733";
-
-                                        t4.Append(SetColor(col));
+                                        TableCell t4 = CellFont(item.Result, 24, false, colour);
                                         trx.Append(t4);
 
-                                        TableCell t5 = new TableCell();
-                                        t5.Append(new Paragraph(new Run(new Text(item.Installer))));
+                                        TableCell t5 = CellFont(item.Installer, 24, false, colour);
                                         trx.Append(t5);
-                                        TableCell t6 = new TableCell();
-                                        t6.Append(new Paragraph(new Run(new Text(item.Rating))));
+                                        TableCell t6 = CellFont(item.Rating, 24, false, colour);
                                         trx.Append(t6);
-                                        TableCell t7 = new TableCell();
-                                        t7.Append(new Paragraph(new Run(new Text(item.SerialNos[i]))));
+                                        TableCell t7 = CellFont(item.SerialNos[i], 24, false, colour);
                                         trx.Append(t7);
                                         
                                     }
@@ -1577,14 +1518,23 @@ namespace RoofSafety.Controllers
                             Paragraph paraintro1 = bodyintro1.AppendChild(new Paragraph());
                             Run runintro1 = paraintro1.AppendChild(new Run());
                             RunProperties runPropintro1 = runintro1.AppendChild(new RunProperties());
-                            FontSize fontSizeintro1 = new FontSize() { Val = "24" };
+                            FontSize fontSizeintro1 = new FontSize() { Val = "30" };
                             runPropintro1.Append(fontSizeintro1);
                             //Bold bold4 = new Bold();
 
                             // bold4.Val = OnOffValue.FromBoolean(true);
                             // runp2.AppendChild(bold4);
-                            runintro1.AppendChild(new Text("All recommendations within this report will enable personnel to carry out their work in a safe manner when working on the roof and will ensure that the systems are ready for everyday maintenance tasks. All Purlin fixed anchor points have been re-tensioned to the sub-structure, all signage has been updated to reflect inspection dates and all height safety equipment has been tagged to reflect inspection dates and load ratings. All Friction Mounted Anchors have been subject to load testing under the guidance given by the relevant Australian Standard and its mechanical testing requirements for fall prevention anchors. If you have any questions, please do not hesitate to contact the undersigned. Kind Regards,"));
-
+                            runintro1.AppendChild(new Text("All recommendations within this report will enable personnel to carry out their jobs in a safe manner while working on your roof and ensure the height safety systems are ready for everyday maintenance tasks."));
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Text("Data plates have been updated to show inspection dates."));
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break()); 
+                            runintro1.AppendChild(new Text("All height safety equipment has been tagged to reflect inspection dates and load ratings."));
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Text("Any purlin fixed anchors have been re-tensioned to the sub structure."));
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break()); 
+                            runintro1.AppendChild(new Text("Any friction mounted anchors have been subjected to load testing under the guidance given by the relevant Australian standard and its mechanical testing requirements for fall prevention anchors."));
+                            runintro1.AppendChild(new Break()); runintro1.AppendChild(new Break());
+                            runintro1.AppendChild(new Text("If you have any questions please do not hesitate to contact us on (08) 9447 4884 or email us at admin@roofsafetysolutions.com.au."));
                         }
 
                         {
@@ -1605,7 +1555,7 @@ namespace RoofSafety.Controllers
                             Paragraph paraintro1 = bodyintro1.AppendChild(new Paragraph());
                             Run runintro1 = paraintro1.AppendChild(new Run());
                             RunProperties runPropintro1 = runintro1.AppendChild(new RunProperties());
-                            FontSize fontSizeintro1 = new FontSize() { Val = "24" };
+                            FontSize fontSizeintro1 = new FontSize() { Val = "30" };
                             runPropintro1.Append(fontSizeintro1);
                             //Bold bold4 = new Bold();
 
@@ -1619,7 +1569,7 @@ namespace RoofSafety.Controllers
                         wordDocument.Save();
                         wordDocument.Dispose();
                         memoryStream.Close();
-                        return File(memoryStream.ToArray(), "application/msword", "sample.docx");
+                        return File(memoryStream.ToArray(), "application/msword", "RSSInspection_"+id.ToString()+".docx");
                         ///Task.FromResult(memoryStream.ToArray());
                     }
                     catch (Exception ex)
@@ -1715,15 +1665,16 @@ namespace RoofSafety.Controllers
             new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
             // Add the Color object for your run into the RunProperties
             rprp.Color = new Color() { Val = colour };
-            // tcInspDte.Append(SetForeColor(colour));
+            
             Run rnrn = new Run(new Text(text));
             rnrn.RunProperties = rprp;
             tcInspDte.Append(new Paragraph(rnrn));
             return tcInspDte;
         }
 
-        private static TableCell CellFont(string vall,int fontsize)
+        private static TableCell CellFont(string vall,int fontsize, bool bold,string colour="black")
         {
+
             TableCell tc1 = new TableCell();
             var paragraph = new DocumentFormat.OpenXml.Wordprocessing.Paragraph();
             var runXX = new DocumentFormat.OpenXml.Wordprocessing.Run();
@@ -1733,9 +1684,27 @@ namespace RoofSafety.Controllers
             FontSize fs1 = new FontSize() { Val = fontsize.ToString() };
             runProperties1.Append(fs1);
 
+            if (bold)
+            {
+                Bold bold3 = new Bold();
+
+
+                bold3.Val = OnOffValue.FromBoolean(true);
+                runProperties1.Append(bold3);
+            }
+
+            // DocumentFormat.OpenXml.Wordprocessing.RunProperties rprp =
+            // new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
+
+            runProperties1.Color = new Color() { Val = colour };
+
+           
+            
+
+
             runXX.Append(runProperties1);
             runXX.Append(text);
-
+         //   runXX.RunProperties = rprp;
             paragraph.Append(runXX);
             tc1.Append(paragraph);
             return tc1;
@@ -2000,7 +1969,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,InspectionID,Location,Notes,EquipTypeID")] InspEquip inspEquip)
+        public async Task<IActionResult> Edit(int id, InspEquip inspEquip)
         {
             if (id != inspEquip.id)
             {

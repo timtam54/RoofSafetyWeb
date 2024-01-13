@@ -682,3 +682,4 @@ C:\RSS\RoofSafetyWeb\obj\Debug\net6.0\refint\RoofSafety.dll
 C:\RSS\RoofSafetyWeb\obj\Debug\net6.0\RoofSafety.pdb
 C:\RSS\RoofSafetyWeb\obj\Debug\net6.0\RoofSafety.genruntimeconfig.cache
 C:\RSS\RoofSafetyWeb\obj\Debug\net6.0\ref\RoofSafety.dll
+C:\RSS\RoofSafetyWeb\obj\Debug\net6.0\RoofSafety.sourcelink.json

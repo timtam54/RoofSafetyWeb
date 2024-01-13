@@ -115,12 +115,12 @@ namespace RoofSafety.Models
       public  static string getcolour(int Severity)
         {
             if (Severity <= 3)
-               return "LimeGreen";
+                return "#0BDA51";// LimeGreen";
             if (Severity <= 6)
-                return "royalblue";
+                return "#0096FF";// "royalblue";
             if (Severity <= 12)
                 return "Yellow";
-            return "Red";
+            return "#FF5733";// "Red";
         }
 
 

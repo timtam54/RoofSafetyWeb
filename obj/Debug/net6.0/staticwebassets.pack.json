@@ -5,10 +5,6 @@
       "PackagePath": "staticwebassets\\RoofSafety.bundle.scp.css"
     },
     {
-      "Id": "C:\\RSS\\RoofSafetyWeb\\wwwroot\\.DS_Store",
-      "PackagePath": "staticwebassets\\.DS_Store"
-    },
-    {
       "Id": "C:\\RSS\\RoofSafetyWeb\\wwwroot\\Image\\180891.png",
       "PackagePath": "staticwebassets\\Image\\180891.png"
     },

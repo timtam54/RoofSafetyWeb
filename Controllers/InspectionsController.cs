@@ -22,7 +22,7 @@ namespace RoofSafety.Controllers
             _imageservice = imageservice;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? status)
         {
             ViewBag.ClientDesc = "All Clients";
             ViewBag.ClientID = 0;
@@ -30,10 +30,9 @@ namespace RoofSafety.Controllers
             ViewBag.BuildingID = 0;
            // var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
             ViewBag.BuildingDesc = "All Buildings";
-
-            var dbcontext = _context.Inspection.Include(i => i.Building).Include(i=>i.Inspector);
-            var xx = await dbcontext.ToListAsync();
-            return View(xx);
+            if (status==null)
+                return View(await _context.Inspection.Where(i=>i.Status=="A").Include(i => i.Building).Include(i => i.Inspector).ToListAsync());
+            return View(await _context.Inspection.Include(i => i.Building).Include(i=>i.Inspector).ToListAsync());
         }
 
         // GET: Inspections/Details/5

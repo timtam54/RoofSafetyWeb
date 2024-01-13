@@ -12,34 +12,149 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Clients" asp-action="Index">RoofSafety</a>
+                <img src="~/Image/rsslogo.png" />
+          @*       <a class="navbar-brand" asp-area="" asp-controller="Clients" asp-action="Index">RoofSafety</a> *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <!--div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+
+                    <style >
+                    /* Style The Dropdown Button */
+                    .dropbtn {
+                        background-color: #2fa0b6;
+                        color: white;
+                        padding: 16px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                    }
+
+                    /* The container <div> - needed to position the dropdown content */
+                    .dropdown {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    /* Dropdown Content (Hidden by Default) */
+                    .dropdown-content {
+                        display: none;
+                        position: absolute;
+                        background-color: #f9f9f9;
+                        min-width: 160px;
+                        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                        z-index: 1;
+                    }
+
+                        /* Links inside the dropdown */
+                        .dropdown-content a {
+                            color: black;
+                            padding: 12px 16px;
+                            text-decoration: none;
+                            display: block;
+                        }
+
+                            /* Change color of dropdown links on hover */
+                            .dropdown-content a:hover {
+                                background-color: #f1f1f1
+                            }
+
+                    /* Show the dropdown menu on hover */
+                    .dropdown:hover .dropdown-content {
+                        display: block;
+                    }
+
+                    /* Change the background color of the dropdown button when the dropdown content is shown */
+                    .dropdown:hover .dropbtn {
+                        background-color: #383838;
+                    }
+                </style>
+                <div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+
+
+
+                <div class="dropdown">
+                    <button class="dropbtn">Clients/Buildings</button>
+                    <div class="dropdown-content">
+                        <a asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+
+                        <a asp-area="" asp-controller="Buildings" asp-action="Index">Buildings</a>
+
+
+                    </div>
+                </div>
+
+
+                <div class="dropdown">
+                    <button class="dropbtn">Lookups</button>
+                    <div class="dropdown-content">
+                        <a asp-area="" asp-controller="EquipTypes" asp-action="Index">Item Types</a>
+
+                        <a asp-area="" asp-controller="EquipTypeTests" asp-action="Index">Item Type Tests</a>
+
+                        <a asp-area="" asp-controller="Employees" asp-action="Index">Employees/Inspectors</a>
+
+                        <a asp-area="" asp-controller="EquipTypeTestHazards" asp-action="Index">Hazards for Equip Type Test</a>
+         
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropbtn">Inspections</button>
+                    <div class="dropdown-content">
+                        <a asp-area="" asp-controller="Inspections" asp-action="Index" asp-route-status="All">All Inspections</a>
+
+                        <a asp-area="" asp-controller="Inspections" asp-action="Index" >Active Inspections</a>
+
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropbtn">Data Matrix</button>
+                    <div class="dropdown-content">
+                        <a target="_blank" href="../EquipTypeTestHazards/EquipTypeTestHazardMat">Item Type Test / Hazard</a>
+
+                        <a target="_blank" href="../EquipTypeTests/EquipTypeTestMat">Item Type / Test</a>
+
+
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <div class="dropbtn">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <div class="dropbtn">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <div class="dropbtn">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <div class="dropbtn">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
 
-                <li><div>|</div></li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
-                </li>
-                <li><div>|</div></li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="EquipTypes" asp-action="Index">Inspection Items</a>
-                </li>
-                <li><div>|</div></li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Inspections" asp-action="Index">Inspections</a>
-                </li>
-                <li><div>|</div></li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Employees</a>
-                </li>
-            </ul>
-        </!--div>
+
+                 <li class="nav-item">
+                 </li>
+            
+               
+             
+             </ul>
+        </div>
     </div>
-            -->
+            
 </nav>
     </header>
     <div class="container">

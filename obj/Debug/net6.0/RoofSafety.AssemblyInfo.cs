@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RoofSafety")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e6ecd86fe0319dfb1dbd4d3412586c1237e34937")]
 [assembly: System.Reflection.AssemblyProductAttribute("RoofSafety")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RoofSafety")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

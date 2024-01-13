@@ -2,17 +2,35 @@
 @{
     ViewData["Title"] = "Inspections for Buiding " + @ViewBag.BuildingDesc;
 }
-<h1>Inspections for @ViewBag.BuildingDesc</h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<table>
+    <tr>
+        <td>
+
+<h2>Inspections for @ViewBag.BuildingDesc</h2>
+        </td>
+
 @if (ViewBag.BuildingID != 0)
 {
+            <td>
+
     <p>
         <a asp-action="Create" asp-route-id="@ViewBag.BuildingID">Add New Inspections</a>
     </p>
+            </td>
+
 }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <td>
+
 <div>
     <button id="download-button">Download as PDF</button>
 </div>
+
+        </td>
+    </tr>
+</table>
+
 <table class="table" id="invoice">
    
     <thead>
@@ -27,11 +45,11 @@
                 @Html.DisplayNameFor(model => model.Building.BuildingName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Inspector.Given)
+               Inspector
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.Inspector.Surname)
+                Status
             </th>
             <th></th>
             <th></th>
@@ -52,10 +70,10 @@
                     @Html.DisplayFor(modelItem => item.Building.BuildingName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Inspector.Given)
+                    @Html.DisplayFor(modelItem => item.Inspector.Given) @Html.DisplayFor(modelItem => item.Inspector.Surname)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Inspector.Surname)
+                    @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
                     <a asp-action="EquipForInspectionsAll" asp-route-hpw="p" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report pdf</a>
@@ -70,7 +88,7 @@
                     <a asp-action="EquipForInspections" asp-controller="InspectionEquipments" asp-route-id="@item.id">Edit Items</a>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                    <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a><br/>
                     <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
                 </td>
             </tr>

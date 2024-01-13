@@ -23,13 +23,7 @@ namespace RoofSafety.Controllers
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-         /*   string imgsrc = "https://rssblob.blob.core.windows.net/rssimage/847ce06f-541f-43bc-929a-ccb69802f3b6..jpeg";
-            using (var client = new HttpClient())
-            {
-                var bytes = await client.GetByteArrayAsync(imgsrc);
-                string imgbase64 = "data:image/jpeg;base64," + Convert.ToBase64String(bytes);
-                ViewBag.imgsrc = imgbase64;
-            }*/
+         
             return View(await _context.Client.ToListAsync());
         }
 

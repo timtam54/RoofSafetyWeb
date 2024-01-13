@@ -21,6 +21,7 @@ namespace RoofSafety.Models
         public int? SNSuffix { get; set; }
         public DateTime? WithdrawalDate { get; set; }
         public List<InspPhoto>? Photos { get; set; }
+        [Display(Name = "Required Controls")]
         public string? RequiredControls { get; set; }
         public int? Qty { get; set; }
 

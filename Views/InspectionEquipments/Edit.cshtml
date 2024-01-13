@@ -21,7 +21,12 @@
                 <label asp-for="Inspection" class="control-label"></label>
                 <input asp-for="Inspection" class="form-control" />
             </div>
-
+  
+            <div class="form-group">
+                <label asp-for="Manufacturer" class="control-label"></label>
+                <input asp-for="Manufacturer" class="form-control" />
+                <span asp-validation-for="Manufacturer" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
@@ -31,6 +36,21 @@
                 <label asp-for="Notes" class="control-label"></label>
                 <input asp-for="Notes" class="form-control" />
                 <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Installer" class="control-label"></label>
+                <input asp-for="Installer" class="form-control" />
+                <span asp-validation-for="Installer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequiredControls" class="control-label"></label>
+                <input asp-for="RequiredControls" class="form-control" />
+                <span asp-validation-for="RequiredControls" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EquipTypeID" class="control-label"></label>

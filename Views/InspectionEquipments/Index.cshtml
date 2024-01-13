@@ -16,10 +16,19 @@
                 @Html.DisplayNameFor(model => model.Location)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notes)
+                @Html.DisplayNameFor(model => model.Installer)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EquipType.EquipTypeDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Manufacturer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Manufacturer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
             </th>
             <th></th>
             <th></th>
@@ -38,11 +47,17 @@
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Notes)
+                @Html.DisplayFor(modelItem => item.Installer)
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.EquipType.EquipTypeDesc)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manufacturer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
                     <td>
                     <a asp-action="TestsForEquip" asp-controller="InspEquipTypeTests" asp-route-id="@item.id">Test</a>
                     </td>
