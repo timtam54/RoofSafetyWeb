@@ -358,10 +358,12 @@ namespace RoofSafety.Controllers
                         runProperties.AppendChild(bold);
                         run.AppendChild(new Text("Height and Safety Audit Report for " + xx.Desc));
                         run.AppendChild(new Break());
-                        string imgurl = ret.Photo.Replace("%0D%0A", "").TrimEnd();
-                      
-                        await InsertImage(wordDocument, mainPart, imgurl);
+                        if (ret.Photo != null)
+                        {
+                            string imgurl = ret.Photo.Replace("%0D%0A", "").TrimEnd();
 
+                            await InsertImage(wordDocument, mainPart, imgurl);
+                        }
                         Paragraph para2 = body.AppendChild(new Paragraph());
                         Run run2 = para2.AppendChild(new Run());
                         RunProperties runProperties2 = run2.AppendChild(new RunProperties());
@@ -812,25 +814,20 @@ namespace RoofSafety.Controllers
                            
                                     tc1.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("5"))));
-                                    tc2.Append(SetColor("#0096FF"));
+                                    TableCell tc2 = CenterAndColour("5", "#0096FF");
+           
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("10"))));
-                                    tc3.Append(SetColor("yellow"));
+                                    TableCell tc3 = CenterAndColour("10", "yellow");
+
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("15"))));
-                                    tc4.Append(SetColor("#FF5733"));
+                                    TableCell tc4 = CenterAndColour("15", "#FF5733");
+                  
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("20"))));
-                                    tc5.Append(SetColor("#FF5733"));
+                                    TableCell tc5 = CenterAndColour("20", "#FF5733");
+                 
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("25"))));
-                                    tc6.Append(SetColor("#FF5733"));
+                                    TableCell tc6 = CenterAndColour("25", "#FF5733");
+             
                                     tr.Append(tc6);
 
                                 }
@@ -843,25 +840,19 @@ namespace RoofSafety.Controllers
                                     tc1.Append(new Paragraph(new Run(new Text("Likely"))));
                                     tc1.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("4"))));
-                                    tc2.Append(SetColor("#0096FF"));
+                                    TableCell tc2 = CenterAndColour("4", "#0096FF");
+
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("8"))));
-                                    tc3.Append(SetColor("yellow"));
+                                    TableCell tc3 = CenterAndColour("8", "yellow");
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("12"))));
-                                    tc4.Append(SetColor("yellow"));
+                                    TableCell tc4 = CenterAndColour("12", "yellow");
+           
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("16"))));
-                                    tc5.Append(SetColor("#FF5733"));
+                                    TableCell tc5 = CenterAndColour("16", "#FF5733");
+                                   
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("20"))));
-                                    tc6.Append(SetColor("#FF5733"));
+                                    TableCell tc6 = CenterAndColour("20", "#FF5733");
+                                    
                                     tr.Append(tc6);
 
                                 }
@@ -872,25 +863,19 @@ namespace RoofSafety.Controllers
                                     tc1.Append(SetColor("#D3D3D3"));
                                     tc1.Append(new Paragraph(new Run(new Text("Occasionally"))));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("3"))));
-                                    tc2.Append(SetColor("#0BDA51"));
+                                    TableCell tc2 = CenterAndColour("3", "#0BDA51");
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("6"))));
-                                    tc3.Append(SetColor("#0096FF"));
+                                    TableCell tc3 = CenterAndColour("6", "#0096FF");
+                                   
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("9"))));
-                                    tc4.Append(SetColor("yellow"));
+                                    TableCell tc4 = CenterAndColour("9", "yellow");
+                                   
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("12"))));
-                                    tc5.Append(SetColor("yellow"));
+                                    TableCell tc5 = CenterAndColour("12", "yellow");
+                                   
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("15"))));
-                                    tc6.Append(SetColor("#FF5733"));
+                                    TableCell tc6 = CenterAndColour("15", "#FF5733");
+                                    
                                     tr.Append(tc6);
 
                                 }
@@ -901,25 +886,17 @@ namespace RoofSafety.Controllers
                                     tc1.Append(SetColor("#D3D3D3"));
                                     tc1.Append(new Paragraph(new Run(new Text("Unlikely"))));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("2"))));
-                                    tc2.Append(SetColor("#0BDA51"));
+                                    TableCell tc2 = CenterAndColour("2", "#0BDA51");
+                                  
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("4"))));
-                                    tc3.Append(SetColor("#0096FF"));
-                                    tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("6"))));
-                                    tc4.Append(SetColor("#0096FF"));
+                                    TableCell tc3 = CenterAndColour("4", "#0096FF");
+                                     tr.Append(tc3);
+                                    TableCell tc4 = CenterAndColour("6", "#0096FF");
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("8"))));
-                                    tc5.Append(SetColor("yellow"));
+                                    TableCell tc5 = CenterAndColour("8", "yellow");
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("10"))));
-                                    tc6.Append(SetColor("yellow"));
+                                    TableCell tc6 = CenterAndColour("10", "yellow");
+
                                     tr.Append(tc6);
 
                                 }
@@ -930,26 +907,20 @@ namespace RoofSafety.Controllers
                                     tc1.Append(SetColor("#D3D3D3"));
                                     tc1.Append(new Paragraph(new Run(new Text("Rare"))));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("1"))));
-                                    tc2.Append(SetColor("#0BDA51"));
+                        
+                                    TableCell tc2 = CenterAndColour("1", "#0BDA51");
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("3"))));
-                                    tc3.Append(SetColor("#0BDA51"));
+                                    TableCell tc3 = CenterAndColour("3", "#0BDA51"); 
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("4"))));
-                                    tc4.Append(SetColor("#0BDA51"));
+
+                                    TableCell tc4 = CenterAndColour("4", "#0BDA51");
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("4"))));
-                                    tc5.Append(SetColor("#0096FF"));
+
+                                    TableCell tc5 = CenterAndColour("4", "##0096FF");
+
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("5"))));
-                                    tc6.Append(SetColor("#0096FF"));
-                                    tr.Append(tc6);
+                                    TableCell tc6 = CenterAndColour("5", "##0096FF");
+                                     tr.Append(tc6);
 
                                 }
                                 {
@@ -1658,6 +1629,24 @@ namespace RoofSafety.Controllers
             return View("Word", ret);
         }
 
+        private static TableCell CenterAndColour(string txt, string clr)
+        {
+            TableCell tc2 = new TableCell();
+            Paragraph pp = new Paragraph(new Run(new Text(txt)))
+            {
+                ParagraphProperties = new ParagraphProperties()
+                {
+                    Justification = new Justification()
+                    {
+                        Val = JustificationValues.Center
+                    }
+                }
+            };
+            tc2.Append(pp);
+            tc2.Append(SetColor(clr));
+            return tc2;
+        }
+
         private static TableCell CellForeColor(string text, string colour)
         {
             TableCell tcInspDte = new TableCell();
@@ -1732,7 +1721,7 @@ namespace RoofSafety.Controllers
                 Fill = col,
                 Val = ShadingPatternValues.Clear
             };
-
+            
             tcp.Append(shading);
             return tcp;
         }
@@ -1930,7 +1919,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,InspectionID,EquipTypeID,Location,Notes,Inspection")] InspEquip inspEquip)
+        public async Task<IActionResult> Create( InspEquip inspEquip)
         {
             var xx = ModelState.Values.SelectMany(i => i.Errors);
             //if (ModelState.IsValid)

@@ -13,9 +13,7 @@
 
 @if (ViewBag.BuildingID != 0)
 {
-            <td>
-
-    <p>
+            <td><p>
         <a asp-action="Create" asp-route-id="@ViewBag.BuildingID">Add New Inspections</a>
     </p>
             </td>
@@ -61,9 +59,12 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.InspectionDate)
+                    <a asp-area="" asp-route-id="@item.id" asp-action="Edit">@item.InspectionDate.ToString("dd-MMM-yyyy")</a>
+             
                 </td>
                 <td>
+                   
+
                     @Html.DisplayFor(modelItem => item.Areas)
                 </td>
                 <td>

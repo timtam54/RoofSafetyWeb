@@ -184,7 +184,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Createjs([Bind("id,HazardID,EquipTypeTestID,Haz")] EquipTypeTestHazards equipTypeTestHazards)
+        public async Task<JsonResult> Createjs(EquipTypeTestHazards equipTypeTestHazards)
         {
             
 //            if (ModelState.IsValid)
@@ -234,7 +234,7 @@ namespace RoofSafety.Controllers
 
                 [HttpPost]
                 [ValidateAntiForgeryToken]
-                public async Task<IActionResult> Edit(int id, [Bind("id,EquipTypeDesc")] EquipType equipType)
+                public async Task<IActionResult> Edit(int id, EquipType equipType)
                 {
                     if (id != equipType.id)
                     {

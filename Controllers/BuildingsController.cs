@@ -64,7 +64,7 @@ namespace RoofSafety.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,BuildingName,ClientID,Address")] Building building)
+        public async Task<IActionResult> Create(Building building)
         {
             Client? cli = _context.Client.Find(building.ClientID);
             building.Client = cli!;
@@ -113,7 +113,7 @@ namespace RoofSafety.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,BuildingName,ClientID,Address")] Building building)
+        public async Task<IActionResult> Edit(int id,Building building)
         {
             if (id != building.id)
             {

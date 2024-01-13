@@ -61,7 +61,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,EquipTypeDesc,CompliantInfo")] EquipType equipType)
+        public async Task<IActionResult> Create(EquipType equipType)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,EquipTypeDesc,CompliantInfo")] EquipType equipType)
+        public async Task<IActionResult> Edit(int id, EquipType equipType)
         {
             if (id != equipType.id)
             {

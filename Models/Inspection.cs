@@ -12,9 +12,15 @@ namespace RoofSafety.Models
         public Building? Building { get; set; }
         [Display(Name = "Building")]
         public int BuildingID { get; set; }
-        [Display(Name = "Inspector")]
+        [Display(Name = "Main Inspector")]
         public int? InspectorID { get; set; }
+
         public Employee? Inspector { get; set; }
+
+        [Display(Name = "Second Inspector")]
+        public int? Inspector2ID { get; set; }
+
+        
         public string? TestingInstruments { get; set; }
         public string? Photo { get; set; }
         public string? Status { get; set; }

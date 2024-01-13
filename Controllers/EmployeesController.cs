@@ -54,7 +54,7 @@ namespace RoofSafety.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Given,Surname,Inspector,Password,Email")] Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace RoofSafety.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Given,Surname,Inspector,Password,Email")] Employee employee)
+        public async Task<IActionResult> Edit(int id,  Employee employee)
         {
             if (id != employee.id)
             {

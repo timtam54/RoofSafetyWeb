@@ -142,7 +142,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,EquipTypeID,Test,Severity")] EquipTypeTest equipTypeTest)//,string inspequipid)
+        public async Task<IActionResult> Create(EquipTypeTest equipTypeTest)//,string inspequipid)
         {
             var errors = ModelState.Select(x => x.Value.Errors)
                            .Where(y => y.Count > 0)
@@ -180,7 +180,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( [Bind("id,EquipTypeID,Test,Severity")] EquipTypeTest equipTypeTest, int iettid)
+        public async Task<IActionResult> Edit( EquipTypeTest equipTypeTest, int iettid)
         {
             ////if (id != equipTypeTest.id)
             ////{

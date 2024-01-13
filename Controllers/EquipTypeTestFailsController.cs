@@ -57,7 +57,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,EquipTypeTestID,FailReason")] EquipTypeTestFail equipTypeTestFail)
+        public async Task<IActionResult> Create(EquipTypeTestFail equipTypeTestFail)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace RoofSafety.Controllers
 
                 [HttpPost]
                 [ValidateAntiForgeryToken]
-                public async Task<IActionResult> Create([Bind("id,EquipTypeID,Test,Severity")] EquipTypeTest equipTypeTest,string inspequipid)
+                public async Task<IActionResult> Create(EquipTypeTest equipTypeTest,string inspequipid)
                 {
                     if (ModelState.IsValid)
                     {
@@ -119,7 +119,7 @@ namespace RoofSafety.Controllers
 
                 [HttpPost]
                 [ValidateAntiForgeryToken]
-                public async Task<IActionResult> Edit( [Bind("id,EquipTypeID,Test,Severity")] EquipTypeTest equipTypeTest, int iettid)
+                public async Task<IActionResult> Edit( EquipTypeTest equipTypeTest, int iettid)
                 {
                     ////if (id != equipTypeTest.id)
                     ////{

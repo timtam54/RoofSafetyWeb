@@ -4,9 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Inspection</h4>
+<h2>Edit Inspection</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,12 +20,20 @@
                 <label asp-for="InspectorID" class="control-label"></label>
                 <select asp-for="InspectorID" class="form-control" asp-items="@(new SelectList(ViewBag.InspectorID, "Value", "Text"))"></select>
             </div>
+            <div class="form-group">
+                <label asp-for="Inspector2ID" class="control-label"></label>
+                <select asp-for="Inspector2ID" class="form-control" asp-items="@(new SelectList(ViewBag.InspectorID, "Value", "Text"))"></select>
+            </div>
             <img src="@Model.Photo" width="@RoofSafety.Controllers.HomeController.WidthImage" />
             <div class="form-group" hidden="hidden">
                 <label asp-for="Photo" class="control-label"></label>
                 <select asp-for="Photo" class="form-control" asp-items="@(new SelectList(ViewBag.InspectorID, "Value", "Text"))"></select>
             </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.Status, "Value", "Text"))"></select>
 
+            </div>
             <div class="form-group">
                 <label asp-for="Areas" class="control-label"></label>
                 <input asp-for="Areas" class="form-control" />

@@ -31,8 +31,8 @@ namespace RoofSafety.Controllers
            // var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
             ViewBag.BuildingDesc = "All Buildings";
             if (status==null)
-                return View(await _context.Inspection.Where(i=>i.Status=="A").Include(i => i.Building).Include(i => i.Inspector).ToListAsync());
-            return View(await _context.Inspection.Include(i => i.Building).Include(i=>i.Inspector).ToListAsync());
+                return View(await _context.Inspection.Where(i=>i.Status=="A").OrderByDescending(i=>i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync());
+            return View(await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i=>i.Inspector).ToListAsync());
         }
 
         // GET: Inspections/Details/5
@@ -66,7 +66,7 @@ namespace RoofSafety.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,InspectionDate,Areas,BuildingID,InspectorID,TestingInstruments")] Inspection inspection)
+        public async Task<IActionResult> Create(Inspection inspection)
         {
       //      if (ModelState.IsValid)
             {
@@ -95,12 +95,22 @@ namespace RoofSafety.Controllers
                 inspection.Photo = _imageservice.GetImageURL(inspection.Photo);
             ViewBag.InspectorID = (from xx in _context.Employee select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
             ViewBag.BuildingID = (from xx in _context.Building select new SelectListItem() { Value = xx.id.ToString(), Text = xx.BuildingName }).ToList();
+            List<SelectListItem> stat = new List<SelectListItem>();
+            SelectListItem si;
+            si = new SelectListItem(); si.Text = "Active";si.Value = "A";
+            stat.Add(si);
+            si = new SelectListItem(); si.Text = "Complete"; si.Value = "C";
+            stat.Add(si);
+            si = new SelectListItem(); si.Text = "Pending"; si.Value = "P";
+            stat.Add(si);
+
+            ViewBag.Status = stat;
             return View(inspection);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,InspectionDate,Areas,BuildingID,InspectorID,TestingInstruments")] Inspection inspection)
+        public async Task<IActionResult> Edit(int id, Inspection inspection)
         {
             if (id != inspection.id)
             {
@@ -119,7 +129,9 @@ namespace RoofSafety.Controllers
                         insp.BuildingID = inspection.BuildingID;
                         insp.InspectorID = inspection.InspectorID;
                         insp.TestingInstruments = inspection.TestingInstruments;
-                        //inspection.id = 0;
+                        insp.Inspector2ID = inspection.Inspector2ID;
+                        insp.Status= inspection.Status;
+
                         _context.Update(insp);
                         await _context.SaveChangesAsync();
                     }
