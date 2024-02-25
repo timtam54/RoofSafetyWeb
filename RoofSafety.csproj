@@ -31,7 +31,6 @@
     <Folder Include="Services\" />
     <Folder Include="Services\Abstract\" />
     <Folder Include="Services\Concrete\" />
-    <Folder Include="Controllers\API\" />
     <Folder Include="Views\EquipTypeTestFails\" />
   </ItemGroup>
 

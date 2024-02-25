@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RoofSafety.Models.Building>
+﻿@model RoofSafety.Models.BuildingsSearch
 
 @{
     ViewData["Title"] = "Buildings for client " + @ViewBag.ClientDesc;
@@ -7,28 +7,39 @@
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.ClientID">Add New Building</a>
     <input type="button" id="create_pdf" value="Generate PDF">
+    
 </p>
-<form class="form">
+<form class="form" asp-action="Index">
+    <div>Search<input asp-for="Search" /><button type="submit">Filter</button></div>
     <table class="table">
         
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.BuildingName)
+                    Building Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Address)
+                    Address
                 </th>
 
                 <th>
-                    @Html.DisplayNameFor(model => model.Client)
+                    Client
+                </th>
+                <th>
+                    Contact Name
+                </th>
+                <th>
+                    Contact Number
+                </th>
+                <th>
+                    Access Details
                 </th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Buildings.OrderBy(i=>i.BuildingName))
             {
                 <tr>
                     <td>
@@ -40,6 +51,16 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Client.name)
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccessDetails)
+                    </td>
+
                     <td>
                         <a asp-action="InspectionsForBuilding" asp-controller="Inspections" asp-route-id="@item.id">Inspections</a>
                     </td>

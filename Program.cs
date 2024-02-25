@@ -21,7 +21,8 @@ builder.Services.AddCors(options =>
             policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();//.WithOrigins("https://localhost",                "https://localhost:7284/");
         });
 });
-builder.Services.AddDbContext<dbcontext>(options => options.UseSqlServer("Server=tcp:perthcitycranes.database.windows.net,1433;Initial Catalog=RoofSafetySolutions;Persist Security Info=False;User ID=PerthCityCranes;Password=ABC1234!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+//builder.Services.AddDbContext<dbcontext>(options => options.UseSqlServer("Server=tcp:perthcitycranes.database.windows.net,1433;Initial Catalog=RoofSafetySolutions;Persist Security Info=False;User ID=PerthCityCranes;Password=ABC1234!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+builder.Services.AddDbContext<dbcontext>(options => options.UseSqlServer("Server=tcp:tccplantallocation.database.windows.net,1433;Initial Catalog=RoofSafetySolutions;Persist Security Info=False;User ID=tccplantallocation;Password=Password123!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
 builder.Services.Configure<AzureOptions>(builder.Configuration.GetSection("Azure"));
 
 builder.Services.AddTransient<IImageService,ImageService>();

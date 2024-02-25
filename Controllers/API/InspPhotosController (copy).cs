@@ -26,11 +26,12 @@ namespace RSSAPI.Controllers
 
         public async Task<ActionResult<IEnumerable<InspPhoto>>> GetInspPhoto(string id)
         {
+            string[] val= id.Split('~');
             if (_context.InspPhoto == null)
             {
                 return NotFound();
             }
-            return await _context.InspPhoto.Where(i=>i.InspEquipID==Convert.ToInt32(id)).ToListAsync();
+            return await _context.InspPhoto.Where(i => i.InspEquipID == Convert.ToInt32(val[0]) && i.SourceTable == val[1]).ToListAsync();
         }
 
        
@@ -41,6 +42,7 @@ namespace RSSAPI.Controllers
         [HttpGet("int/{id:int}")]
         public async Task<ActionResult<IEnumerable<InspPhoto>>> GetInspPhoto(int id)
         {
+            //string[] xx = id.Split('~');
             if (_context.InspPhoto == null)
             {
                 return NotFound();
@@ -98,6 +100,7 @@ namespace RSSAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInspPhoto(int id)
         {
+
             if (_context.InspPhoto == null)
             {
                 return NotFound();

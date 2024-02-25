@@ -80,13 +80,13 @@ namespace RoofSafety.Controllers
             var xxx = _context.InspEquip.Where(i => i.InspectionID == id).Include(i => i.EquipType).Include(i => i.Inspection).Include(i=>i.EquipType);
             var yyy= await xxx.ToListAsync();
             ViewBag.InspectionID = id;
-            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = ("Building " + bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")),ID=ie.BuildingID }).FirstOrDefault();
+            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")),ID=ie.BuildingID }).FirstOrDefault();
             ViewBag.InspectionDesc = xx.Desc;
             ViewBag.BuildingID = xx.ID;
             return View("Index",xxx);
         }
 
-        private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId,decimal htw)
+        private static void AddImageToBodyWordDoc(WordprocessingDocument wordDoc, string relationshipId,decimal htw)
         {
 
             // Define the reference of the image.
@@ -168,6 +168,87 @@ namespace RoofSafety.Controllers
                  });
         }
 
+        private static void AddImageToBody(Body wordDoc, string relationshipId, decimal htw)
+        {
+
+            // Define the reference of the image.
+            var element =
+                 new Drawing(
+                     new DW.Inline(
+                         new DW.Extent() { Cx = 990000L * 5, Cy = Convert.ToInt64(792000L * 5 * htw) },
+                         new DW.EffectExtent()
+                         {
+                             LeftEdge = 0L,
+                             TopEdge = 0L,
+                             RightEdge = 0L,
+                             BottomEdge = 0L
+                         },
+                         new DW.DocProperties()
+                         {
+                             Id = (UInt32Value)1U,
+                             Name = "Picture 1"
+                         },
+                         new DW.NonVisualGraphicFrameDrawingProperties(
+                             new A.GraphicFrameLocks() { NoChangeAspect = true }),
+                         new A.Graphic(
+                             new A.GraphicData(
+                                 new PIC.Picture(
+                                     new PIC.NonVisualPictureProperties(
+                                         new PIC.NonVisualDrawingProperties()
+                                         {
+                                             Id = (UInt32Value)0U,
+                                             Name = "New Bitmap Image.jpg"
+                                         },
+                                         new PIC.NonVisualPictureDrawingProperties()),
+                                     new PIC.BlipFill(
+                                         new A.Blip(
+                                             new A.BlipExtensionList(
+                                                 new A.BlipExtension()
+                                                 {
+                                                     Uri =
+                                                        "{28A0092B-C50C-407E-A947-70E740481C1C}"
+                                                 })
+                                         )
+                                         {
+                                             Embed = relationshipId,
+                                             CompressionState =
+                                             A.BlipCompressionValues.Print
+                                         },
+                                         new A.Stretch(
+                                             new A.FillRectangle())),
+                                     new PIC.ShapeProperties(
+                                         new A.Transform2D(
+                                             new A.Offset() { X = 0L, Y = 0L },
+                                             new A.Extents() { Cx = 990000L * 5, Cy = Convert.ToInt64(792000L * 5 * htw) }),
+                                         new A.PresetGeometry(
+                                             new A.AdjustValueList()
+                                         )
+                                         { Preset = A.ShapeTypeValues.Rectangle }))
+                             )
+                             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                     )
+                     {
+                         DistanceFromTop = (UInt32Value)0U,
+                         DistanceFromBottom = (UInt32Value)0U,
+                         DistanceFromLeft = (UInt32Value)0U,
+                         DistanceFromRight = (UInt32Value)0U,
+                         EditId = "50D07946"
+                     });
+
+            // Append the reference to body, the element should be in a Run.
+            wordDoc.AppendChild(//(new Paragraph(new Run(element)));
+
+                 new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(element))
+                 {
+                     ParagraphProperties = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties()
+                     {
+                         Justification = new DocumentFormat.OpenXml.Wordprocessing.Justification()
+                         {
+                             Val = DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Center
+                         }
+                     }
+                 });
+        }
 
         private static DocumentFormat.OpenXml.Wordprocessing.Header GeneratePicHeader(string relationshipId)
         {
@@ -327,7 +408,7 @@ namespace RoofSafety.Controllers
                 }
             }
             ViewBag.InspectionID = id;
-            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = ("Building " + bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")), ID = ie.BuildingID }).FirstOrDefault();
+            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = ( bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")), ID = ie.BuildingID }).FirstOrDefault();
             ViewBag.InspectionDesc = xx.Desc;
             ViewBag.BuildingID = xx.ID;
             if (hpw == "w")
@@ -341,54 +422,102 @@ namespace RoofSafety.Controllers
                     {
                         MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
                         mainPart.Document = new Document();
+                        {
+                            Body bodycover = mainPart.Document.AppendChild(new Body());
+                            Table table = new Table();
+                            FontSize fontSizep42 = new FontSize() { Val = "42" };
+
+                            //TableProperties tblProp = new TableProperties(
+                            //   fontSizep42,
+                            //    new TableBorders(
+                            //        new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
+                            //        new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
+                            //        new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
+                            //        new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
+                            //        new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
+                            //        new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 }
+                            //    )
+                            //);
+
+                            //table.AppendChild<TableProperties>(tblProp);
+
+                            TableRow tr = new TableRow();
+//    new TableRowProperties(
+  //      new TableRowHeight() { Val = Convert.ToUInt32("100"),HeightType= HeightRuleValues.AtLeast }));
+                            
+
+                            TableCell t3 = CellFont("Roof Safety Solutions", 30, false, "white",true);
+                            t3.Append(SetColor("Navy"));
+                            t3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50" }));
+
+                            tr.Append(t3);
+                            TableCell t2 = CellFont("Height and Safety Audit Report for " + xx.Desc, 26, false, "black",true);
+                            t2.Append(SetColor("RoyalBlue"));
+                            t3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "30" }));
+
+                            tr.Append(t2);
+                            table.Append(tr);
+                            bodycover.AppendChild(table);
+                            Paragraph paracover = bodycover.AppendChild(new Paragraph());
+                            Run runcover = paracover.AppendChild(new Run());
+                            Break pgbrkcover = new Break();
+                            pgbrkcover.Type = BreakValues.Page;
+                            runcover.AppendChild(pgbrkcover);
+                        }
                         Body body = mainPart.Document.AppendChild(new Body());
-                        Paragraph para = body.AppendChild(new Paragraph());
-                        Run run = para.AppendChild(new Run());
-                        ParagraphProperties paraProperties = new ParagraphProperties();
-                        ParagraphBorders paraBorders = new ParagraphBorders();
-                        BottomBorder bottom = new BottomBorder() { Val = BorderValues.Single, Color = "auto", Size = (UInt32Value)12U, Space = (UInt32Value)1U };
-                        paraBorders.Append(bottom);
-                        paraProperties.Append(paraBorders);
-                        para.Append(paraProperties);
-                        RunProperties runProperties = run.AppendChild(new RunProperties());
-                        FontSize fontSize1 = new FontSize() { Val = "36" };
-                        runProperties.Append(fontSize1);
-                        Bold bold = new Bold();
-                        bold.Val = OnOffValue.FromBoolean(true);
-                        runProperties.AppendChild(bold);
-                        run.AppendChild(new Text("Height and Safety Audit Report for " + xx.Desc));
-                        run.AppendChild(new Break());
+                        {
+                            
+                            Paragraph para = body.AppendChild(new Paragraph());
+                            Run run = para.AppendChild(new Run());
+                            ParagraphProperties paraProperties = new ParagraphProperties();
+                            ParagraphBorders paraBorders = new ParagraphBorders();
+                            BottomBorder bottom = new BottomBorder() { Val = BorderValues.Single, Color = "auto", Size = (UInt32Value)12U, Space = (UInt32Value)1U };
+                            paraBorders.Append(bottom);
+                            paraProperties.Append(paraBorders);
+                            para.Append(paraProperties);
+                            RunProperties runProperties = run.AppendChild(new RunProperties());
+                            FontSize fontSize1 = new FontSize() { Val = "36" };
+                            runProperties.Append(fontSize1);
+                            Bold bold = new Bold();
+                            bold.Val = OnOffValue.FromBoolean(true);
+                            runProperties.AppendChild(bold);
+                            run.AppendChild(new Text("Height and Safety Audit Report for " + xx.Desc));
+
+                            run.AppendChild(new Break());
+                        }
                         if (ret.Photo != null)
                         {
                             string imgurl = ret.Photo.Replace("%0D%0A", "").TrimEnd();
 
-                            await InsertImage(wordDocument, mainPart, imgurl);
+                            await InsertImage(body,wordDocument, mainPart, imgurl);
                         }
                         Paragraph para2 = body.AppendChild(new Paragraph());
-                        Run run2 = para2.AppendChild(new Run());
-                        RunProperties runProperties2 = run2.AppendChild(new RunProperties());
-                        FontSize fontSize24 = new FontSize() { Val = "24" };
-                        runProperties2.Append(fontSize24);
-                        run2.AppendChild(new Text("Roof Safety Solutions Pty Ltd"));
-                        run2.AppendChild(new Break());
-                        run2.AppendChild(new Text("38 Radius Loop, Bayswater WA 6053"));
-                        run2.AppendChild(new Break());
-                        run2.AppendChild(new Text("p: 08 9477 4884"));
-                        run2.AppendChild(new Break());
-                        run2.AppendChild(new Text("f: 08 9277 3009"));
-                        run2.AppendChild(new Break());
-                        run2.AppendChild(new Text("e: admin@roofsafetysolutions.com.au"));
-                        run2.AppendChild(new Break());
-                        Break pgbrk = new Break();
-                        pgbrk.Type = BreakValues.Page;
-                        run2.AppendChild(pgbrk);
+                        {
+                            
+                            Run run2 = para2.AppendChild(new Run());
+                            RunProperties runProperties2 = run2.AppendChild(new RunProperties());
+                            FontSize fontSize24 = new FontSize() { Val = "24" };
+                            runProperties2.Append(fontSize24);
+                            run2.AppendChild(new Text("Roof Safety Solutions Pty Ltd"));
+                            run2.AppendChild(new Break());
+                            run2.AppendChild(new Text("38 Radius Loop, Bayswater WA 6053"));
+                            run2.AppendChild(new Break());
+                            run2.AppendChild(new Text("p: 08 9477 4884"));
+                            run2.AppendChild(new Break());
+                            run2.AppendChild(new Text("f: 08 9277 3009"));
+                            run2.AppendChild(new Break());
+                            run2.AppendChild(new Text("e: admin@roofsafetysolutions.com.au"));
+                            run2.AppendChild(new Break());
+                            Break pgbrk = new Break();
+                            pgbrk.Type = BreakValues.Page;
+                            run2.AppendChild(pgbrk);
 
+                           
+                        }
                         SectionProperties sectionProps = new SectionProperties();
                         PageMargin pageMargin = new PageMargin() { Top = 1008, Right = (UInt32Value)1008U, Bottom = 1008, Left = (UInt32Value)1008U, Header = (UInt32Value)720U, Footer = (UInt32Value)720U, Gutter = (UInt32Value)0U };
                         sectionProps.Append(pageMargin);
                         mainPart.Document.Body?.Append(sectionProps);
-
-
                         Run run3 = para2.AppendChild(new Run());
                         RunProperties runProperties3 = run3.AppendChild(new RunProperties());
 
@@ -397,7 +526,6 @@ namespace RoofSafety.Controllers
 
                             var newHeaderPart = mainPart.AddNewPart<HeaderPart>();
                             var imgPart = newHeaderPart.AddImagePart(ImagePartType.Png);
-                         //  var image = GetImageFromFile(logoFileName);
                             var imagePartID = newHeaderPart.GetIdOfPart(imgPart);
                             // ^^^^^^^^^^^^^GenerateImagePartContent(imgPart, image);
                             //////////
@@ -405,7 +533,6 @@ namespace RoofSafety.Controllers
                             {
                                 var bytes = await client.GetByteArrayAsync("https://www.roofsafetysolutions.com.au/wp-content/uploads/2020/06/roof_safety_logo.png");// ret.Photo);
                                 MemoryStream stream = new MemoryStream(bytes);
-
                                 imgPart.FeedData(stream);
                                 stream.Close();
                                 stream.Dispose();
@@ -442,7 +569,7 @@ namespace RoofSafety.Controllers
                             runp2.AppendChild(new Break());
                             runp2.AppendChild(new Text("5. Risk Assessment"));
                             runp2.AppendChild(new Break());
-                            runp2.AppendChild(new Text("6.Inspection Report"));
+                            runp2.AppendChild(new Text("6. Inspection Report"));
                             runp2.AppendChild(new Break());
                             runp2.AppendChild(new Text("7. Summary"));
                             runp2.AppendChild(new Break());
@@ -534,7 +661,7 @@ namespace RoofSafety.Controllers
                         pgbrkeh.Type = BreakValues.Page;
                         runPropertiesExec.AppendChild(pgbrkeh);
 
-                        AddHeader(runExec, runPropertiesExec, "2. Executive History");
+                        AddHeader(runExec, runPropertiesExec, "2. Executive Summary");
 
                         Body bodyeh = mainPart.Document.AppendChild(new Body());
                         Paragraph paraeh = bodyeh.AppendChild(new Paragraph());
@@ -549,7 +676,13 @@ namespace RoofSafety.Controllers
                         runeh.AppendChild(new Text("Roof Safety Solutions were contracted to perform the routine audit of " + ret.Title + "."));
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The following existing height safety equipment is installed on site:"));
-                        runeh.AppendChild(new Break()); 
+                        runeh.AppendChild(new Break());
+                        foreach (var itmdesc in ret.Items)
+                        {
+                            runeh.AppendChild(new Text("- " + itmdesc.EquipName + " " + itmdesc.Manufacturer + " " + itmdesc.SerialNo )); runeh.AppendChild(new Break());
+                        }
+                        runeh.AppendChild(new Break());
+                        runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The inspection was carried out on the " + ret.InspDate.ToLongDateString() + " by height safety inspectors from Roof Safety Solutions Pty Ltd. The inspection identifies any risks and reports on compliance in relation to the Australian Standards, Acts and Regulations that form the basis for height safety in Australia."));
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("This report contains:"));
@@ -1026,6 +1159,7 @@ namespace RoofSafety.Controllers
                                   
 
                                     Table tableInsp = new Table();
+
                                     FontSize fontSizeInsp = new FontSize() { Val = "42" };
 
                                     TableProperties tblPropInsp = new TableProperties(
@@ -1063,21 +1197,65 @@ namespace RoofSafety.Controllers
 
                                         boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                        Run runInsp = new Run(new Text("Risk:"));
-                                        runInsp.AppendChild(boldinsp);
-                                        tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                        {
+                                            Paragraph paraxx = tcInspDteLbl.AppendChild(new Paragraph());
+
+                                            ParagraphProperties paraPropsx = new ParagraphProperties();
+                                            SpacingBetweenLines spacingx = new SpacingBetweenLines() { Before = "15", After = "0" };
+                                            paraPropsx.SpacingBetweenLines = spacingx;
+                                            paraxx.ParagraphProperties = paraPropsx;
+
+                                            Run runInsp = paraxx.AppendChild(new Run());
+                                            runInsp.AppendChild(new Text("Risk:"));
+                                            runInsp.AppendChild(boldinsp);
+                                        }
+                                       // Run runInsp = new Run(new Text("Risk:"));
+                                       // 
+                                        //tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
                                         trInsp.Append(tcInspDteLbl);
 
 
+
                                         TableCell tcInspDte = new TableCell();
+                                        {
+                                            //TableCellProperties tcp = new TableCellProperties();
+                                            //TableCellVerticalAlignment tcVA = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center };
+                                            //tcp.Append(tcVA);
+                                            //tcInspDte.Append(tcp);
+                                        }
+
+                                        TableCellProperties tcp = new TableCellProperties();
+
+                                        
+
+                                        //set the alignment to "Center"
+                                        TableCellVerticalAlignment tcVA = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center };
+
+                                        //append the TableCellVerticalAlignment instance
+                                        tcp.Append(tcVA);
+                                        tcInspDte.Append(tcp);
+
                                         string colour;
                                         if (item.Risk == "Maintained")
                                             colour = "#D3D3D3";
                                         else
                                             colour =RoofSafety.Models.InspEquipTest.getcolour(item.MaxRisk);
-                                        tcInspDte.Append(SetColor(colour));
+                                       tcInspDte.Append(SetColor(colour));
                                         tcInspDte.Append(new GridSpan { Val = 2 });
-                                        tcInspDte.Append(new Paragraph(new Run(new Text(item.Risk))));
+
+                                        Paragraph parax = tcInspDte.AppendChild(new Paragraph());
+
+                                        ParagraphProperties paraProps = new ParagraphProperties();
+                                        SpacingBetweenLines spacing = new SpacingBetweenLines() {Before="15", After = "0" };
+                                        paraProps.SpacingBetweenLines = spacing;
+                                        parax.ParagraphProperties = paraProps;
+
+                                        Run runx = parax.AppendChild(new Run());
+                                        runx.AppendChild(new Text(item.Risk));
+
+
+
+                                     //   tcInspDte.Append(new Paragraph(new Run(new Text(item.Risk))));
                                         trInsp.Append(tcInspDte);
                                         tableInsp.Append(trInsp);
                                     }
@@ -1413,28 +1591,28 @@ namespace RoofSafety.Controllers
                             
                             foreach (var item in ret.Items)
                             {
-                                string colour = item.Pass ? "Green" : "Black";
+                                string colour = item.Pass ? "Green" : "Red";
                                 {
                                     TableRow trx = new TableRow();
                                     table.Append(trx);
-                                    TableCell t1 = CellFont(item.EquipName?.ToString(), 24, false, colour);
+                                    TableCell t1 = CellFont(item.EquipName?.ToString(), 24, false, "Black");
 //                                    t1.Append(new Paragraph(new Run(new Text(item.EquipName?.ToString()))));
                                     trx.Append(t1);
-                                    TableCell t2 = CellFont(item.Manufacturer?.ToString(), 24, false, colour);
+                                    TableCell t2 = CellFont(item.Manufacturer?.ToString(), 24, false, "Black");
                               
                                     trx.Append(t2);
-                                    TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, colour);
+                                    TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, "Black");
                                     trx.Append(t3);
 
                                     TableCell t4 = CellFont((item.Pass) ? "Compliant" : "Non-Compliant", 24, false, colour);
                   
                                     trx.Append(t4);
-                                    TableCell t5 = CellFont(item.Installer, 24, false, colour);
+                                    TableCell t5 = CellFont(item.Installer, 24, false, "Black");
  
                                     trx.Append(t5);
-                                    TableCell t6 = CellFont(item.Rating, 24, false, colour);
+                                    TableCell t6 = CellFont(item.Rating, 24, false, "Black");
                                     trx.Append(t6);
-                                    TableCell t7 = CellFont(item.SerialNo, 24, false, colour);
+                                    TableCell t7 = CellFont(item.SerialNo, 24, false, "Black");
                                      trx.Append(t7);
 
                                 }
@@ -1447,22 +1625,22 @@ namespace RoofSafety.Controllers
                                     {
                                         TableRow trx = new TableRow();
                                         table.Append(trx);
-                                        TableCell t1 = CellFont(item.EquipName, 24, false, colour);
+                                        TableCell t1 = CellFont(item.EquipName, 24, false, "Black");
                                         trx.Append(t1);
-                                        TableCell t2 = CellFont(item.Manufacturer, 24, false, colour);
+                                        TableCell t2 = CellFont(item.Manufacturer, 24, false, "Black");
                                         trx.Append(t2);
 
-                                        TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, colour);
+                                        TableCell t3 = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 24, false, "Black");
                                         trx.Append(t3);
 
                                         TableCell t4 = CellFont(item.Result, 24, false, colour);
                                         trx.Append(t4);
 
-                                        TableCell t5 = CellFont(item.Installer, 24, false, colour);
+                                        TableCell t5 = CellFont(item.Installer, 24, false, "Black");
                                         trx.Append(t5);
-                                        TableCell t6 = CellFont(item.Rating, 24, false, colour);
+                                        TableCell t6 = CellFont(item.Rating, 24, false, "Black");
                                         trx.Append(t6);
-                                        TableCell t7 = CellFont(item.SerialNos[i], 24, false, colour);
+                                        TableCell t7 = CellFont(item.SerialNos[i], 24, false, "Black");
                                         trx.Append(t7);
                                         
                                     }
@@ -1661,7 +1839,7 @@ namespace RoofSafety.Controllers
             return tcInspDte;
         }
 
-        private static TableCell CellFont(string vall,int fontsize, bool bold,string colour="black")
+        private static TableCell CellFont(string vall,int fontsize, bool bold,string colour="black",bool FullPage=false)
         {
 
             TableCell tc1 = new TableCell();
@@ -1692,8 +1870,24 @@ namespace RoofSafety.Controllers
 
 
             runXX.Append(runProperties1);
+          
+            if (FullPage)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    runXX.Append(new Break());
+                }
+                
+            }
             runXX.Append(text);
-         //   runXX.RunProperties = rprp;
+            if (FullPage)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    runXX.Append(new Break());
+                }
+
+            }
             paragraph.Append(runXX);
             tc1.Append(paragraph);
             return tc1;
@@ -1742,7 +1936,7 @@ namespace RoofSafety.Controllers
             run3.AppendChild(new Break());
         }
 
-        private static async Task InsertImage(WordprocessingDocument wordDocument, MainDocumentPart mainPart, string imgurl)
+        private static async Task InsertImage(Body Body, WordprocessingDocument wordDocument, MainDocumentPart mainPart, string imgurl)
         {    ImagePart imagePart = wordDocument.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
            
             using (var client = new HttpClient())
@@ -1766,9 +1960,11 @@ namespace RoofSafety.Controllers
                 imagePart.FeedData(stream);
                 stream.Close();
                 stream.Dispose();
-                AddImageToBody(wordDocument, mainPart.GetIdOfPart(imagePart), (decimal)hSize/(decimal)wSize);
+                AddImageToBody(Body, mainPart.GetIdOfPart(imagePart), (decimal)hSize/(decimal)wSize);
             }
         }
+
+
 
         private static async Task InsertImage(TableCell tc1,WordprocessingDocument wordDocument, MainDocumentPart mainPart, string imgurl)
         {

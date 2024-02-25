@@ -34,7 +34,7 @@ namespace RSSAPI.Controllers
             }
             if (id=="")
                 return await _context.Building.ToListAsync();
-            var bds = await (from bd in _context.Building join cl in _context.Client on bd.ClientID equals cl.id  where (bd.BuildingName != null && bd.BuildingName.ToLower().Contains(id.ToLower())) || (bd.Address != null && bd.Address.ToLower().Contains(id.ToLower())) || (cl.name!.ToLower().Contains(id.ToLower()))  select new Building { id=bd.id, Address=bd.Address, BuildingName=cl.name + ""+ bd.BuildingName, ClientID=bd.ClientID } ).ToListAsync();
+            var bds = await (from bd in _context.Building join cl in _context.Client on bd.ClientID equals cl.id  where (bd.BuildingName != null && bd.BuildingName.ToLower().Contains(id.ToLower())) || (bd.Address != null && bd.Address.ToLower().Contains(id.ToLower())) || (cl.name!.ToLower().Contains(id.ToLower()))  select new Building { id=bd.id, Address=bd.Address, BuildingName = cl.name +"~"+ bd.BuildingName, ClientID=bd.ClientID } ).ToListAsync();
             return bds;
         }
 

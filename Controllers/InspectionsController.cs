@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RoofSafety.Data;
 using RoofSafety.Models;
 using RoofSafety.Services.Abstract;
@@ -28,13 +30,29 @@ namespace RoofSafety.Controllers
             ViewBag.ClientID = 0;
 
             ViewBag.BuildingID = 0;
-           // var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
+            // var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
             ViewBag.BuildingDesc = "All Buildings";
-            if (status==null)
-                return View(await _context.Inspection.Where(i=>i.Status=="A").OrderByDescending(i=>i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync());
-            return View(await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i=>i.Inspector).ToListAsync());
+            List<Inspection> ret = new List<Inspection>();
+            if (status == null)
+
+                ret = await _context.Inspection.Where(i => i.Status == "A").OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            else
+               ret = await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            var ss = await (from ie in _context.InspEquip where ret.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
+            foreach (var ins in ret)
+            {
+                var inspit = ss.Where(i => i.InspectionID == ins.id).FirstOrDefault();
+                if (inspit != null)
+                    ins.Inspector2ID = inspit.Count;
+            }
+            return View(ret);
         }
 
+        public class InspItemCount
+        {
+            public int InspectionID { get; set; }
+            public int Count { get; set; }
+        }
         // GET: Inspections/Details/5
         public async Task<IActionResult> Details(int? id)
         {

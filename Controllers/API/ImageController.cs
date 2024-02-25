@@ -41,11 +41,12 @@ namespace RSSAPI.Controllers
 
             MemoryStream ms = new MemoryStream(bytes);
             _imageservice.UploadAzure(imagefile.FileName!,ms);
-            if (imagefile.ParentTable == 1)
+            if (imagefile.ParentTable == 1 || imagefile.ParentTable == 3)
             {
                 InspPhoto inspPhoto = new InspPhoto();
                 inspPhoto.description = imagefile.ContentType;
                 inspPhoto.photoname = imagefile.FileName!;
+                inspPhoto.SourceTable = (imagefile.ParentTable == 1) ? "I" : "B";
                 inspPhoto.InspEquipID = imagefile.ParentID;
                 _context.InspPhoto.Add(inspPhoto);
                 /*

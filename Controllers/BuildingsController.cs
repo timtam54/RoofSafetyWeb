@@ -18,16 +18,26 @@ namespace RoofSafety.Controllers
         {
             _context = context;
         }
-
-        // GET: Buildings
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string search)
+        {
+            search = search.ToLower();
+            var dbcontext = _context.Building.Where(i => (i.BuildingName!=null && i.BuildingName.ToLower().Contains(search)) || (i.Address!=null && i.Address.ToLower().Contains(search))).Include(b => b.Client);
+            BuildingsSearch ret = new BuildingsSearch();
+            ret.Buildings = await dbcontext.ToListAsync();
+            return View(ret);
+        }
+            // GET: Buildings
+            public async Task<IActionResult> Index()
         {
             ViewBag.ClientDesc = "All Clients";
             ViewBag.ClientID = 0;
 
             var dbcontext = _context.Building.Include(b => b.Client);
-
-            return View(await dbcontext.ToListAsync());
+            BuildingsSearch ret = new BuildingsSearch();
+            ret.Buildings = await dbcontext.ToListAsync();
+            return View(ret);
         }
 
         // GET: Buildings/Details/5

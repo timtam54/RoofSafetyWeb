@@ -8,6 +8,8 @@ namespace RoofSafety.Models
             public int InspEquipID { get; set; }
             public string? photoname { get; set; }
             public string? description { get; set; }
+
+        public string SourceTable { get; set; }
         }
     
 }

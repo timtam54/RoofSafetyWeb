@@ -28,6 +28,8 @@ namespace RSSAPI.Controllers
             {
                 return NotFound();
             }
+            if (id=="*")
+                return await _context.Client.ToListAsync();
             return await _context.Client.Where(i=>i.name!=null && i.name.ToLower().Contains(id.ToLower())).ToListAsync();
         }
 

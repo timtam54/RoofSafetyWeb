@@ -12,6 +12,7 @@ namespace RoofSafety.Data
         }
 
         public DbSet<Client> Client { get; set; }
+       // public DbSet<BuildingPhoto> BuildingPhoto { get; set; }
         public DbSet<Building> Building { get; set; }
         public DbSet<Inspection> Inspection { get; set; }
         public DbSet<Version> Version { get; set; }

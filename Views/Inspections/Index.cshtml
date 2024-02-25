@@ -49,6 +49,9 @@
             <th>
                 Status
             </th>
+            <th>
+                Item Count
+            </th>
             <th></th>
             <th></th>
         </tr>
@@ -77,17 +80,15 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="p" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report pdf</a>
+                    <a asp-action="EquipForInspections" asp-controller="InspectionEquipments" asp-route-id="@item.id">@item.Inspector2ID</a>
                 </td>
                 <td>
-                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="h" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report html</a>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="p" asp-controller="InspectionEquipments" asp-route-id="@item.id">pdf</a>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="h" asp-controller="InspectionEquipments" asp-route-id="@item.id">html</a>
+                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="w" asp-controller="InspectionEquipments" asp-route-id="@item.id">word</a>
                 </td>
-                <td>
-                    <a asp-action="EquipForInspectionsAll" asp-route-hpw="w" asp-controller="InspectionEquipments" asp-route-id="@item.id">Inspection Report word</a>
-                </td>
-                <td>
-                    <a asp-action="EquipForInspections" asp-controller="InspectionEquipments" asp-route-id="@item.id">Edit Items</a>
-                </td>
+              
+               
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a><br/>
                     <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
