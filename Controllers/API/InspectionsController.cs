@@ -71,8 +71,23 @@ namespace RSSAPI.Controllers
             return inspection;
         }
 
-        // PUT: api/inspection/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet("copy/{id:int}")]
+        public async Task<ActionResult<Inspection>> CopyInspection(int id)
+        {
+            if (_context.Inspection == null)
+            {
+                return NotFound();
+            }
+            int newid = await RoofSafety.Controllers.InspectionsController.CopyInspection(id, -1, _context);
+            var inspection = await _context.Inspection.FindAsync(newid);
+
+            if (inspection == null)
+            {
+                return NotFound();
+            }
+
+            return inspection;
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> Putinspection(int id, Inspection inspection)
         {
@@ -124,6 +139,23 @@ namespace RSSAPI.Controllers
             {
                 return NotFound();
             }
+            foreach (var item in _context.InspEquip.Where(i=>i.InspectionID==id).ToList())
+            {
+                foreach (var item2 in _context.InspEquipTypeTest.Where(i=>i.InspEquipID==item.id).ToList())
+                {
+                    foreach (var item3 in _context.InspEquipTypeTestFail.Where(i => i.InspEquipTypeTestID == item2.id).ToList())
+                    {
+                        _context.Remove(item3);
+                    }
+                    _context.SaveChanges();
+
+                    _context.Remove(item2);
+                }
+                _context.SaveChanges();
+
+                _context.Remove(item);
+            }
+            _context.SaveChanges();
             var inspection = await _context.Inspection.FindAsync(id);
             if (inspection == null)
             {

@@ -15,7 +15,7 @@ namespace RoofSafety.Data
        // public DbSet<BuildingPhoto> BuildingPhoto { get; set; }
         public DbSet<Building> Building { get; set; }
         public DbSet<Inspection> Inspection { get; set; }
-        public DbSet<Version> Version { get; set; }
+       // public DbSet<Version> Version { get; set; }
         public DbSet<EquipType> EquipType { get; set; }
         public DbSet<InspEquip> InspEquip { get; set; }
         public DbSet<InspEquipTypeTest> InspEquipTypeTest { get; set; }

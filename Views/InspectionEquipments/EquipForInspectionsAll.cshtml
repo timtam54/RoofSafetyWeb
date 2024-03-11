@@ -814,6 +814,8 @@
                 </table>
                 <table cellpadding="1" border="1" cellspacing="1" class="mytable">
                     <tr>
+                        <th>Item No</th>
+
                         <th>Equip Name</th>
                         <th>Manufacturer</th>
                         <th>Inspection Date</th>
@@ -827,6 +829,7 @@
                         
                             if (item.Pass)
                             {<tr>
+                <td>@String.Format("1.{0}", @item.ItemNo)</td>
                             <td>@item.EquipName</td>
                             <td>@item.Manufacturer</td>
                             <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>
@@ -839,6 +842,7 @@
                             else
                         {
                             <tr style="color:red">
+                <td>@String.Format("1.{0}", @item.ItemNo)</td>
                             <td>@item.EquipName</td>
                             <td>@item.Manufacturer</td>
                             <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>
@@ -855,7 +859,8 @@
 
                             for (int i = 1; i < item.SerialNos.Count(); i++)
                             {
-                                <tr>
+                <tr>
+                    <td>    </td>
                                     <td>@item.EquipName</td>
                                     <td>@item.Manufacturer</td>
                                     <td>@Model.InspDate.ToString("dd-MMM-yyyy")</td>

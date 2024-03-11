@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ using RoofSafety.Services.Abstract;
 
 namespace RoofSafety.Controllers
 {
+    [Authorize]
     public class InspectionsController : Controller
     {
         private readonly dbcontext _context;
@@ -28,16 +31,13 @@ namespace RoofSafety.Controllers
         {
             ViewBag.ClientDesc = "All Clients";
             ViewBag.ClientID = 0;
-
             ViewBag.BuildingID = 0;
-            // var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
             ViewBag.BuildingDesc = "All Buildings";
             List<Inspection> ret = new List<Inspection>();
             if (status == null)
-
                 ret = await _context.Inspection.Where(i => i.Status == "A").OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
             else
-               ret = await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+                ret = await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
             var ss = await (from ie in _context.InspEquip where ret.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
             foreach (var ins in ret)
             {
@@ -53,7 +53,7 @@ namespace RoofSafety.Controllers
             public int InspectionID { get; set; }
             public int Count { get; set; }
         }
-        // GET: Inspections/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Inspection == null)
@@ -86,15 +86,75 @@ namespace RoofSafety.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Inspection inspection)
         {
-      //      if (ModelState.IsValid)
+            inspection.id = 0;
+            _context.Add(inspection);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(InspectionsForBuilding), new { id = inspection.BuildingID });
+        }
+
+        public async Task<ActionResult> Copy(int? id)
+        {
+            int copyid = await CopyInspection(id,-1,_context);
+            return RedirectToAction("Edit", new { id = copyid });
+        }
+
+        public static async Task<int> CopyInspection(int? id,int InspectorID,dbcontext _context)
+        {
+            int copyid = 0;
+            var existInsp = await _context.Inspection.Where(i => i.id == id).FirstAsync();
             {
-                inspection.id = 0;  
-                _context.Add(inspection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(InspectionsForBuilding), new {id= inspection.BuildingID });
+                var values = _context.Entry(existInsp).CurrentValues.Clone();
+                var newInsp = new Inspection();
+                _context.Entry(newInsp).CurrentValues.SetValues(values);
+                newInsp.id = 0;
+                newInsp.InspectionDate = DateTime.Now;
+                if (InspectorID != -1)
+                    newInsp.InspectorID = InspectorID;
+                newInsp.Status = "A";
+                _context.Add(newInsp);
+                _context.SaveChanges();
+
+                copyid = newInsp.id;
             }
-//            ViewData["BuildingID"] = new SelectList(_context.Building, "id", "id", inspection.BuildingID);
-  //          return View(inspection);
+            var existInspitems = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
+            foreach (var existInspitem in existInspitems)
+            {
+                var values = _context.Entry(existInspitem).CurrentValues.Clone();
+                var newInspEquip = new InspEquip();
+                _context.Entry(newInspEquip).CurrentValues.SetValues(values);
+                newInspEquip.id = 0;
+                newInspEquip.InspectionID = copyid;
+
+                _context.Add(newInspEquip);
+                _context.SaveChanges();
+
+                var InspEquipTypeTests = await _context.InspEquipTypeTest.Where(i => i.InspEquipID == existInspitem.id).ToListAsync();
+                foreach (var InspEquipTypeTest in InspEquipTypeTests)
+                {
+                    var values2 = _context.Entry(InspEquipTypeTest).CurrentValues.Clone();
+                    var newInspEquipTypeTest = new InspEquipTypeTest();
+                    _context.Entry(newInspEquipTypeTest).CurrentValues.SetValues(values2);
+                    newInspEquipTypeTest.id = 0;
+                    newInspEquipTypeTest.InspEquipID = newInspEquip.id;
+                    _context.Add(newInspEquipTypeTest);
+
+                    _context.SaveChanges();
+
+                    var InspEquipTypeTestFails = await _context.InspEquipTypeTestFail.Where(i => i.InspEquipTypeTestID == InspEquipTypeTest.id).ToListAsync();
+                    foreach (var InspEquipTypeTestFail in InspEquipTypeTestFails)
+                    {
+                        var values3 = _context.Entry(InspEquipTypeTestFail).CurrentValues.Clone();
+                        var newInspEquipTypeTestFail = new InspEquipTypeTestFail();
+                        _context.Entry(newInspEquipTypeTestFail).CurrentValues.SetValues(values3);
+                        newInspEquipTypeTestFail.id = 0;
+                        newInspEquipTypeTestFail.InspEquipTypeTestID = newInspEquipTypeTest.id;
+                        _context.Add(newInspEquipTypeTestFail);
+
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            return copyid;
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -125,8 +185,14 @@ namespace RoofSafety.Controllers
             ViewBag.Status = stat;
             return View(inspection);
         }
-
         [HttpPost]
+        public ActionResult Copy()
+        {
+           return View();
+        }
+
+
+            [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Inspection inspection)
         {

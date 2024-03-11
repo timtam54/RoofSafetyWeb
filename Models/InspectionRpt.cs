@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 
@@ -286,6 +285,8 @@ namespace RoofSafety.Models
         public string? Installer { get; set; }
         public string? Rating { get; set; }
         public string? SerialNo { get; set; }
+
+        public string? ItemNo { get; set; }
         public int? SNSuffix { get; set; }
         public DateTime? WithdrawalDate { get; set; }
 

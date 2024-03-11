@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using RoofSafety.Models;
 
 namespace RoofSafety.Controllers
 {
+    [Authorize]
     public class BuildingsController : Controller
     {
         private readonly dbcontext _context;
@@ -93,13 +95,12 @@ namespace RoofSafety.Controllers
 
         public async Task<IActionResult> BuildingsForClient(int? id)
         {
-            var dbcontext = _context.Building.Where(b => b.ClientID==id.Value).Include(b => b.Client);
-            var res = await dbcontext.ToListAsync();
+            RoofSafety.Models.BuildingsSearch ret = new BuildingsSearch();
+            ret.Buildings = await _context.Building.Where(b => b.ClientID == id.Value).Include(b => b.Client).ToListAsync();
             ViewBag.ClientDesc = (from ie in _context.Client where ie.id == id select ie.name).FirstOrDefault();
             ViewBag.ClientID = id;
-            return View("Index",res);
+            return View("Index", ret);
         }
-        // GET: Buildings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Building == null)

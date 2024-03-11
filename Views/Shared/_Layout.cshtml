@@ -13,7 +13,6 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <img src="~/Image/rsslogo.png" />
-          @*       <a class="navbar-brand" asp-area="" asp-controller="Clients" asp-action="Index">RoofSafety</a> *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -83,7 +82,7 @@
 
                         <a asp-area="" asp-controller="Buildings" asp-action="Index">Buildings</a>
 
-
+                       
                     </div>
                 </div>
 
@@ -120,6 +119,12 @@
                         <a target="_blank" href="../EquipTypeTests/EquipTypeTestMat">Item Type / Test</a>
 
 
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn">Logout</button>
+                    <div class="dropdown-content">
+                    <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
                     </div>
                 </div>
                 <div class="dropdown">

@@ -28,10 +28,10 @@ namespace RSSAPI.Controllers
 
         public async Task<ActionResult<IEnumerable<VersionRpt>>> GetVersion(string id)
         {
-            if (_context.Version == null)
-            {
-                return NotFound();
-            }
+            //if (_context.Version == null)
+            //{
+            //    return NotFound();
+            //}
             //var bid = await _context.Inspection.FindAsync(Convert.ToInt32( id));
             int buildingid = Convert.ToInt32(id);// bid.BuildingID;
             var ret= await (from vs in _context.Inspection join emp in _context.Employee on vs.InspectorID equals emp.id where vs.BuildingID == buildingid orderby vs.id select new VersionRpt { Photo=vs.Photo, Areas = vs.Areas, TestingInstruments = vs.TestingInstruments ,id = vs.id, Information = vs.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = vs.id, VersionType = (vs.Status == "A") ? "Active" : (vs.Status == "P") ? "Pending" : "Complete" }).ToListAsync();
@@ -46,85 +46,85 @@ namespace RSSAPI.Controllers
      
 
         // GET: api/Version/5
-        [HttpGet("int/{id:int}")]
-        public async Task<ActionResult<Version>> GetVersion(int id)
-        {
-            if (_context.Version == null)
-            {
-                return NotFound();
-            }
-            return (await _context.Version.FindAsync( Convert.ToInt32(id)))!;
-        }
+        //[HttpGet("int/{id:int}")]
+        //public async Task<ActionResult<Version>> GetVersion(int id)
+        //{
+        //    if (_context.Version == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return (await _context.Version.FindAsync( Convert.ToInt32(id)))!;
+        //}
 
         // PUT: api/Version/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutVersion(int id, Version version)
-        {
-            if (id != version.id)
-            {
-                return BadRequest();
-            }
+       // [HttpPut("{id}")]
+        //public async Task<IActionResult> PutVersion(int id, Version version)
+        //{
+        //    if (id != version.id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(version).State = EntityState.Modified;
+        //    _context.Entry(version).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VersionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!VersionExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/Version
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Version>> PostVersion(Version version)
-        {
-            if (_context.Version == null)
-            {
-                return Problem("Entity set 'dbContext.Version'  is null.");
-            }
-            _context.Version.Add(version);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<Version>> PostVersion(Version version)
+        //{
+        //    if (_context.Version == null)
+        //    {
+        //        return Problem("Entity set 'dbContext.Version'  is null.");
+        //    }
+        //    _context.Version.Add(version);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEquipType", new { id = version.id }, version);
-        }
+        //    return CreatedAtAction("GetEquipType", new { id = version.id }, version);
+        //}
 
         // DELETE: api/Version/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVersion(int id)
-        {
-            if (_context.Version == null)
-            {
-                return NotFound();
-            }
-            var version = await _context.Version.FindAsync(id);
-            if (version == null)
-            {
-                return NotFound();
-            }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteVersion(int id)
+        //{
+        //    if (_context.Version == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var version = await _context.Version.FindAsync(id);
+        //    if (version == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.Version.Remove(version);
-            await _context.SaveChangesAsync();
+        //    _context.Version.Remove(version);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool VersionExists(int id)
-        {
-            return (_context.Version?.Any(e => e.id == id)).GetValueOrDefault();
-        }
+        //private bool VersionExists(int id)
+        //{
+        //    return (_context.Version?.Any(e => e.id == id)).GetValueOrDefault();
+        //}
     }
 }
