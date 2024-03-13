@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddRazorPages(); ;
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
@@ -30,27 +30,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddTransient<IImageService,ImageService>();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-//    app.UseSwagger();
-  //  app.UseSwaggerUI();
-
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+     app.UseHsts();
 }
 app.UseCors(MyAllowSpecificOrigins);
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
-
-
 app.UseRouting();
 app.UseAuthorization();
 app.UseEndpoints(endpoints=>endpoints.MapControllers());
-
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");

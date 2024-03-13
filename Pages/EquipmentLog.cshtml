@@ -1,0 +1,46 @@
+﻿@page
+@model RoofSafety.Pages.EquipmentLogModel
+@{
+    ViewData["Title"] = "Equipment Log";
+}
+<div class="text-left">
+    <h4 class="display-6">Equipment Log</h4>
+    <form method="post">
+        <p style="color:red">@Model.Error</p>
+
+        <p>
+           @*  <a asp-page="/Home">Back</a>
+ *@
+        @*     <input type="submit" value="Get from Square API now" /> (this can take 1 minutes to extract) *@
+          
+
+        </p>
+
+    </form>
+    @if (Model.Equipment != null)
+    {
+        <table border="1" class="table">
+
+            <thead>
+                <tr>
+
+                    <th>#</th>
+                    <th>SerialNo</th>
+                    <th>EquipmentType_Desc</th>
+                </tr>
+            </thead>
+            @foreach (var prod in Model.Equipment)
+            {
+
+
+                <tr>
+                    <td>@prod.Number</td>
+                    <td>@prod.SerialNo</td>
+                    <td>@prod.EquipmentType_Desc</td>
+                </tr>
+
+            }
+
+        </table>
+    }
+
