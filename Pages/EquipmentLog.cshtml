@@ -15,10 +15,13 @@
     <h4 class="display-6">Equipment Log</h4>
     <form method="post">
         <p style="color:red">@Model.Error</p>
-
+        <input type="hidden" data="ID" value="ID" />
         <H2>
           @Model.Title
-        </H2>
+        </H2>   
+        @Html.AntiForgeryToken()
+        <button type="submit" value="Submit" class="btn btn-primary">Export Excel</button>
+      @*   <input type="submit" asp-action="CreateExcelSheet" value="CreateExcelSheet" /> *@
 
     </form>
     @if (Model.Equipment != null)

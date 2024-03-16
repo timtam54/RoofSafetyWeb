@@ -3,6 +3,7 @@
 
         public class EquipmentLogExcel
     {
+        public int InspEquipID { get; set; }
         public int Number { get; set; }
         public string EquipmentType_Desc { get; set; }
 

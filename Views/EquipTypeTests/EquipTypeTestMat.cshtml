@@ -138,49 +138,6 @@
     </div>
 
 
-
-
-   @*  <table width="100%">
-    <tr style="z-index: 1;position: fixed;">
-        <td height="100px" width="200px" colspan="2" style="width:200px;background-color:black;color:white">Equip Types</td>
-        @foreach (var item in Model.Hazards)
-        {
-                <td height="100px" width="40px" style="word-wrap: break-word; border:solid;background-color:white;writing-mode: vertical-rl;text-orientation: mixed;">
-                @item.Detail
-            </td>
-        }
-    </tr>
-   
-        @{
-        string prev = "";
-        foreach (var item in Model.EquipTypeTests)
-    {
-        <tr>
-                @if (prev == item.EquipTypeName)
-                {
-                    <td></td>
-                }
-                else
-                {
-                        <td style="border:solid" width="80px">
-                @item.EquipTypeName
-            </td>
-                }
-
-                    <td style="border:solid" width="120px">
-            @item.Test
-        </td>
-                @foreach (var hz in Model.Hazards)
-                {
-                        <td style="border:solid" width="40px">
-                        <input title="Haard:@hz.Detail EquipType:@item.EquipTypeName Test:@item.Test" type="checkbox" checked="@RoofSafety.Controllers.EquipTypeTestHazardsController.Checked(hz.id,item.id,Model.EquipTypeTestHazards)">
-                    </td>
-                }
-        </tr>
-        {                prev=item.EquipTypeName;}
-    }
-    }
-</table> *@
 </body>
 </html>
 <script type="text/javascript">
