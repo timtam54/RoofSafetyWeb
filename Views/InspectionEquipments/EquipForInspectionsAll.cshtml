@@ -214,15 +214,11 @@
         <td style="width:100%">
             
                             <ul>
-                                @foreach (var item in Model.InspItems)
+                @foreach (var itmdesc in Model.Items.OrderBy(i => i.Ordr))
                                 {
-                                    <li>@item</li>
-
+                    <li>@itmdesc.EquipName + " " + @itmdesc.Manufacturer + " " + @itmdesc.SerialNo</li>
                                 }
-
                             </ul>
-
-
         </td>
     </tr>
    
