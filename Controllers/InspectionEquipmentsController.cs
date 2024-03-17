@@ -724,7 +724,7 @@ namespace RoofSafety.Controllers
                         runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("- Work Health & Safety Regulations 2022 (WA) relevant to Fall Prevention."));
                         runeh.AppendChild(new Break());
-                        runeh.AppendChild(new Text("- Code of Practice – Prevention of Falls at Workplaces 2020 (WA)."));
+                        runeh.AppendChild(new Text("- Code of Practice: Managing the risk of falls at workplaces 2022."));
                         runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("- AS 1657:2018 - Fixed platforms, walkways, stairways and ladders."));
                         runeh.AppendChild(new Break());
@@ -843,7 +843,7 @@ namespace RoofSafety.Controllers
                             runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("• Work Health & Safety Regulations 2022 (WA)"));
                             runintro1.AppendChild(new Break());
-                            runintro1.AppendChild(new Text("• Code of Practice – Prevention of Falls at Workplaces 2020 (WA)."));                          
+                            runintro1.AppendChild(new Text("• Code of Practice: Managing the risk of falls at workplaces 2022."));                          
                              runintro1.AppendChild(new Break());
                             runintro1.AppendChild(new Text("• AS 1657:2018 - Fixed platforms, walkways, stairways and ladders."));
                             runintro1.AppendChild(new Break());
