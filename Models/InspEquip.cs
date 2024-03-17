@@ -24,7 +24,7 @@ namespace RoofSafety.Models
         [Display(Name = "Required Controls")]
         public string? RequiredControls { get; set; }
         public int? Qty { get; set; }
-
+        public int? Ordr { get; set; }
         
     }
     public class InspEquipView
@@ -35,8 +35,7 @@ namespace RoofSafety.Models
         public int InspectionID { get; set; }
         public string? Location { get; set; }
         public string? Notes { get; set; }
-
-
+        public int? Ordr { get; set; }
         public string? Manufacturer { get; set; }
         public string? Installer { get; set; }
         public string? Rating { get; set; }

@@ -8,6 +8,7 @@
 
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.InspectionID">Add New Items for Inspection</a>
+    <a asp-area="" asp-controller="Inspections" asp-action="Index">Back</a>
 </p>
 <table class="table">
     <thead>
@@ -27,22 +28,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
+            <th>Test</th>
             <th>
-    
+                Order
             </th>
+           
             <th></th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy(i=>i.Ordr)) {
         <tr>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.Inspection.InspectionDate)
-            </td>*@
-  @*              <td>
-                    @Html.DisplayFor(modelItem => item.EquipName)
-                </td>*@
                 <td>
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
@@ -58,14 +55,17 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Rating)
                 </td>
-                    <td>
+                <td>
                     <a asp-action="TestsForEquip" asp-controller="InspEquipTypeTests" asp-route-id="@item.id">Test</a>
                     </td>
-
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
-                <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
-            </td>
+                <td>
+                    <a asp-action="Up" asp-route-Ordr="@item.Ordr" asp-route-id="@item.InspectionID">Up</a> |
+                    <a asp-action="Down" asp-route-Ordr="@item.Ordr" asp-route-id="@item.InspectionID">Down</a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                    <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
+                </td>
         </tr>
 }
 <tr>

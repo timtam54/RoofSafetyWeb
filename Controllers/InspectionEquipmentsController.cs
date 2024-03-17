@@ -50,6 +50,7 @@ using System.Drawing;
 using DocumentFormat.OpenXml.Vml;
 using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Vml.Office;
+using Microsoft.EntityFrameworkCore.Query;
 //using iText.Kernel.Pdf;
 //using iText.Html2pdf.Attach.Impl.Layout;
 
@@ -80,13 +81,31 @@ namespace RoofSafety.Controllers
         }
         public async Task<ActionResult> EquipForInspections(int id)
         {
-            var xxx = _context.InspEquip.Where(i => i.InspectionID == id).Include(i => i.EquipType).Include(i => i.Inspection).Include(i=>i.EquipType);
-            var yyy= await xxx.ToListAsync();
+            var yyy =await _context.InspEquip.Where(i => i.InspectionID == id).Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType).ToListAsync();
+            
+//            var yyy = await xxx.ToListAsync();
+            SetOrderIfNull(yyy);
             ViewBag.InspectionID = id;
-            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")),ID=ie.BuildingID }).FirstOrDefault();
+            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")), ID = ie.BuildingID }).FirstOrDefault();
             ViewBag.InspectionDesc = xx.Desc;
             ViewBag.BuildingID = xx.ID;
-            return View("Index",xxx);
+            return View("Index", yyy);
+        }
+        private static void SetOrderIfNull(List<InspEquipTest> xxx)
+        {
+            foreach (var x in xxx)
+            {
+                if (x.Ordr == null)
+                    x.Ordr = x.id;
+            }
+        }
+        private static void SetOrderIfNull(List<InspEquip> xxx)
+        {
+            foreach (var x in xxx)
+            {
+                if (x.Ordr == null)
+                    x.Ordr = x.id;
+            }
         }
 
         private static void AddImageToBodyWordDoc(WordprocessingDocument wordDoc, string relationshipId,decimal htw)
@@ -346,7 +365,8 @@ namespace RoofSafety.Controllers
         public async Task<ActionResult> EquipForInspectionsAll(int id, string hpw)//0,1,2
         {
             InspectionRpt ret = new InspectionRpt();
-            ret.InspItems = (from ins in _context.InspEquip join emp in _context.EquipType on ins.EquipTypeID equals emp.id where ins.InspectionID == id select emp.EquipTypeDesc).ToList();
+            ret.InspItems = (from ins in _context.InspEquip join emp in _context.EquipType on ins.EquipTypeID equals emp.id where ins.InspectionID == id orderby ins.Ordr select emp.EquipTypeDesc).ToList();
+          
             ret.Inspector = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.id == id select emp.Given + " " + emp.Surname).FirstOrDefault();
             var insp = _context.Inspection.Where(i => i.id == id).FirstOrDefault();
             ret.InspDate = insp.InspectionDate;
@@ -356,9 +376,10 @@ namespace RoofSafety.Controllers
             ret.Tests = "Test";
             
             ret.Title = (from bd in _context.Building where bd.id == insp.BuildingID select bd.BuildingName).FirstOrDefault();
-            ret.Items = (from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id where ie.InspectionID == id select new InspEquipTest { ItemNo= ie.SerialNo ,Qty=(ie.Qty==null)?1:ie.Qty.Value, RequiredControls=ie.RequiredControls, Pass=true, Manufacturer =ie.Manufacturer, SNSuffix=ie.SNSuffix, SerialNo=ie.SerialNo, Rating=ie.Rating, Installer=ie.Installer ,EquipName = et.EquipTypeDesc,  Notes = ie.Notes, Location = ie.Location, id = ie.id, EquipType = et, ETID=et.id }).ToList();//.Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType)=efe
+            ret.Items = (from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id where ie.InspectionID == id select new InspEquipTest { Ordr=(ie.Ordr==null)?ie.id:ie.Ordr, ItemNo= ie.SerialNo ,Qty=(ie.Qty==null)?1:ie.Qty.Value, RequiredControls=ie.RequiredControls, Pass=true, Manufacturer =ie.Manufacturer, SNSuffix=ie.SNSuffix, SerialNo=ie.SerialNo, Rating=ie.Rating, Installer=ie.Installer ,EquipName = et.EquipTypeDesc,  Notes = ie.Notes, Location = ie.Location, id = ie.id, EquipType = et, ETID=et.id }).OrderBy(i=>i.Ordr).ToList();//.Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType)=efe
+    
             int counter = 1;
-            foreach (var ite in ret.Items)
+            foreach (var ite in ret.Items.OrderBy(i => i.Ordr))
             {
                 ite.ItemNo = counter.ToString();
                 counter++;
@@ -383,7 +404,7 @@ namespace RoofSafety.Controllers
 
                    // }
                 }
-                foreach (var item in ret.Items)
+                foreach (var item in ret.Items.OrderBy(i => i.Ordr))
                 {
                     item.Pass = true;
                     item.TestResult = (from iet in _context.InspEquipTypeTest join ett in _context.EquipTypeTest on iet.EquipTypeTestID equals ett.id where iet.InspEquipID == item.id select new TestResult { Comment=iet.Comment, Test = ett.Test/*, PassFail = iet.Pass*/, Severity=ett.Severity,  EquipTypeTestID = iet.EquipTypeTestID, iettid=iet.id }).ToList();//.Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType)=efe//HazardIfNonCompliant = ett.HazardIfNonCompliant, 
@@ -678,7 +699,7 @@ namespace RoofSafety.Controllers
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The following existing height safety equipment is installed on site:"));
                         runeh.AppendChild(new Break());
-                        foreach (var itmdesc in ret.Items)
+                        foreach (var itmdesc in ret.Items.OrderBy(i=>i.Ordr))
                         {
                             runeh.AppendChild(new Text("- " + itmdesc.EquipName + " " + itmdesc.Manufacturer + " " + itmdesc.SerialNo )); runeh.AppendChild(new Break());
                         }
@@ -1153,7 +1174,7 @@ namespace RoofSafety.Controllers
                                 /////
                                 
                                   int itemno = 0;
-                                foreach (var item in ret.Items)
+                                foreach (var item in ret.Items.OrderBy(i => i.Ordr))
                                 {
 
                                     Body bodyintro = mainPart.Document.AppendChild(new Body());
@@ -1638,7 +1659,7 @@ namespace RoofSafety.Controllers
                             bodyintro1.AppendChild(table);
 
                             
-                            foreach (var item in ret.Items)
+                            foreach (var item in ret.Items.OrderBy(i => i.Ordr))
                             {
                                 string colour = item.Pass ? "Green" : "Red";
                                 {
@@ -2180,7 +2201,83 @@ namespace RoofSafety.Controllers
             }
             return View(inspEquip);
         }
+        public async Task<IActionResult> Up(int? id,int Ordr)
+        {
+            var xxx = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
+            SetOrderIfNull(xxx);
+            int? counter = Ordinal(Ordr, xxx);
+            if (counter != null)
+            {
+                if (counter+1 < xxx.Count())
+                {
+                    var ss = xxx.OrderByDescending(i => i.Ordr).ToList()[counter.Value];
+                    var tt = xxx.OrderByDescending(i => i.Ordr).ToList()[counter.Value + 1];
 
+                    int ssid = ss.id;
+                    int ssOrdr = ss.Ordr.Value;
+
+                    int ttid = tt.id;
+                    int ttOrdr = tt.Ordr.Value;
+
+                    xxx.Where(i => i.id == ss.id).FirstOrDefault().Ordr = ttOrdr;
+                    xxx.Where(i => i.id == tt.id).FirstOrDefault().Ordr = ssOrdr;
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction(nameof(EquipForInspections), new { id = id });
+        }
+
+        private static int? Ordinal(int? Ordr, List<InspEquip> xxx)
+        {
+            int counter = 0;
+            foreach (var item in xxx.OrderByDescending(i => i.Ordr))
+            {
+                if (item.Ordr == Ordr)
+                {
+                   return counter;
+                }
+                counter++;
+            }
+            return null;
+        }
+        private static int? OrdinalAsc(int? Ordr, List<InspEquip> xxx)
+        {
+            int counter = 0;
+            foreach (var item in xxx.OrderBy(i => i.Ordr))
+            {
+                if (item.Ordr == Ordr)
+                {
+                    return counter;
+                }
+                counter++;
+            }
+            return null;
+        }
+        public async Task<IActionResult> Down(int? id, int Ordr)
+        {
+            var xxx = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
+            SetOrderIfNull(xxx);
+            int? counter = OrdinalAsc(Ordr, xxx);
+            if (counter != null)
+            {
+                if (counter + 1 < xxx.Count())
+                {
+                    var ss = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value];
+                    var tt = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value + 1];
+
+                    int ssid = ss.id;
+                    int ssOrdr = ss.Ordr.Value;
+
+                    int ttid = tt.id;
+                    int ttOrdr = tt.Ordr.Value;
+
+                    xxx.Where(i => i.id == ss.id).FirstOrDefault().Ordr = ttOrdr;
+                    xxx.Where(i => i.id == tt.id).FirstOrDefault().Ordr = ssOrdr;
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction(nameof(EquipForInspections), new { id = id });
+        }
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.InspEquip == null)

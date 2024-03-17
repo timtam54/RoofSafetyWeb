@@ -642,7 +642,7 @@
                     <tbody>
 
                         @{int itemno = 0;}
-                        @foreach (var item in Model.Items)
+                        @foreach (var item in Model.Items.OrderBy(i => i.Ordr))
                         {
                             itemno = itemno + 1;
                             <tr>
@@ -824,7 +824,7 @@
                         <th>Rating</th>
         <th>Asset ID</th>
                     </tr>
-                    @foreach (var item in Model.Items)
+                    @foreach (var item in Model.Items.OrderBy(i => i.Ordr))
                     {
                         
                             if (item.Pass)

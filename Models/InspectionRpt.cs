@@ -25,6 +25,7 @@ namespace RoofSafety.Models
     }
     public class InspEquipTest
     {
+        public int? Ordr { get; set; }
         public int? ETID { get; set; }
         public int Qty { get; set; }
 

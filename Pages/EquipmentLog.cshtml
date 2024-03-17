@@ -13,7 +13,9 @@
 </style>
 <div class="text-left">
     <h4 class="display-6">Equipment Log</h4>
+    <a href="./Inspections/Index">Back</a>
     <form method="post">
+
         <p style="color:red">@Model.Error</p>
         <input type="hidden" data="ID" value="ID" />
         <H2>
@@ -21,7 +23,7 @@
         </H2>   
         @Html.AntiForgeryToken()
         <button type="submit" value="Submit" class="btn btn-primary">Export Excel</button>
-      @*   <input type="submit" asp-action="CreateExcelSheet" value="CreateExcelSheet" /> *@
+        <img src="~/Image/rsslogo.png" />
 
     </form>
     @if (Model.Equipment != null)
@@ -51,15 +53,15 @@
                     <td>@prod.Number</td>
                  
                     <td>@prod.EquipmentType_Desc</td>
-                    <td>@prod.Manufacturer</td>
+                     <td>@prod.Manufacturer</td>
                     <td>@prod.WithdrawalDate</td>
                     <td>@prod.SerialNo</td>
                     <td>@prod.Status</td>
                     <td>@prod.InspectionDate</td>
-                    <td>@prod.InspectionDue</td>
+                    <td>@prod.InspectionDue</td> 
                 </tr>
 
-            }
+            } 
 
         </table>
     }

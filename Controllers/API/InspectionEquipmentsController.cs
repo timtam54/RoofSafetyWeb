@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoofSafety.Models;
 using RoofSafety.Data;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace RSSAPI.Controllers
 {
@@ -32,7 +33,7 @@ namespace RSSAPI.Controllers
             {
                 return NotFound();
             }
-            var yyy = from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id orderby ie.id descending where ie.InspectionID==Convert.ToInt32(id) select new InspEquipView { id = ie.id, InspectionID = ie.InspectionID, Installer = ie.Installer, Location = ie.Location, EquipDesc = et.EquipTypeDesc, Manufacturer = ie.Manufacturer, WithdrawalDate = ie.WithdrawalDate, SerialNo = ie.SerialNo,  Rating = ie.Rating, Qty=ie.Qty };
+            var yyy = from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id orderby ie.id descending where ie.InspectionID==Convert.ToInt32(id) select new InspEquipView { Ordr=(ie.Ordr==null)?ie.id: ie.Ordr, id = ie.id, InspectionID = ie.InspectionID, Installer = ie.Installer, Location = ie.Location, EquipDesc = et.EquipTypeDesc, Manufacturer = ie.Manufacturer, WithdrawalDate = ie.WithdrawalDate, SerialNo = ie.SerialNo,  Rating = ie.Rating, Qty=ie.Qty };
             var zzz = await (yyy).ToListAsync();
             foreach (var item in zzz)
             {

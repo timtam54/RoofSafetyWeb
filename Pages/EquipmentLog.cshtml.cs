@@ -93,7 +93,7 @@ namespace RoofSafety.Pages
                         FormatBodyCell(ws.Cell(i + 3,8));
                     }
 
-                    for (int i = 1; i < 8; i++)
+                    for (int i = 1; i <= 8; i++)
                     {
                         ws.Cell(Equipment.Count() + 2,i).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
                         ws.Cell(Equipment.Count() + 2, i).Style.Border.BottomBorderColor = XLColor.Black;
@@ -157,7 +157,7 @@ namespace RoofSafety.Pages
 
         public void OnGet()
         {
-            if (InspectionID != null)
+                if (InspectionID != null)
             {
                 ID = InspectionID.Value;
                 GetData();
@@ -170,7 +170,7 @@ namespace RoofSafety.Pages
             var build = _context.Building.Where(i => i.id == ins.BuildingID).FirstOrDefault();
             Title = ins.Status + " " + ins.InspectionDate.ToString("dd-MMM-yyyy") + " " + build?.BuildingName + "@" + build?.Address;
 
-            Equipment = (from ine in _context.InspEquip join eqt in _context.EquipType on ine.EquipTypeID equals eqt.id where ine.InspectionID == ID select new EquipmentLogExcel { InspEquipID = ine.id, Number = ine.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ine.SerialNo, Manufacturer = ine.Manufacturer, InspectionDate = ins.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
+            Equipment = (from ine in _context.InspEquip join eqt in _context.EquipType on ine.EquipTypeID equals eqt.id where ine.InspectionID == ID select new EquipmentLogExcel { InspectionDue="", WithdrawalDate="", Status="NA", InspEquipID = ine.id, Number = ine.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ine.SerialNo, Manufacturer = ine.Manufacturer, InspectionDate = ins.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
 
             foreach (var item in Equipment)
             {
