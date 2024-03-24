@@ -34,11 +34,14 @@ namespace RSSAPI.Controllers
             //}
             //var bid = await _context.Inspection.FindAsync(Convert.ToInt32( id));
             int buildingid = Convert.ToInt32(id);// bid.BuildingID;
-            var ret= await (from vs in _context.Inspection join emp in _context.Employee on vs.InspectorID equals emp.id where vs.BuildingID == buildingid orderby vs.id select new VersionRpt { Photo=vs.Photo, Areas = vs.Areas, TestingInstruments = vs.TestingInstruments ,id = vs.id, Information = vs.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = vs.id, VersionType = (vs.Status == "A") ? "Active" : (vs.Status == "P") ? "Pending" : "Complete" }).ToListAsync();
+            var ret= await (from vs in _context.Inspection join emp in _context.Employee on vs.InspectorID equals emp.id where vs.BuildingID == buildingid orderby vs.id select new VersionRpt { Author2=(vs.Inspector2ID==null)?null:vs.Inspector2ID.ToString(), Photo=vs.Photo, Areas = vs.Areas, TestingInstruments = vs.TestingInstruments ,id = vs.id, Information = vs.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = vs.id, VersionType = (vs.Status == "A") ? "Active" : (vs.Status == "P") ? "Pending" : "Complete" }).ToListAsync();
             int vn = 1;
             foreach (var rr in ret)
             {
                 rr.VersionNo = vn++;
+                var insp2 = _context.Employee.Where(i => i.id.ToString() == rr.Author2).FirstOrDefault();
+                if (insp2!=null)
+                    rr.Author2 =insp2.Given+ " "+ insp2.Surname;
             }
             return ret;
             //return await (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID==Convert.ToInt32(id) select new VersionRpt { id=vs.id, Information=vs.Information, Author=emp.Given + " " + emp.Surname, VersionNo=vs.VersionNo, VersionType=(vs.VersionType=="FD")?"First Draft": "Internal Review"} ).ToListAsync();

@@ -44,7 +44,7 @@ namespace RSSAPI.Controllers
             if (imagefile.ParentTable == 1 || imagefile.ParentTable == 3)
             {
                 InspPhoto inspPhoto = new InspPhoto();
-                inspPhoto.description = imagefile.ContentType;
+                inspPhoto.Description = imagefile.ContentType;
                 inspPhoto.photoname = imagefile.FileName!;
                 inspPhoto.SourceTable = (imagefile.ParentTable == 1) ? "I" : "B";
                 inspPhoto.InspEquipID = imagefile.ParentID;

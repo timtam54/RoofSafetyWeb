@@ -19,6 +19,7 @@ namespace RoofSafety.Models
         public int? VersionNo { get; set; }
         public string? VersionType { get; set; }
         public string? Author { get; set; }
+        public string? Author2 { get; set; }
         public string? Information { get; set; }
        // public int InspectionID { get; set; }
 

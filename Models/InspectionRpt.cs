@@ -14,7 +14,7 @@ namespace RoofSafety.Models
         public string Callibration { get; set; }
         public string Tests { get; set; }
         public string Inspector { get; set; }
-
+        public string Inspector2 { get; set; }
         public string Instrument { get; set; }
         public List<InspEquipTest> Items { get; set; }
         public List<string> InspItems { get; set; }

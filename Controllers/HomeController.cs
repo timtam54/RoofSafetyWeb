@@ -139,7 +139,7 @@ namespace RoofSafety.Controllers
 
             [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SavePicture(ImageModel imageModel)
+        public async Task<IActionResult> SavePicture(ImageModel imageModel)
         {
             try
             {
@@ -151,10 +151,12 @@ namespace RoofSafety.Controllers
                 if (filename != null)
                 {
                     ip.InspEquipID = imageModel.InspEquipID;
-                    ip.description = imageModel.description;
+                    ip.Description = imageModel.description;
                     ip.photoname = filename;
-                    _context.Add(ip);
-                    _context.SaveChangesAsync();
+                    ip.SourceTable = "I";
+                    _context.Add<InspPhoto>(ip);
+                    
+                    await _context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)

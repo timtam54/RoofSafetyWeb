@@ -51,6 +51,7 @@ using DocumentFormat.OpenXml.Vml;
 using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Vml.Office;
 using Microsoft.EntityFrameworkCore.Query;
+using DocumentFormat.OpenXml.ExtendedProperties;
 //using iText.Kernel.Pdf;
 //using iText.Html2pdf.Attach.Impl.Layout;
 
@@ -368,6 +369,7 @@ namespace RoofSafety.Controllers
             ret.InspItems = (from ins in _context.InspEquip join emp in _context.EquipType on ins.EquipTypeID equals emp.id where ins.InspectionID == id orderby ins.Ordr select emp.EquipTypeDesc).ToList();
           
             ret.Inspector = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.id == id select emp.Given + " " + emp.Surname).FirstOrDefault();
+            ret.Inspector2 = (from ins in _context.Inspection join emp in _context.Employee on ins.Inspector2ID equals emp.id where ins.id == id select emp.Given + " " + emp.Surname).FirstOrDefault();
             var insp = _context.Inspection.Where(i => i.id == id).FirstOrDefault();
             ret.InspDate = insp.InspectionDate;
             ret.Areas = insp.Areas;
@@ -460,42 +462,11 @@ namespace RoofSafety.Controllers
                             Body bodycover = mainPart.Document.AppendChild(new Body());
                             Shape sp = new Shape();
                             string StyleString = "position:absolute;margin-left:0;margin-top:63pt;width:540pt;height:6pt;z-index:-251658240;visibility:visible;mso-wrap-style:square;mso-width-percent:0;mso-height-percent:0;mso-wrap-distance-left:0;mso-wrap-distance-top:0;mso-wrap-distance-right:0;mso-wrap-distance-bottom:0;mso-position-horizontal:absolute;mso-position-horizontal-relative:page;mso-position-vertical:absolute;mso-position-vertical-relative:page;mso-width-percent:0;mso-height-percent:0;mso-width-relative:page;mso-height-relative:page;v-text-anchor:top";
-                            //, CoordinateSize = "6858000,76200", OptionalString = "_x0000_s1026", AllowInCell = false,
-                            ////FillColor = "#00afef", Stroked = false, EdgePath = "m,l,76200r6858000,l6858000,,,e", 
-                            /////EncodedPackage = "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\nAAQA8wAAAAgHAAAAAA==\n" ;
+ 
                             //https://stackoverflow.com/questions/42898907/how-to-add-a-shape-in-word-document-using-openxml-c
                             sp.Style = StyleString;
                             sp.FillColor = "Red";
                             bodycover.AppendChild(sp);
-
-/*                            Table table = new Table();
-                            FontSize fontSizep42 = new FontSize() { Val = "42" };
-
-
-                            TableRow tr = new TableRow();
-
-                            TableCell t3 = CellFont("Roof Safety Solutions", 30, false, "white",true);
-                            t3.Append(SetColor("Navy"));
-                            t3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50" }));
-
-                            tr.Append(t3);
-                            TableCell t2;// 
-                            if (ret.Photo == null)
-                            {
-                                t2 = CellFont("Height and Safety Audit Report for " + xx.Desc, 26, false, "black", true);
-                                t2.Append(SetColor("RoyalBlue"));
-                            }
-                            else
-                            {
-                                t2 = new TableCell();
-                                string imgurl = ret.Photo.Replace("%0D%0A", "").TrimEnd();
-                                await InsertImage(t2, wordDocument, mainPart, imgurl);
-                            }
-                            t3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "30" }));
-
-                            tr.Append(t2);
-                            table.Append(tr);
-                            bodycover.AppendChild(table);*/
 
                             Paragraph paracover = bodycover.AppendChild(new Paragraph());
                             Run runcover = paracover.AppendChild(new Run());
@@ -504,8 +475,7 @@ namespace RoofSafety.Controllers
                             runcover.AppendChild(pgbrkcover);
                         }
                         Body body = mainPart.Document.AppendChild(new Body());
-                        {
-                            
+                        {               
                             Paragraph para = body.AppendChild(new Paragraph());
                             Run run = para.AppendChild(new Run());
                             ParagraphProperties paraProperties = new ParagraphProperties();
@@ -655,6 +625,7 @@ namespace RoofSafety.Controllers
                             tr.Append(CellFont("Version", 32, true));
                             tr.Append(CellFont("Status", 32, true));
                             tr.Append(CellFont("Author", 32, true));
+                            tr.Append(CellFont("Author2", 32, true));
                             tr.Append(CellFont("Inspection Date", 32, true));
 
                             body4.AppendChild(table);
@@ -665,6 +636,7 @@ namespace RoofSafety.Controllers
                                 trx.Append(CellFont(item.VersionNo?.ToString(), 28, false));
                                 trx.Append(CellFont((item.VersionType), 28, false));
                                 trx.Append(CellFont(item.Author, 28, false));
+                                trx.Append(CellFont(item.Author2, 28, false));
                                 trx.Append(CellFont((item.Information), 28, false));
                             }
                         }
@@ -793,6 +765,19 @@ namespace RoofSafety.Controllers
                             {
                                 TableRow trInsp = new TableRow();
 
+                                TableCell tcInspDteLbl = CellFont("",30,false);
+                                trInsp.Append(tcInspDteLbl);
+
+
+                                TableCell tcInspDte = CellFont(ret.Inspector2, 30, false);
+                                trInsp.Append(tcInspDte);
+                                tableInsp.Append(trInsp);
+
+
+                            }
+                            {
+                                TableRow trInsp = new TableRow();
+
                                 TableCell tcInspDteLbl = CellFont("Testing Instrument:", 30, true);
                                 trInsp.Append(tcInspDteLbl);
 
@@ -904,35 +889,72 @@ namespace RoofSafety.Controllers
                                     )
                                 );
                                 // Append the TableProperties object to the empty table.
+                                
                                 table.AppendChild<TableProperties>(tblProp);
                                 {
                                     TableRow tr = new TableRow();
                                     table.Append(tr);
+
+
+                                    TableCell tc1 = new TableCell();
+                                    //{
+                                    //    TableCellProperties cellProperties = new();
+                                    //    cellProperties.Append(new Span { Val =2 });
+                                    //    tc1.Append(cellProperties);
+                                    //}
+                                    tc1.Append(new Paragraph(new Run(new Text("      "))));
+                                    tr.Append(tc1);
+
+                                    TableCell tc2 = new TableCell();
+                                    {
+                                        TableCellProperties cellProperties = new();
+                                        cellProperties.Append(new GridSpan { Val = 5 });
+                                        tc2.Append(cellProperties);
+                                    }
+                                    tc2.Append(SetColor("#D3D3D3"));
+                                    Paragraph parait = new Paragraph();
+                                    ParagraphProperties pp = new ParagraphProperties();
+                                    pp.Justification = new Justification() { Val = JustificationValues.Center };
+                                    parait.Append(pp);
+                                    Run runit = parait.AppendChild(new Run());
+                                    RunProperties rpit = runit.AppendChild(new RunProperties());
+   
+                                    Bold bold = new Bold();
+                                    rpit.AppendChild(bold);
+                                    runit.AppendChild(new Text("Consequence"));
+                                    tc2.Append(parait);                                   
+                                    tr.Append(tc2);
+                                }
+                                {
+                                    TableRow tr = new TableRow();
+                                    table.Append(tr);
+
+
+
                                     TableCell tc1 = new TableCell();
                                     tc1.Append(new Paragraph(new Run(new Text("      "))));
                                     tr.Append(tc1);
-                     
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("  not requiring First Aid"))));
+
+                                    TableCell tc2 = TableCellCentred("Injuries not requiring First Aid");
                                     tc2.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("First Aid Treatment Case."))));
+
+                                    TableCell tc3 = TableCellCentred("First Aid Treatment Case.");
                                     tc3.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("Serious injury, medical treatment, or hospitalisation"))));
+
+                                    TableCell tc4 = TableCellCentred("Serious injury, medical treatment, or hospitalisation");
                                     tc4.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("Multiple serious injuries causing hospitalisation."))));
+
+                                    TableCell tc5 = TableCellCentred("Multiple serious injuries causing hospitalisation.");
                                     tc5.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("Death or multiple life-threatening injuries."))));
+
+                                    TableCell tc6 = TableCellCentred("Death or multiple life-threatening injuries.");
                                     tc6.Append(SetColor("#D3D3D3"));
                                     tr.Append(tc6);
-                                   
+
                                 }
                                 {
                                     TableRow tr = new TableRow();
@@ -942,20 +964,15 @@ namespace RoofSafety.Controllers
 
                                     tc1.Append(new Paragraph(new Run(new Text("Likelihood"))));
                                     tr.Append(tc1);
-                                    TableCell tc2 = new TableCell();
-                                    tc2.Append(new Paragraph(new Run(new Text("Negligible"))));
+                                    TableCell tc2 = TableCellCentred("Negligible");
                                     tr.Append(tc2);
-                                    TableCell tc3 = new TableCell();
-                                    tc3.Append(new Paragraph(new Run(new Text("Minor"))));
+                                    TableCell tc3 = TableCellCentred("Minor");
                                     tr.Append(tc3);
-                                    TableCell tc4 = new TableCell();
-                                    tc4.Append(new Paragraph(new Run(new Text("Moderate"))));
+                                    TableCell tc4 = TableCellCentred("Moderate");
                                     tr.Append(tc4);
-                                    TableCell tc5 = new TableCell();
-                                    tc5.Append(new Paragraph(new Run(new Text("Major"))));
+                                    TableCell tc5 = TableCellCentred("Major");
                                     tr.Append(tc5);
-                                    TableCell tc6 = new TableCell();
-                                    tc6.Append(new Paragraph(new Run(new Text("Catastrophic"))));
+                                    TableCell tc6 = TableCellCentred("Catastrophic");
                                     tr.Append(tc6);
 
                                 }
@@ -1067,14 +1084,11 @@ namespace RoofSafety.Controllers
                                     tr.Append(tc2);
                                     TableCell tc3 = CenterAndColour("3", Green); 
                                     tr.Append(tc3);
-
                                     TableCell tc4 = CenterAndColour("4", Green);
                                     tr.Append(tc4);
-
-                                    TableCell tc5 = CenterAndColour("4", "##0096FF");
-
+                                    TableCell tc5 = CenterAndColour("4", Blue);
                                     tr.Append(tc5);
-                                    TableCell tc6 = CenterAndColour("5", "##0096FF");
+                                    TableCell tc6 = CenterAndColour("5", Blue);
                                      tr.Append(tc6);
 
                                 }
@@ -1113,7 +1127,7 @@ namespace RoofSafety.Controllers
                                         tc2.Append(cellProperties);
                                     }
                                     tc2.Append(new Paragraph(new Run(new Text("Management attention is required with the implementation of formal controls"))));
-
+                                    
                                     tr.Append(tc2);
                                 }
                                 {
@@ -1484,34 +1498,35 @@ namespace RoofSafety.Controllers
                                       }
                                       else
                                     {
+                                        if (item.Hazards != null)
                                         {
-                                              TableRow trInsp = new TableRow();
-                                              TableCell tcInspDteLbl = new TableCell();
+                                            int cnt = 0;
+                                            foreach (var hz in item.Hazards)
+                                            {
 
-                                              Bold boldinsp = new Bold();
+                                                TableRow trInsp = new TableRow();
+                                                TableCell tcInspDteLbl = new TableCell();
 
-                                              boldinsp.Val = OnOffValue.FromBoolean(true);
+                                                Bold boldinsp = new Bold();
 
-                                              Run runInsp = new Run(new Text("Hazards:"));
-                                              runInsp.AppendChild(boldinsp);
-                                              tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
-                                              trInsp.Append(tcInspDteLbl);
+                                                boldinsp.Val = OnOffValue.FromBoolean(true);
+
+                                                Run runInsp = new Run(new Text((cnt==0)?"Hazards:":""));
+                                                cnt++;
+                                                runInsp.AppendChild(boldinsp);
+                                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                                trInsp.Append(tcInspDteLbl);
 
 
-                                              TableCell tcInspDte = new TableCell();
-                                              string ss="";
-                                              if(item.Hazards != null)
-                                              {
-                                                  foreach (var hz in item.Hazards)
-                                                  {
-                                                      ss = ss + @hz;
-                                                  }
-                                              }
-                                              tcInspDte.Append(new Paragraph(new Run(new Text(ss))));
-                                            tcInspDte.Append(new GridSpan { Val = 2 });
-                                            trInsp.Append(tcInspDte);
-                                              tableInsp.Append(trInsp);
-                                          }
+                                                TableCell tcInspDte = new TableCell();
+
+                                                tcInspDte.Append(new Paragraph(new Run(new Text(hz))));
+                                                tcInspDte.Append(new GridSpan { Val = 2 });
+                                                trInsp.Append(tcInspDte);
+                                                tableInsp.Append(trInsp);
+                                            }
+                                        }
+
                                           {
                                               TableRow trInsp = new TableRow();
                                             //  TableCell tcInspDteLbl = new TableCell();
@@ -1684,8 +1699,12 @@ namespace RoofSafety.Controllers
                                     trx.Append(t5);
                                     TableCell t6 = CellFont(item.Rating, 24, false, "Black");
                                     trx.Append(t6);
-                                    TableCell t7 = CellFont(item.SerialNo, 24, false, "Black");
-                                     trx.Append(t7);
+                                    TableCell t7;
+                                    if(item.SerialNos.Count()>1)
+                                    t7 = CellFont(item.SerialNo + "1", 24, false, "Black");
+                                    else
+                                    t7 = CellFont(item.SerialNo , 24, false, "Black");
+                                    trx.Append(t7);
 
                                 }
 
@@ -1879,6 +1898,20 @@ namespace RoofSafety.Controllers
 
             }
             return View("Word", ret);
+        }
+
+        private static TableCell TableCellCentred(string txt)
+        {
+            TableCell tc2 = new TableCell();
+            Paragraph parait = new Paragraph();
+            ParagraphProperties pp = new ParagraphProperties();
+            pp.Justification = new Justification() { Val = JustificationValues.Center };
+            parait.Append(pp);
+            Run runit = parait.AppendChild(new Run());
+            RunProperties rpit = runit.AppendChild(new RunProperties());
+            runit.AppendChild(new Text(txt));
+            tc2.Append(parait);
+            return tc2;
         }
 
         private static TableCell CenterAndColour(string txt, string clr)
