@@ -467,8 +467,7 @@ namespace RoofSafety.Controllers
                             Body bodycover = mainPart.Document.AppendChild(new Body());
                             Shape sp = new Shape();
                             string StyleString = "position:absolute;margin-left:0;margin-top:63pt;width:540pt;height:6pt;z-index:-251658240;visibility:visible;mso-wrap-style:square;mso-width-percent:0;mso-height-percent:0;mso-wrap-distance-left:0;mso-wrap-distance-top:0;mso-wrap-distance-right:0;mso-wrap-distance-bottom:0;mso-position-horizontal:absolute;mso-position-horizontal-relative:page;mso-position-vertical:absolute;mso-position-vertical-relative:page;mso-width-percent:0;mso-height-percent:0;mso-width-relative:page;mso-height-relative:page;v-text-anchor:top";
- 
-                            //https://stackoverflow.com/questions/42898907/how-to-add-a-shape-in-word-document-using-openxml-c
+
                             sp.Style = StyleString;
                             sp.FillColor = "Red";
                             bodycover.AppendChild(sp);
@@ -676,9 +675,10 @@ namespace RoofSafety.Controllers
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The following existing height safety equipment is installed on site:"));
                         runeh.AppendChild(new Break());
-                        foreach (var itmdesc in ret.Items.OrderBy(i=>i.Ordr))
+                        foreach (var itmdesc in ret.Items.GroupBy(i=>i.EquipName).OrderBy(i=>i.Key))
                         {
-                            runeh.AppendChild(new Text("- " + itmdesc.EquipName + " " + itmdesc.Manufacturer + " " + itmdesc.SerialNo )); runeh.AppendChild(new Break());
+                            runeh.AppendChild(new Text("- " + itmdesc.Key));// itmdesc.EquipName + " " + itmdesc.Manufacturer + " " + itmdesc.SerialNo); ;// ;//);
+                                                                           runeh.AppendChild(new Break());
                         }
                         runeh.AppendChild(new Break());
                         runeh.AppendChild(new Break());
