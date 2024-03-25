@@ -387,9 +387,14 @@ namespace RoofSafety.Controllers
                 counter++;
             }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
-            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { id = ins.id, Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
+            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { Author2=ins.Inspector2ID.ToString(), id = ins.id, Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
             //  ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
-           
+            foreach (var item in ret.Versions)
+            {
+                var mm = _context.Employee.Where(i => i.id.ToString() == item.Author2).FirstOrDefault();
+                if (mm != null)
+                    item.Author2 = mm.Given + " " + mm.Surname; 
+            }
             using (var client = new HttpClient())
             {
                 if (insp.Photo != null)
@@ -1242,15 +1247,15 @@ namespace RoofSafety.Controllers
                                     }
                                     {
                                         TableRow trInsp = new TableRow();
-                                        TableCell tcInspDteLbl = new TableCell();
+                                        TableCell tcInspDteLbl = CellFont("Item:", 26, true,"Navy");// new TableCell();
 
-                                        Bold boldinsp = new Bold();
+                                        //Bold boldinsp = new Bold();
 
-                                        boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                                        Run runInsp = new Run(new Text("Item:"));
-                                        runInsp.AppendChild(boldinsp);
-                                        tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                        //boldinsp.Val = OnOffValue.FromBoolean(true);
+                                        
+                                        //Run runInsp = new Run(new Text(""));
+                                        //runInsp.AppendChild(boldinsp);
+                                        //tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
                                         trInsp.Append(tcInspDteLbl);
 
 
@@ -1262,27 +1267,25 @@ namespace RoofSafety.Controllers
                                     }
                                      {
                                         TableRow trInsp = new TableRow();
-                                        TableCell tcInspDteLbl = new TableCell();
+                                        TableCell tcInspDteLbl = CellFont("Risk:", 26, true, "Navy"); //new TableCell();
 
-                                        Bold boldinsp = new Bold();
+                                        //Bold boldinsp = new Bold();
 
-                                        boldinsp.Val = OnOffValue.FromBoolean(true);
+                                        //boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                        {
-                                            Paragraph paraxx = tcInspDteLbl.AppendChild(new Paragraph());
+                                        //{
+                                        //    Paragraph paraxx = tcInspDteLbl.AppendChild(new Paragraph());
 
-                                            ParagraphProperties paraPropsx = new ParagraphProperties();
-                                            SpacingBetweenLines spacingx = new SpacingBetweenLines() { Before = "15", After = "0" };
-                                            paraPropsx.SpacingBetweenLines = spacingx;
-                                            paraxx.ParagraphProperties = paraPropsx;
+                                        //    ParagraphProperties paraPropsx = new ParagraphProperties();
+                                        //    SpacingBetweenLines spacingx = new SpacingBetweenLines() { Before = "15", After = "0" };
+                                        //    paraPropsx.SpacingBetweenLines = spacingx;
+                                        //    paraxx.ParagraphProperties = paraPropsx;
 
-                                            Run runInsp = paraxx.AppendChild(new Run());
-                                            runInsp.AppendChild(new Text("Risk:"));
-                                            runInsp.AppendChild(boldinsp);
-                                        }
-                                       // Run runInsp = new Run(new Text("Risk:"));
-                                       // 
-                                        //tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                        //    Run runInsp = paraxx.AppendChild(new Run());
+                                        //    runInsp.AppendChild(new Text("Risk:"));
+                                        //    runInsp.AppendChild(boldinsp);
+                                        //}
+
                                         trInsp.Append(tcInspDteLbl);
 
 
@@ -1332,15 +1335,15 @@ namespace RoofSafety.Controllers
                                     }
                                       {
                                           TableRow trInsp = new TableRow();
-                                          TableCell tcInspDteLbl = new TableCell();
+                                          TableCell tcInspDteLbl = CellFont("Description:", 26, true, "Navy"); //new TableCell();
 
-                                          Bold boldinsp = new Bold();
+                                          //Bold boldinsp = new Bold();
 
-                                          boldinsp.Val = OnOffValue.FromBoolean(true);
+                                          //boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                          Run runInsp = new Run(new Text("Description:"));
-                                          runInsp.AppendChild(boldinsp);
-                                          tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                          //Run runInsp = new Run(new Text("Description:"));
+                                          //runInsp.AppendChild(boldinsp);
+                                          //tcInspDteLbl.Append(new Paragraph(runInsp));
                                           trInsp.Append(tcInspDteLbl);
 
 
@@ -1353,15 +1356,15 @@ namespace RoofSafety.Controllers
                                       }
                                       {
                                           TableRow trInsp = new TableRow();
-                                          TableCell tcInspDteLbl = new TableCell();
+                                          TableCell tcInspDteLbl = CellFont("Location:", 26, true, "Navy"); //new TableCell();
 
-                                          Bold boldinsp = new Bold();
+                                          //Bold boldinsp = new Bold();
 
-                                          boldinsp.Val = OnOffValue.FromBoolean(true);
+                                          //boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                          Run runInsp = new Run(new Text("Location:"));
-                                          runInsp.AppendChild(boldinsp);
-                                          tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                          //Run runInsp = new Run(new Text("Location:"));
+                                          //runInsp.AppendChild(boldinsp);
+                                          //tcInspDteLbl.Append(new Paragraph(runInsp));
                                           trInsp.Append(tcInspDteLbl);
 
 
@@ -1374,15 +1377,15 @@ namespace RoofSafety.Controllers
                                       }
                                       {
                                           TableRow trInsp = new TableRow();
-                                          TableCell tcInspDteLbl = new TableCell();
+                                          TableCell tcInspDteLbl = CellFont("Result:", 26, true, "Navy"); //new TableCell();
 
-                                          Bold boldinsp = new Bold();
+                                          //Bold boldinsp = new Bold();
 
-                                          boldinsp.Val = OnOffValue.FromBoolean(true);
+                                          //boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                          Run runInsp = new Run(new Text("Result:"));
-                                          runInsp.AppendChild(boldinsp);
-                                          tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                          //Run runInsp = new Run(new Text("Result:"));
+                                          //runInsp.AppendChild(boldinsp);
+                                          //tcInspDteLbl.Append(new Paragraph(runInsp));
                                           trInsp.Append(tcInspDteLbl);
 
 
@@ -1404,16 +1407,16 @@ namespace RoofSafety.Controllers
                                         foreach (var ep in item.Explanation.Eps)
                                         {
                                             TableRow trInsp = new TableRow();
-                                          TableCell tcInspDteLbl = new TableCell();
+                                          TableCell tcInspDteLbl = CellFont(((ii == 0) ? "Explanation:" : ""), 26, true, "Navy"); //new TableCell();
 
-                                          Bold boldinsp = new Bold();
+                                          //Bold boldinsp = new Bold();
 
-                                          boldinsp.Val = OnOffValue.FromBoolean(true);
+                                          //boldinsp.Val = OnOffValue.FromBoolean(true);
                                      
 
-                                          Run runInsp = new Run(new Text((ii==0)?"Explanation:":""));
-                                          runInsp.AppendChild(boldinsp);
-                                          tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                          //Run runInsp = new Run(new Text((ii==0)?"Explanation:":""));
+                                          //runInsp.AppendChild(boldinsp);
+                                          //tcInspDteLbl.Append(new Paragraph(runInsp));
                                           trInsp.Append(tcInspDteLbl);
 
                                             ii++;
@@ -1505,16 +1508,16 @@ namespace RoofSafety.Controllers
                                             {
 
                                                 TableRow trInsp = new TableRow();
-                                                TableCell tcInspDteLbl = new TableCell();
+                                                TableCell tcInspDteLbl = CellFont(((cnt == 0) ? "Hazards:" : ""), 26, true, "Navy");// new TableCell();
 
-                                                Bold boldinsp = new Bold();
+                                                //Bold boldinsp = new Bold();
 
-                                                boldinsp.Val = OnOffValue.FromBoolean(true);
+                                                //boldinsp.Val = OnOffValue.FromBoolean(true);
 
-                                                Run runInsp = new Run(new Text((cnt==0)?"Hazards:":""));
+                                                //Run runInsp = new Run(new Text((cnt==0)?"Hazards:":""));
                                                 cnt++;
-                                                runInsp.AppendChild(boldinsp);
-                                                tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
+                                                //runInsp.AppendChild(boldinsp);
+                                                //tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
                                                 trInsp.Append(tcInspDteLbl);
 
 
@@ -1541,7 +1544,7 @@ namespace RoofSafety.Controllers
                                             //  tcInspDteLbl.Append(new Paragraph(runInsp));//.AppendChild(boldinsp)
                                           //    trInsp.Append(tcInspDteLbl);
 
-                                              TableCell tcInspDteLbl = CellForeColor("Required Controls:", "navy");
+                                              TableCell tcInspDteLbl = CellFont("Required Controls:",26,true, "navy");
                                               trInsp.Append(tcInspDteLbl);
 
 
@@ -1558,9 +1561,9 @@ namespace RoofSafety.Controllers
                                           {
                                               TableRow trInsp = new TableRow();
 
-                                          TableCell tclbl = new TableCell();
+                                          TableCell tclbl = CellFont("Photo:", 26, true, "navy");// new TableCell();
 
-                                          tclbl.Append(new Paragraph(new Run(new Text("Photo"))));
+                                          //tclbl.Append(new Paragraph(new Run(new Text("Photo"))));
                                           trInsp.Append(tclbl);
 
                                           TableCell tcInspDte = new TableCell();
