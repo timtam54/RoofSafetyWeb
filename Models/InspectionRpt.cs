@@ -20,6 +20,8 @@ namespace RoofSafety.Models
         public List<string> InspItems { get; set; }
         public string Photo { get; set; }
 
+        public string Address { get; set; }
+
         public int id { get; set; }
 
     }
