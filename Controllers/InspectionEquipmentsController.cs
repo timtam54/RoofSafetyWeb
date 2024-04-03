@@ -366,7 +366,7 @@ namespace RoofSafety.Controllers
         public static string Yellow = "yellow";
         public static string Red = "#FF2C1A";//"#FF5733";//""
         public static string Blue = "#0052FF";//"#0096FF";
-        public async Task<ActionResult> EquipForInspectionsAll(int id, string hpw)//0,1,2
+        public async Task<ActionResult> EquipForInspectionsAll(int id, string hpw, int scale=90)//0,1,2
         {
             InspectionRpt ret = new InspectionRpt();
             ret.InspItems = (from ins in _context.InspEquip join emp in _context.EquipType on ins.EquipTypeID equals emp.id where ins.InspectionID == id orderby ins.Ordr select emp.EquipTypeDesc).ToList();
@@ -506,7 +506,7 @@ namespace RoofSafety.Controllers
                             // tcInspDte.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6000" }));
 
 
-                            await InsertImage(tcInspDteLbl, wordDocument, mainPart, "https://rssblob.blob.core.windows.net/rssimage/rsspnggreyvertical70.png",24);
+                            await InsertImage(tcInspDteLbl, wordDocument, mainPart, "https://rssblob.blob.core.windows.net/rssimage/rsspnggreyvertical70.png",48);
                             // trInsp.Append(tcInspDte);
 
                             TableCell tcInspDte2 = new TableCell();
@@ -729,15 +729,18 @@ namespace RoofSafety.Controllers
                             tr.Append(CellFont("Version", 32, true));
                             tr.Append(CellFont("Status", 32, true));
                             tr.Append(CellFont("Author", 32, true));
-                            tr.Append(CellFont("Author2", 32, true));
+                            tr.Append(CellFont("Reviewed", 32, true));
                             tr.Append(CellFont("Inspection Date", 32, true));
 
                             body4.AppendChild(table);
-                            foreach (var item in ret.Versions)
+                            int iiii = 0;
+                            foreach (var item in ret.Versions.OrderBy(i=>i.VersionNo))
                             {
+                                iiii++;
                                 TableRow trx = new TableRow();
                                 table.Append(trx);
-                                trx.Append(CellFont(item.VersionNo?.ToString(), 28, false));
+                                //trx.Append(CellFont(item.VersionNo?.ToString(), 28, false));
+                                trx.Append(CellFont(iiii.ToString(), 28, false));
                                 trx.Append(CellFont((item.VersionType), 28, false));
                                 trx.Append(CellFont(item.Author, 28, false));
                                 trx.Append(CellFont(item.Author2, 28, false));
@@ -765,7 +768,7 @@ namespace RoofSafety.Controllers
                         Paragraph paraeh = bodyeh.AppendChild(new Paragraph());
                         Run runeh = paraeh.AppendChild(new Run());
                         RunProperties runPropertieseh = runeh.AppendChild(new RunProperties());
-                        FontSize fontSizepeh = new FontSize() { Val = "30" };
+                        FontSize fontSizepeh = new FontSize() { Val = "26" };
                         runPropertieseh.Append(fontSizepeh);
                         //Bold bold4 = new Bold();
 
@@ -781,7 +784,7 @@ namespace RoofSafety.Controllers
                                                                            runeh.AppendChild(new Break());
                         }
                         runeh.AppendChild(new Break());
-                        runeh.AppendChild(new Break());
+                     //   runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The inspection was carried out on the " + ret.InspDate.ToLongDateString() + " by height safety inspectors from Roof Safety Solutions Pty Ltd. The inspection identifies any risks and reports on compliance in relation to the Australian Standards, Acts and Regulations that form the basis for height safety in Australia."));
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("This report contains:"));
@@ -1690,7 +1693,7 @@ namespace RoofSafety.Controllers
 
                                           string imgurlx = ph.photoname.Replace("%0D%0A", "").TrimEnd();
                                               //MainDocumentPart mainPart2 = wordDocument.AddMainDocumentPart();
-                                              await InsertImage(tcInspDte,wordDocument, mainPart, imgurlx,50);
+                                              await InsertImage(tcInspDte,wordDocument, mainPart, imgurlx, scale);//50
                                           }
                                     
                                     bodyintro.AppendChild(tableInsp);
@@ -2311,7 +2314,7 @@ namespace RoofSafety.Controllers
             var element =
               new Drawing(
                 new DW.Inline(
-                  new DW.Extent() { Cx = wdth * 99000L, Cy = Convert.ToInt64(htw* wdth * 79200L) },
+                  new DW.Extent() { Cx = wdth * 49500L, Cy = Convert.ToInt64(htw* wdth * 39600L) },
                   new DW.EffectExtent()
                   {
                       LeftEdge = 0L,
@@ -2354,7 +2357,7 @@ namespace RoofSafety.Controllers
                           new PIC.ShapeProperties(
                             new A.Transform2D(
                               new A.Offset() { X = 0L, Y = 0L },
-                              new A.Extents() { Cx = wdth * 99000L, Cy = Convert.ToInt64(htw * wdth * 79200L) }),
+                              new A.Extents() { Cx = wdth * 49500L, Cy = Convert.ToInt64(htw * wdth * 39600L) }),
                             new A.PresetGeometry(
                               new A.AdjustValueList()
                             )
