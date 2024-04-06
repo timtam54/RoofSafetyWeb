@@ -2435,6 +2435,32 @@ namespace RoofSafety.Controllers
             }
             return View(inspEquip);
         }
+
+        public async Task<IActionResult> Down(int? id, int Ordr)
+        {
+            var xxx = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
+            SetOrderIfNull(xxx);
+            int? counter = OrdinalAsc(Ordr, xxx);
+            if (counter != null)
+            {
+                if (counter + 1 < xxx.Count())
+                {
+                    var ss = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value];
+                    var tt = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value + 1];
+
+                    int ssid = ss.id;
+                    int ssOrdr = ss.Ordr.Value;
+
+                    int ttid = tt.id;
+                    int ttOrdr = tt.Ordr.Value;
+
+                    xxx.Where(i => i.id == ss.id).FirstOrDefault().Ordr = ttOrdr;
+                    xxx.Where(i => i.id == tt.id).FirstOrDefault().Ordr = ssOrdr;
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction(nameof(EquipForInspections), new { id = id });
+        }
         public async Task<IActionResult> Up(int? id,int Ordr)
         {
             var xxx = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
@@ -2487,31 +2513,7 @@ namespace RoofSafety.Controllers
             }
             return null;
         }
-        public async Task<IActionResult> Down(int? id, int Ordr)
-        {
-            var xxx = await _context.InspEquip.Where(i => i.InspectionID == id).ToListAsync();
-            SetOrderIfNull(xxx);
-            int? counter = OrdinalAsc(Ordr, xxx);
-            if (counter != null)
-            {
-                if (counter + 1 < xxx.Count())
-                {
-                    var ss = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value];
-                    var tt = xxx.OrderBy(i => i.Ordr).ToList()[counter.Value + 1];
-
-                    int ssid = ss.id;
-                    int ssOrdr = ss.Ordr.Value;
-
-                    int ttid = tt.id;
-                    int ttOrdr = tt.Ordr.Value;
-
-                    xxx.Where(i => i.id == ss.id).FirstOrDefault().Ordr = ttOrdr;
-                    xxx.Where(i => i.id == tt.id).FirstOrDefault().Ordr = ssOrdr;
-                    _context.SaveChanges();
-                }
-            }
-            return RedirectToAction(nameof(EquipForInspections), new { id = id });
-        }
+      
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.InspEquip == null)

@@ -19,11 +19,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Inspector)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ordr)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy(i=>i.Ordr)) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Given)
@@ -34,6 +37,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Inspector)
             </td>
+                <td>
+                    <a asp-action="Up" asp-route-Ordr="@item.Ordr" asp-route-id="@item.id">Up</a> |
+                    <a asp-action="Down" asp-route-Ordr="@item.Ordr" asp-route-id="@item.id">Down</a>
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
                 <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>

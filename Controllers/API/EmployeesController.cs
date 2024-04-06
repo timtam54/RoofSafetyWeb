@@ -62,7 +62,7 @@ namespace RSSAPI.Controllers
                {
                    return NotFound();
                }
-               return await _context.Employee.ToListAsync();
+               return await _context.Employee.OrderBy(i => i.Ordr).ToListAsync();
            }
 
 

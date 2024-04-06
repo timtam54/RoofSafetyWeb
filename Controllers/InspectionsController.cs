@@ -75,7 +75,7 @@ namespace RoofSafety.Controllers
         public IActionResult Create(int? id)
         {
             ViewBag.BuildingID = (from xx in _context.Building select new SelectListItem() { Value = xx.id.ToString(), Text = xx.BuildingName }).ToList();
-            ViewBag.InspectorID= (from xx in _context.Employee select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
+            ViewBag.InspectorID= (from xx in _context.Employee orderby xx.Ordr select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
             Inspection ret = new Inspection();
             ret.BuildingID = id.Value;
             ret.InspectionDate = DateTime.Now.Date;
@@ -171,7 +171,7 @@ namespace RoofSafety.Controllers
             }
             if (inspection.Photo!=null)
                 inspection.Photo = _imageservice.GetImageURL(inspection.Photo);
-            ViewBag.InspectorID = (from xx in _context.Employee select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
+            ViewBag.InspectorID = (from xx in _context.Employee orderby xx.Ordr select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
             ViewBag.BuildingID = (from xx in _context.Building select new SelectListItem() { Value = xx.id.ToString(), Text = xx.BuildingName }).ToList();
             List<SelectListItem> stat = new List<SelectListItem>();
             SelectListItem si;
@@ -233,10 +233,10 @@ namespace RoofSafety.Controllers
                 }
                 return RedirectToAction(nameof(InspectionsForBuilding),new { id=inspection.BuildingID});
             }
-            ViewBag.BuildingID = (from xx in _context.Building select new SelectListItem() { Value = xx.id.ToString(), Text = xx.BuildingName }).ToList();
-            ViewBag.InspectorID = (from xx in _context.Employee select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
+            //ViewBag.BuildingID = (from xx in _context.Building select new SelectListItem() { Value = xx.id.ToString(), Text = xx.BuildingName }).ToList();
+           // ViewBag.InspectorID = (from xx in _context.Employee select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Given + " " + xx.Surname }).ToList();
 
-            return View(inspection);
+       //  return View(inspection);
         }
 
         public async Task<IActionResult> Delete(int? id)
