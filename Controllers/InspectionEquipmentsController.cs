@@ -90,7 +90,7 @@ namespace RoofSafety.Controllers
 //            var yyy = await xxx.ToListAsync();
             SetOrderIfNull(yyy);
             ViewBag.InspectionID = id;
-            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName + " @ " + ie.InspectionDate.ToString("dd-MM-yyyy")), ID = ie.BuildingID }).FirstOrDefault();
+            DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName), ID = ie.BuildingID }).FirstOrDefault();
             ViewBag.InspectionDesc = xx.Desc;
             ViewBag.BuildingID = xx.ID;
             return View("Index", yyy);
@@ -519,9 +519,6 @@ namespace RoofSafety.Controllers
                                 Val = ShadingPatternValues.Clear
                             };
                             tcInspDte2.Append(shading);
-
-
-
                             tcInspDte2.Append(ParaLeftSize("36", "Height Safety"));
 
                             tcInspDte2.Append(ParaLeftSize("36", "Audit Report"));
@@ -590,7 +587,7 @@ namespace RoofSafety.Controllers
                                 Bold bold = new Bold();
                                 bold.Val = OnOffValue.FromBoolean(true);
                                 runProperties.AppendChild(bold);
-                                run.AppendChild(new Text("Height and Safety Audit Report for " + xx.Desc));
+                                run.AppendChild(new Text(xx.Desc));
 
                                 run.AppendChild(new Break());
                             //}
@@ -617,9 +614,9 @@ namespace RoofSafety.Controllers
                                 //run2.AppendChild(new Text("e: admin@roofsafetysolutions.com.au"));
                                 //run2.AppendChild(new Break());
 
-                                //Break pgbrk = new Break();
-                                //pgbrk.Type = BreakValues.Page;
-                                //run2.AppendChild(pgbrk);
+                                Break pgbrk = new Break();
+                                pgbrk.Type = BreakValues.Page;
+                                run2.AppendChild(pgbrk);
                             }
                         }
 
@@ -778,7 +775,7 @@ namespace RoofSafety.Controllers
                         runeh.AppendChild(new Break()); runeh.AppendChild(new Break());
                         runeh.AppendChild(new Text("The following existing height safety equipment is installed on site:"));
                         runeh.AppendChild(new Break());
-                        foreach (var itmdesc in ret.Items.GroupBy(i=>i.EquipName).OrderBy(i=>i.Key))
+                        foreach (var itmdesc in ret.Items.GroupBy(i=>i.EquipName).Where(i=>!i.Key.ToLower().Contains("no safe access")).OrderBy(i=>i.Key))
                         {
                             runeh.AppendChild(new Text("- " + itmdesc.Key));// itmdesc.EquipName + " " + itmdesc.Manufacturer + " " + itmdesc.SerialNo); ;// ;//);
                                                                            runeh.AppendChild(new Break());
@@ -2522,6 +2519,7 @@ namespace RoofSafety.Controllers
             }
 
             var inspectionEquipment = await _context.InspEquip.FindAsync(id);
+        
             var Photos =  _context.InspPhoto.Where(i => i.InspEquipID == id).ToList();
             foreach (var item in Photos)
             {

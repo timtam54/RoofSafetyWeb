@@ -8,8 +8,10 @@
 
 
 <p>
+ @if (Model.FirstOrDefault()?.id!=null)
+ {
     <a asp-action="Create">Add new Equipment/Item Types</a>
-  
+ }  
 </p>
 <table class="table">
     <thead>

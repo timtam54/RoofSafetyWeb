@@ -10,7 +10,7 @@ namespace RoofSafety.Data
         public dbcontext(DbContextOptions options) : base(options)
         {
         }
-
+        public DbSet<Token> token { get; set; }
         public DbSet<Client> Client { get; set; }
        // public DbSet<BuildingPhoto> BuildingPhoto { get; set; }
         public DbSet<Building> Building { get; set; }

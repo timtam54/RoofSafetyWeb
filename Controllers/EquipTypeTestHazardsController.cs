@@ -137,6 +137,7 @@ namespace RoofSafety.Controllers
                 public IActionResult Create(int? id)
                 {
                     EquipTypeTestHazards ret = new EquipTypeTestHazards();
+            //if (id!=null)
                     ret.EquipTypeTestID = id.Value;//EquipTypeTestID
 
                                                    //                    ViewBag.HazardID = (from xx in _context.Hazard select new SelectListItem() { Value = xx.id.ToString(), Text = xx.Detail}).ToList();

@@ -52,6 +52,21 @@
                 <input asp-for="RequiredControls" class="form-control" />
                 <span asp-validation-for="RequiredControls" class="text-danger"></span>
             </div>
+             <div class="form-group">
+                <label asp-for="Qty" class="control-label"></label>
+                <input asp-for="Qty" class="form-control" />
+                <span asp-validation-for="Qty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNo" class="control-label"></label>
+                <input asp-for="SerialNo" class="form-control" />
+                <span asp-validation-for="SerialNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SNSuffix" class="control-label"></label>
+                <input asp-for="SNSuffix" class="form-control" />
+                <span asp-validation-for="SNSuffix" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="EquipTypeID" class="control-label"></label>
                 <select asp-for="EquipTypeID" class="form-control" asp-items="@(new SelectList(ViewBag.EquipmentTypeID, "Value", "Text"))"></select>

@@ -1,0 +1,82 @@
+﻿@page
+@model RoofSafety.Pages.xeroredirModel
+@{
+}
+<form method="post">
+
+    <table>
+    <tr>
+        <td colspan="3"><h3>Connect to a Xero</h3></td>
+    </tr>
+    <tr>
+        <th>Create an app with Redirect URL</th>
+            <td>@Model.RedirectURL</td>
+    </tr>
+    @*    <tr>
+    <th><b>
+    <label asp-for="Token.email"></label>
+    </b>
+    </th>
+    <td>@Model.Token.email</td>
+    </tr> *@
+    <tr>
+        <th><b>App/client id</b></th>
+        <td width="400px"><input style="width:600px" type="text" asp-for="Token.client_id" value="@Model.Token.client_id" /></td>
+    </tr>
+    <tr>
+        <th>App/Client secret</th>
+        <td><input type="text" width="400px" style="width:600px" asp-for="Token.client_secret" value="@Model.Token.client_secret" /></td>
+    </tr>
+    <tr>
+        <th>
+            Scope
+        </th>
+
+        <td><input type="text" width="400px" style="width:600px" asp-for="Token.scope" value="@Model.Token.scope" /></td>
+    </tr>
+    <tr>
+        <td><a href="https://developer.squareup.com/docs/oauth-api/square-permissions" target="_blank">All Scopes</a>"</td>
+        <td>eg MERCHANT_PROFILE_READ+PAYMENTS_READ+PAYMENTS_WRITE</td>
+
+    </tr>
+
+    <tr>
+        <th>Access Token</th>
+        <td>@Model.Token.access_token</td>
+    </tr>
+    <tr>
+        <th>Refresh Token</th>
+        <td>@Model.Token.refresh_token</td>
+    </tr>
+    <tr>
+        <th>Expires At</th>
+        <td>@Model.Token.expires_at</td>
+    </tr>
+    <tr>
+            <td><button type="submit">Submit</button></td>
+</tr>
+<tr>
+   
+</tr>
+
+    </table>
+    @if (Model.Token.client_secret!=null)
+    {
+    <a href="https://login.xero.com/identity/connect/authorize?client_id=@Model.Token.client_id&redirect_uri=@Model.RedirectURL&response_type=code&scope=@Model.Token.scope">
+        https://login.xero.com/identity/connect/authorize?client_id=@Model.Token.client_id&redirect_uri=@Model.RedirectURL&response_type=code&scope=@Model.Token.scope
+    </a>
+    }
+</form>
+<table><tr>
+<td>
+
+    <a href="Customer" class="btn btn-primary">Customer import</a>
+</td>
+    </tr>
+    <tr>
+        <td>
+
+            <a href="Inspection" class="btn btn-primary">Inspection import</a>
+        </td>
+    </tr>
+</table>

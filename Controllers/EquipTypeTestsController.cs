@@ -115,7 +115,8 @@ namespace RoofSafety.Controllers
 
         public async Task<ActionResult> TestsForEquipType(int id)
         {
-            ViewBag.id = id;
+            ViewData["id"] = id;
+            
             return await TFET(id);
         }
 

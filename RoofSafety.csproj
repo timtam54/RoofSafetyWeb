@@ -25,6 +25,7 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     <PackageReference Include="Razor.Templating.Core" Version="1.9.0" />
+    <PackageReference Include="Xero.NetStandard.OAuth2" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>

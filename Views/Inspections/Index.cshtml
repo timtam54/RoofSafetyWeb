@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RoofSafety.Models.Inspection>
+﻿@model RoofSafety.Models.InspectionSearch
 @{
     ViewData["Title"] = "Inspections for Buiding " + @ViewBag.BuildingDesc;
 }
@@ -9,6 +9,9 @@
         <td>
 
 <h2>Inspections for @ViewBag.BuildingDesc</h2>
+        </td>
+        <td style="color:red">
+            @ViewBag.Status
         </td>
 
 @if (ViewBag.BuildingID != 0)
@@ -26,6 +29,31 @@
 </div>
 
         </td>
+        @if (Model.status != "Building")
+        {
+            <form class="form" asp-action="Index">
+
+        <td>
+            <input type="hidden" asp-for="status" />
+            <input type="text" placeholder="-Search-" asp-for="Search" />
+  
+        </td>
+        <td>
+            <b>Sort</b>
+        </td>
+        <td>
+            <select asp-for="sort">
+                <option value="Date">Date</option>
+                <option value="BuildingName">BuildingName</option>
+                <option value="Areas">Areas</option>
+                <option value="Inspector">Inspector</option>
+            </select>
+        </td>
+        <td>
+            <button type="submit">Filter</button>
+        </td>
+        </form>
+        }
     </tr>
 </table>
 
@@ -34,13 +62,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.InspectionDate)
+                Inspection Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Areas)
+                Areas
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Building.BuildingName)
+                Building Name
             </th>
             <th>
                Inspector
@@ -59,7 +87,7 @@
 
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Inspections)
         {
             <tr>
                 <td>

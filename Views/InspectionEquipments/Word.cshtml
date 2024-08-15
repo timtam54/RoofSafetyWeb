@@ -229,9 +229,10 @@
             
                             <ul>
                     <ul>
-                        @foreach (var itmdesc in Model.Items.OrderBy(i => i.Ordr))
+                        @foreach (var itmdesc in Model.Items.GroupBy(i => i.EquipName).Where(i => !i.Key.ToLower().Contains("no safe access")).OrderBy(i => i.Key))
+
                         {
-                            <li>@itmdesc.EquipName + " " + @itmdesc.Manufacturer + " " + @itmdesc.SerialNo</li>
+                            <li>@itmdesc.Key</li>
                         }
                     </ul>
 

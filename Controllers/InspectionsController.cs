@@ -21,33 +21,94 @@ namespace RoofSafety.Controllers
         private readonly dbcontext _context;
         private readonly IImageService _imageservice;
 
+
+        public string? Search { get; set; }
+
         public InspectionsController(dbcontext context, IImageService imageservice)
         {
             _context = context;
             _imageservice = imageservice;
         }
 
-        public async Task<IActionResult> Index(string? status)
+        public async Task<IActionResult> Index(string? status,string? search,string? sort)
         {
             ViewBag.ClientDesc = "All Clients";
             ViewBag.ClientID = 0;
             ViewBag.BuildingID = 0;
             ViewBag.BuildingDesc = "All Buildings";
-            List<Inspection> ret = new List<Inspection>();
+            InspectionSearch ret = new InspectionSearch();
+            ret.status = status;
+            //ret.Inspections = new List<Inspection>();
+
             if (status == null)
-                ret = await _context.Inspection.Where(i => i.Status == "A").OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            {
+                ViewBag.Status = "Active Inspections Only";
+                ret.Inspections = await _context.Inspection.Where(i => i.Status == "A" && (search == null || i.Areas.ToLower().Contains(search.ToLower()) || i.Building.BuildingName.ToLower().Contains(search.ToLower()) || i.Inspector.Surname.ToLower().Contains(search.ToLower()) || i.Inspector.Given.ToLower().Contains(search.ToLower()))).OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            }
             else
-                ret = await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
-            var ss = await (from ie in _context.InspEquip where ret.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
-            foreach (var ins in ret)
+            {
+                ViewBag.Status = "All Inspections";
+
+                ret.Inspections = await _context.Inspection.Where(i=> (search == null || i.Areas.ToLower().Contains(search.ToLower()) || i.Building.BuildingName.ToLower().Contains(search.ToLower()) || i.Inspector.Surname.ToLower().Contains(search.ToLower()) || i.Inspector.Given.ToLower().Contains(search.ToLower()))).OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            }
+            if (sort=="BuildingName")
+            {
+                ret.Inspections = ret.Inspections.OrderBy(i=>i.Building.BuildingName).ToList();
+            }
+            else if (sort == "Areas")
+            {
+                ret.Inspections = ret.Inspections.OrderBy(i => i.Areas).ToList();
+            }
+            else if (sort == "Inspector")
+            {
+                ret.Inspections = ret.Inspections.OrderBy(i => i.Inspector.Given).ToList();
+            }
+            else //if (sort == "Date" || sort==null)
+            {
+                ret.Inspections = ret.Inspections.OrderByDescending(i => i.InspectionDate).ToList();
+            }
+          
+            var ss = await (from ie in _context.InspEquip where ret.Inspections.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
+            foreach (var ins in ret.Inspections)
             {
                 var inspit = ss.Where(i => i.InspectionID == ins.id).FirstOrDefault();
                 if (inspit != null)
-                    ins.Inspector2ID = inspit.Count;
+                    ins.Inspector2ID = inspit?.Count;
             }
             return View(ret);
         }
 
+
+        /*    public async Task<IActionResult> Index(string? status)
+        {
+            ViewBag.ClientDesc = "All Clients";
+            ViewBag.ClientID = 0;
+            ViewBag.BuildingID = 0;
+            ViewBag.BuildingDesc = "All Buildings";
+            InspectionSearch ret = new InspectionSearch();
+            //ret.Inspections = new List<Inspection>();
+
+            if (status == null)
+            {
+                ViewBag.Status = "Active Inspections Only";
+                ret.Inspections = await _context.Inspection.Where(i => i.Status == "A").OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            }
+            else
+            {
+                ViewBag.Status = "All Inspections";
+
+                ret.Inspections = await _context.Inspection.OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+            }
+            var ss = await (from ie in _context.InspEquip where ret.Inspections.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
+            foreach (var ins in ret.Inspections)
+            {
+                var inspit = ss.Where(i => i.InspectionID == ins.id).FirstOrDefault();
+                if (inspit != null)
+                    ins.Inspector2ID = inspit?.Count;
+            }
+            return View(ret);
+        }
+        */
         public class InspItemCount
         {
             public int InspectionID { get; set; }
@@ -257,8 +318,12 @@ namespace RoofSafety.Controllers
         public async Task<IActionResult> InspectionsForBuilding(int id)
         {
             var dbcontext = _context.Inspection.Where(i => i.BuildingID==id).Include(i=>i.Building).Include(i=>i.Inspector);
-            var res = await dbcontext.ToListAsync();
 
+            InspectionSearch ret = new InspectionSearch();
+            ret.status = "Building";
+
+            ret.Inspections = await dbcontext.ToListAsync();
+            ViewBag.Status = "All Inspections";
             ViewBag.BuildingID = id;
             var bd = (from ie in _context.Building where ie.id == id select ie).FirstOrDefault();
             if (bd != null)
@@ -266,7 +331,7 @@ namespace RoofSafety.Controllers
                 ViewBag.BuildingDesc = bd.BuildingName;
                 ViewBag.ClientID = bd.ClientID;
             }
-            return View("Index",res);
+            return View("Index",ret);
         }
 
         [HttpPost, ActionName("Delete")]

@@ -8,7 +8,10 @@
 <h1>Hazards for Equip Type Test @ViewBag.EquipTypeTest</h1>
 
 <p>
-    <a asp-action="Create" asp-route-id="@ViewBag.EquipTypeTestID">Add new Hazards for this Test</a>
+    @if (ViewBag.EquipTypeTestID != null)
+    {
+        <a asp-action="Create" asp-route-id="@ViewBag.EquipTypeTestID">Add new Hazards for this Test</a>
+    }
 </p>
 <table class="table">
     <thead>

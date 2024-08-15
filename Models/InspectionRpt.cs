@@ -39,7 +39,7 @@ namespace RoofSafety.Models
                 List<string> ret = new List<string>();
                 for (int i = 0; i < Qty; i++)
                 {
-                    ret.Add(SerialNo+ (sn + i).ToString());
+                    ret.Add((SerialNo==null)?"":SerialNo+ (sn + i).ToString());
 
                 }
                 return ret;

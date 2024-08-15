@@ -65,9 +65,18 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ContactName)
                         </td>
+                @if (   item.StartedDate==null)
+                {
+                    <td>
+
+                    </td>
+                }
+                else
+                {
                         <td>
-                            @item.StartedDate.ToShortDateString()
+                            @item.StartedDate.Value.ToShortDateString()
                         </td>
+                }
                         <td>
                             @Html.DisplayFor(modelItem => item.PhoneNumber)
                         </td>
@@ -77,8 +86,10 @@
                         <td>
                             <a asp-action="BuildingsForClient" asp-controller="Buildings" asp-route-id="@item.id">Buildings</a>
                         </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a> |
+                        <td style="display:flex">
+
+                            <a asp-action="Edit" asp-route-id="@item.id"><img src="~/Image/Edit.png" /></a>
+
                             <a asp-action="Delete" asp-route-id="@item.id"><img src="~/Image/delete.png" /></a>
                         </td>
                     </tr>

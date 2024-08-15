@@ -17,12 +17,20 @@ namespace RoofSafety.Models
 
         [DataType(DataType.Date)]
 
-        public DateTime StartedDate { get; set; }
+        public DateTime? StartedDate { get; set; }
 
         public string? PhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
 
+        public string? source { get; set; }
+
         public List<Building> Buildings { get; set; }
+
+        public string? ABN { get; set; }
+
+        public string? ACN { get; set; }
+
+        public Guid? XeroID { get; set; }
     }
 
 

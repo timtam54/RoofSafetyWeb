@@ -14,6 +14,9 @@
     <thead>
         <tr>
             <th>
+                Item No
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Location)
             </th>
             <th>
@@ -28,6 +31,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SNSuffix)
+            </th>
             <th>Test</th>
             <th>
                 Order
@@ -38,9 +50,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.OrderBy(i=>i.Ordr)) {
+        @{
+            int counter = 0;
+        }
+        @foreach (var item in Model.OrderBy(i => i.Ordr))
+        {
+            counter++;
+
         <tr>
-                <td>
+            <td>
+                @string.Format("1.{0}",counter.ToString())
+            </td>
+            <td>
+
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
             <td>
@@ -56,8 +78,18 @@
                     @Html.DisplayFor(modelItem => item.Rating)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SNSuffix)
+                </td>
+                <td>
                     <a asp-action="TestsForEquip" asp-controller="InspEquipTypeTests" asp-route-id="@item.id">Test</a>
                     </td>
+            
                 <td>
                     <a asp-action="Up" asp-route-Ordr="@item.Ordr" asp-route-id="@item.InspectionID">Up</a> |
                     <a asp-action="Down" asp-route-Ordr="@item.Ordr" asp-route-id="@item.InspectionID">Down</a>
