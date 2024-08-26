@@ -43,8 +43,9 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseEndpoints(endpoints=>endpoints.MapControllers());
 app.MapRazorPages();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Login}/{id?}");
+   pattern: "{controller=Home}/{action=Login}/{id?}");
 
 app.Run();

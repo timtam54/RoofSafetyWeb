@@ -1,5 +1,7 @@
+using EficazFramework.Validation.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RoofSafety.Data;
 using RoofSafety.Models;
@@ -16,8 +18,14 @@ namespace RoofSafety.Pages
         {
             _context = context;
         }
-        public async Task OnGet()
+        public async Task<ActionResult> OnGet()
         {
+        //    clis = await _context.Client.ToListAsync();
+        //    //return Page();
+        //}
+        //public async Task<ActionResult> OnPost()
+
+        //{ 
             var apiInstance = new AccountingApi();// PayrollAuApi();
 
             //var ifModifiedSince = DateTime.Parse("2020-02-06T12:17:43.202-08:00");
@@ -43,18 +51,20 @@ namespace RoofSafety.Pages
                     accessToken = referesh(tkn.client_id, tkn.client_secret);
                     // accessToken = tkn.access_token;
                     xeroTenantId = tkn.TenantID.Value;
-
                     Emps = await apiInstance.GetContactsAsync(accessToken, xeroTenantId.ToString(), null, null, null);
+
+//                    Emps = await apiInstance.GetContactsAsync(accessToken, xeroTenantId.ToString(),null, null, null);
                 }
                 catch (Xero.NetStandard.OAuth2.Client.ApiException e)
                 {
-                    return;//todotim Json(new { Error = "Authorisation Failed - please try again." });// RedirectToAction("Clients", "Home", new { Error = "Error: " + e.Message });
+                    return Page();//todotim Json(new { Error = "Authorisation Failed - please try again." });// RedirectToAction("Clients", "Home", new { Error = "Error: " + e.Message });
                 }
             }
 
-            UpdateClients(Emps._Contacts);//Xero.NetStandard.OAuth2.Model.PayrollAu.Employees Emps
-           // return null;//todotim Json(new { Error = "" });
-            //return RedirectToAction("Clients", "Home", new { Error = "Successfully imported Clients" });
+            UpdateClients(Emps._Contacts.Where(i=>i.Name!=null).ToList());//Xero.NetStandard.OAuth2.Model.PayrollAu.Employees Emps
+                                          // return null;//todotim Json(new { Error = "" });
+                                          //return RedirectToAction("Clients", "Home", new { Error = "Successfully imported Clients" });
+            return Page();
         }
 
         string MaxLength(int len, string instring)
@@ -165,29 +175,29 @@ namespace RoofSafety.Pages
                 }
             }
         }
+        public List<Client> clis { get; set; }
         void UpdateClients(List<Xero.NetStandard.OAuth2.Model.Accounting.Contact> Custs)
         {
             //DataClasses1DataContext db = new DataClasses1DataContext();
-            List<Client> clis = _context.Client.ToList();
+            clis = _context.Client.ToList();
             foreach (Xero.NetStandard.OAuth2.Model.Accounting.Contact item in Custs)
             {
                 if (item.ContactStatus == Xero.NetStandard.OAuth2.Model.Accounting.Contact.ContactStatusEnum.ACTIVE) { 
                     try
                     {
-                        if (item.Name.ToLower().Contains("minpro"))
-                            item.Name = item.Name;
+                        
                         Client cliMatch = null;
                         if (item.Name != null)
                             cliMatch = clis.Where(i => i.name.ToLower() == item.Name.ToLower()).FirstOrDefault();
-                        if (cliMatch == null)
-                        {
-                            if (item.EmailAddress != null)
-                            {
-                                var cliMatch2 = clis.Where(i => i.EmailAddress != null).ToList();
-                                cliMatch = cliMatch2.Where(i => i.EmailAddress.ToLower() == item.EmailAddress.ToLower()).FirstOrDefault();
+                        //if (cliMatch == null)
+                        //{
+                        //    if (item.EmailAddress != null)
+                        //    {
+                        //        var cliMatch2 = clis.Where(i => i.EmailAddress != null && i.EmailAddress!="").ToList();
+                        //        cliMatch = cliMatch2.Where(i => i.EmailAddress.ToLower() == item.EmailAddress.ToLower()).FirstOrDefault();
 
-                            }
-                        }
+                        //    }
+                        //}
 
                         if (cliMatch == null)
                             cliMatch = clis.Where(i => i.XeroID == item.ContactID).FirstOrDefault();
@@ -199,29 +209,48 @@ namespace RoofSafety.Pages
                             cliMatch.XeroID = item.ContactID;
                             cliMatch.EmailAddress = item.EmailAddress;
                             cliMatch.source = "AddedFromXero";
-                            cliMatch.PhoneNumber = item.Phones.FirstOrDefault().PhoneNumber;
-
                             cliMatch.name = item.Name;
+                            cliMatch.PhoneNumber = item.Phones.FirstOrDefault().PhoneNumber;
+                            var cont = item.ContactPersons.FirstOrDefault();
+                            if (cont != null)
+                            {
+                                cliMatch.ContactName = cont.FirstName + " " + cont.LastName;
+                                if (cliMatch.EmailAddress==null || cliMatch.EmailAddress=="")
+
+                                    cliMatch.EmailAddress = cont.EmailAddress;
+                                //cliMatch.ContactName= cont.FirstName + " " + cont.LastName;
+                            }
                             //add new
                         }
-                        
 
-                        cliMatch.XeroID = item.ContactID;
-                        if (item.Addresses != null)
+                        if (cliMatch.XeroID != item.ContactID || newrec || (cliMatch.ContactName =="" && item.ContactPersons.Count()>0))
                         {
-                            if (item.Addresses.Count > 0)
+                            var cont = item.ContactPersons.FirstOrDefault();
+                            if (cont != null)
                             {
-                                cliMatch.Address = MaxLength(150, item.Addresses.FirstOrDefault().AddressLine1 + " " + item.Addresses.FirstOrDefault().AddressLine2 + " " + item.Addresses.FirstOrDefault().AddressLine3) + " " + MaxLength(150, item.Addresses.FirstOrDefault().City) + " " + MaxLength(4, item.Addresses.FirstOrDefault().PostalCode);
-                                //                          cliMatch.ClientName = MaxLength(255, item.Addresses.FirstOrDefault().AttentionTo);
-                                //cliMatch.PostCode = MaxLength(4, item.Addresses.FirstOrDefault().PostalCode);
-                            }
-                        }
-                        cliMatch.ABN = item.TaxNumber;
-                        cliMatch.ACN = item.CompanyNumber;
+                                cliMatch.ContactName = cont.FirstName + " " + cont.LastName;
+                                if (cliMatch.EmailAddress == null || cliMatch.EmailAddress == "")
 
-                        if (newrec)
-                            _context.Add(cliMatch);//.Client.InsertOnSubmit(cliMatch);
-                        _context.SaveChanges();
+                                    cliMatch.EmailAddress = cont.EmailAddress;
+                                //cliMatch.ContactName= cont.FirstName + " " + cont.LastName;
+                            }
+                            cliMatch.XeroID = item.ContactID;
+                            if (item.Addresses != null)
+                            {
+                                if (item.Addresses.Count > 0)
+                                {
+                                    cliMatch.Address = MaxLength(150, item.Addresses.FirstOrDefault().AddressLine1 + " " + item.Addresses.FirstOrDefault().AddressLine2 + " " + item.Addresses.FirstOrDefault().AddressLine3) + " " + MaxLength(150, item.Addresses.FirstOrDefault().City) + " " + MaxLength(4, item.Addresses.FirstOrDefault().PostalCode);
+                                    //                          cliMatch.ClientName = MaxLength(255, item.Addresses.FirstOrDefault().AttentionTo);
+                                    //cliMatch.PostCode = MaxLength(4, item.Addresses.FirstOrDefault().PostalCode);
+                                }
+                            }
+                            cliMatch.ABN = item.TaxNumber;
+                            cliMatch.ACN = item.CompanyNumber;
+
+                            if (newrec)
+                                _context.Add(cliMatch);//.Client.InsertOnSubmit(cliMatch);
+                            _context.SaveChanges();
+                        }
                     }
                     catch (Exception ex)
                     {

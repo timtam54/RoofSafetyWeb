@@ -2,3 +2,34 @@
 @model RoofSafety.Pages.CustomerModel
 @{
 }
+
+<h1>Customer</h1>
+<form method="post">
+    <button type="submit">Submit</button>
+    <input type="submit" value="get from xero" />
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Xero</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cli in Model.clis)
+        {
+            <tr>
+                <td>@cli.id</td>
+                <td>@cli.name</td>
+                <td>@cli.Address</td>
+                <td>@cli.PhoneNumber</td>
+                <td>@cli.EmailAddress</td>
+                <td>@cli.XeroID</td>
+            </tr>
+        }
+    </tbody>
+</form>

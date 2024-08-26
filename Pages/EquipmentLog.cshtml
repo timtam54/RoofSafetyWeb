@@ -18,6 +18,8 @@
 
         <p style="color:red">@Model.Error</p>
         <input type="hidden" data="ID" value="ID" />
+        <input type="hidden" data="CliID" value="CliID" />
+        
         <H2>
           @Model.Title
         </H2>   
@@ -34,7 +36,9 @@
                 <tr>
 
                     <th>#</th>
-                   
+                   <th>Building</th>
+                    <th>Status</th>
+                    <th>Date</th>
                     <th>EquipmentType_Desc</th>
                     <th>Manufacturer</th>
                     <th>Withdrawal Date</th>
@@ -50,6 +54,26 @@
 
 
                 <tr>
+
+                    <td>
+                        @prod.BuildingName
+                    </td>
+
+                    <td>
+                        @prod.InspStatus
+                    </td>
+                    @if (prod.InspDate == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>
+                            @prod.InspDate.Value.ToString("dd-MMM-yyyy")
+                    </td>
+                    }
+
+          
                     <td>@prod.Number</td>
                  
                     <td>@prod.EquipmentType_Desc</td>

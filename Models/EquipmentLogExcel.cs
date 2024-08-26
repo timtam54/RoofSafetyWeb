@@ -16,5 +16,13 @@
         public string Status { get; set; }
         public string InspectionDate { get; set; }
         public string InspectionDue { get; set; }
+
+        public int BuildingID { get; set; }
+
+        public string? BuildingName { get; set; }
+
+        public string? InspStatus { get; set; }
+
+        public DateTime? InspDate { get; set; }
     }
 }
