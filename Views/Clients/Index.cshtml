@@ -87,7 +87,7 @@
                             @Html.DisplayFor(modelItem => item.EmailAddress)
                         </td>
                         <td>
-                    <a href="https://localhost:7017/EquipmentLog?ClientID=@item.id" target="other">Buiding / Equip Log</a>
+                    <a href="/EquipmentLog?ClientID=@item.id" target="other">Buiding / Equip Log</a>
                         </td>
                         <td>
                             <a asp-action="BuildingsForClient" asp-controller="Buildings" asp-route-id="@item.id">Buildings</a>
