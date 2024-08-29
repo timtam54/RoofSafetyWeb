@@ -11,22 +11,26 @@
         background-color: lightgray;
     }
 </style>
-<div class="text-left">
+
+    <div class="text-left" style="display:flex;justify-content: space-around">
+        <img src="~/Image/rsslogo.png" />
     <h4 class="display-6">Equipment Log</h4>
     <a href="./Inspections/Index">Back</a>
+        <p style="color:red">@Model.Error</p>
+       
+       
+        <button type="submit" value="Submit" class="btn btn-primary">Export Excel</button>
+    </div>
+    <H2>
+        @Model.Title
+    </H2>
     <form method="post">
 
-        <p style="color:red">@Model.Error</p>
+        @Html.AntiForgeryToken()
         <input type="hidden" data="ID" value="ID" />
         <input type="hidden" data="CliID" value="CliID" />
         
-        <H2>
-          @Model.Title
-        </H2>   
-        @Html.AntiForgeryToken()
-        <button type="submit" value="Submit" class="btn btn-primary">Export Excel</button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="~/Image/rsslogo.png" />
-
+   
     </form>
     @if (Model.Equipment != null)
     {
