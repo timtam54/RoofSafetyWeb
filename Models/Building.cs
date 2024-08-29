@@ -18,6 +18,8 @@ namespace RoofSafety.Models
         public Client? Client { get; set; }
         [Display(Name = "Client")]
 
+        public int? InspFreqMonths { get; set; }
+
         public int ClientID { get; set; }
 
         public string? Address { get; set; }
