@@ -1,5 +1,5 @@
 ﻿@page
-@model RoofSafety.Pages.EquipmentLogModel
+@model RoofSafety.Pages.LogOldModel
 @{
     ViewData["Title"] = "Equipment Log";
 }
@@ -18,11 +18,9 @@
 
         <p style="color:red">@Model.Error</p>
         <input type="hidden" data="ID" value="ID" />
-        <input type="hidden" data="CliID" value="CliID" />
-        
         <H2>
-          @Model.Title
-        </H2>   
+            @Model.Title
+        </H2>
         @Html.AntiForgeryToken()
         <button type="submit" value="Submit" class="btn btn-primary">Export Excel</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="~/Image/rsslogo.png" />
@@ -34,52 +32,30 @@
 
             <thead>
                 <tr>
-                    <th>Building</th>
-                    <th>Status</th>
-                    <th>Date</th>
+                    <th>#</th>
                     <th>EquipmentType_Desc</th>
                     <th>Manufacturer</th>
-                    <th>Installer</th>
                     <th>Withdrawal Date</th>
                     <th>SerialNo</th>
                     <th>Status</th>
+                    <th>Inspection Date</th>
                     <th>Due</th>
-                    <th>Qty</th>
-
                 </tr>
             </thead>
             @foreach (var prod in Model.Equipment)
             {
-
-
                 <tr>
-
-                    <td>
-                        @prod.BuildingName
-                    </td>
-
-                    <td>
-                        @prod.InspStatus
-                    </td>
-
-
-                   
-
-                    <td>@prod.InspectionDate</td>
-                 
+                    <td>@prod.Number</td>
                     <td>@prod.EquipmentType_Desc</td>
-                     <td>@prod.Manufacturer</td>
-                   
-                    <td>@prod.Installer</td>
+                    <td>@prod.Manufacturer</td>
                     <td>@prod.WithdrawalDate</td>
                     <td>@prod.SerialNo</td>
                     <td>@prod.Status</td>
+                    <td>@prod.InspectionDate</td>
                     <td>@prod.InspectionDue</td>
-                    <td>@prod.Qty</td>
                 </tr>
 
-            } 
+            }
 
         </table>
     }
-

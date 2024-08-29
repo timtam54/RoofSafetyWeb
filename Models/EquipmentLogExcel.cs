@@ -9,6 +9,8 @@
 
         public string Manufacturer { get; set; }
 
+        public string? Installer { get; set; }
+
         public string WithdrawalDate { get; set; }
 
         public string SerialNo { get; set; }
@@ -24,5 +26,7 @@
         public string? InspStatus { get; set; }
 
         public DateTime? InspDate { get; set; }
+
+        public int? Qty { get; set; }
     }
 }

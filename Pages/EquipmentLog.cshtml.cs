@@ -98,6 +98,12 @@ namespace RoofSafety.Pages
                     ws.Column(11).Width = 15;
                     FormatHeaderCell(ws.Cell(2, 11));
 
+                    ws.Cell(2, 12).Value = "Installer";
+                    ws.Column(12).Width = 15;
+                    FormatHeaderCell(ws.Cell(2, 12));
+                    ws.Cell(2, 13).Value = "Qty";
+                    ws.Column(13).Width = 15;
+                    FormatHeaderCell(ws.Cell(2, 13));
                     for (int i = 0; i < Equipment.Count(); i++)
                     {
                         ws.Cell(i + 3, 1).Value = Equipment[i].BuildingName;
@@ -123,6 +129,10 @@ namespace RoofSafety.Pages
                         FormatBodyCell(ws.Cell(i + 3, 10));
                         ws.Cell(i + 3, 11).Value = Equipment[i].InspectionDue;
                         FormatBodyCell(ws.Cell(i + 3,11));
+                        ws.Cell(i + 3, 12).Value = Equipment[i].Installer;
+                        FormatBodyCell(ws.Cell(i + 3, 12));
+                        ws.Cell(i + 3, 13).Value = Equipment[i].Qty;
+                        FormatBodyCell(ws.Cell(i + 3, 13));
                     }
 
                     for (int i = 1; i <= 8; i++)
@@ -225,7 +235,7 @@ namespace RoofSafety.Pages
                 Title = "All item for equipment for client " + cli.name;// ins.Status + " " + ins.InspectionDate.ToString("dd-MMM-yyyy") + " " + build?.BuildingName + "@" + build?.Address;
 
                 var mm = (from bil in bilast join ineq in _context.InspEquip on bil.InspectionID equals ineq.InspectionID select ineq).ToList();
-                Equipment = (from bil in bilast join ineq in _context.InspEquip on bil.InspectionID equals ineq.InspectionID join eqt in _context.EquipType on ineq.EquipTypeID equals eqt.id join insp in _context.Inspection on ineq.InspectionID equals insp.id select new EquipmentLogExcel { InspDate = insp.InvoiceDate, InspStatus = insp.Status, BuildingID = bil.BuildingID, BuildingName = bil.BuildingName, InspectionDue = "", WithdrawalDate = "", Status = "NA", InspEquipID = ineq.id, Number = ineq.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ineq.SerialNo, Manufacturer = ineq.Manufacturer, InspectionDate = insp.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
+                Equipment = (from bil in bilast join ineq in _context.InspEquip on bil.InspectionID equals ineq.InspectionID join eqt in _context.EquipType on ineq.EquipTypeID equals eqt.id join insp in _context.Inspection on ineq.InspectionID equals insp.id select new EquipmentLogExcel { Qty = ineq.Qty ?? 1, Installer = ineq.Installer, InspDate = insp.InvoiceDate, InspStatus = insp.Status, BuildingID = bil.BuildingID, BuildingName = bil.BuildingName, InspectionDue = "", WithdrawalDate = "", Status = "NA", InspEquipID = ineq.id, Number = ineq.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ineq.SerialNo, Manufacturer = ineq.Manufacturer, InspectionDate = insp.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
             }
             else
             {
@@ -233,7 +243,7 @@ namespace RoofSafety.Pages
                 var build = _context.Building.Where(i => i.id == ins.BuildingID).FirstOrDefault();
                 Title = ins.Status + " " + ins.InspectionDate.ToString("dd-MMM-yyyy") + " " + build?.BuildingName + "@" + build?.Address;
 
-                Equipment = (from ine in _context.InspEquip join eqt in _context.EquipType on ine.EquipTypeID equals eqt.id where ine.InspectionID == ID select new EquipmentLogExcel { BuildingID=ins.BuildingID, BuildingName=build.BuildingName, InspDate=ins.InvoiceDate, InspStatus=ins.Status  ,InspectionDue = "", WithdrawalDate = "", Status = "NA", InspEquipID = ine.id, Number = ine.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ine.SerialNo, Manufacturer = ine.Manufacturer, InspectionDate = ins.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
+                Equipment = (from ine in _context.InspEquip join eqt in _context.EquipType on ine.EquipTypeID equals eqt.id where ine.InspectionID == ID select new EquipmentLogExcel { Qty=ine.Qty??1, Installer=ine.Installer, BuildingID=ins.BuildingID, BuildingName=build.BuildingName, InspDate=ins.InvoiceDate, InspStatus=ins.Status  ,InspectionDue = "", WithdrawalDate = "", Status = "NA", InspEquipID = ine.id, Number = ine.id, EquipmentType_Desc = eqt.EquipTypeDesc, SerialNo = ine.SerialNo, Manufacturer = ine.Manufacturer, InspectionDate = ins.InspectionDate.ToString("dd-MMM-yyyy") }).ToList();
             }
             foreach (var item in Equipment)
             {
