@@ -11,7 +11,7 @@
         background-color: lightgray;
     }
 </style>
-
+<form method="post">
     <div class="text-left" style="display:flex;justify-content: space-around">
         <img src="~/Image/rsslogo.png" />
     <h4 class="display-6">Equipment Log</h4>
@@ -24,7 +24,7 @@
     <H2>
         @Model.Title
     </H2>
-    <form method="post">
+   
 
         @Html.AntiForgeryToken()
         <input type="hidden" data="ID" value="ID" />
