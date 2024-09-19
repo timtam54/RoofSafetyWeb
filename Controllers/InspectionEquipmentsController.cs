@@ -638,7 +638,10 @@ namespace RoofSafety.Controllers
                             {
                                 try
                                 {
-                                    var bytes = await client.GetByteArrayAsync("https://www.roofsafetysolutions.com.au/wp-content/uploads/2020/06/roof_safety_logo.png");// ret.Photo);
+                                   // var xxx = await client.GetByteArrayAsync("https://rssblob.blob.core.windows.net/rssimage/rsspnggreyvertical70.png");
+                                   var bytes = await client.GetByteArrayAsync("https://rssblob.blob.core.windows.net/rssimage/roof_safety_logo.png");
+                                    //var bytes = await client.GetByteArrayAsync(@"C:\RSS\RoofSafetyWeb\wwwroot\Image\rsslogo.png");// ret.Photo);
+                                   // var bytes = await client.GetByteArrayAsync("https://www.roofsafetysolutions.com.au/wp-content/uploads/2020/06/roof_safety_logo.png");// ret.Photo);
                                     MemoryStream stream = new MemoryStream(bytes);
                                     imgPart.FeedData(stream);
                                     stream.Close();
