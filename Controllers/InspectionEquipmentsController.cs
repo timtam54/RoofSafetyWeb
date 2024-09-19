@@ -86,8 +86,7 @@ namespace RoofSafety.Controllers
         public async Task<ActionResult> EquipForInspections(int id)
         {
             var yyy =await _context.InspEquip.Where(i => i.InspectionID == id).Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType).ToListAsync();
-            
-//            var yyy = await xxx.ToListAsync();
+
             SetOrderIfNull(yyy);
             ViewBag.InspectionID = id;
             DescParID xx = (from ie in _context.Inspection join bd in _context.Building on ie.BuildingID equals bd.id where ie.id == id select new DescParID { Desc = (bd.BuildingName), ID = ie.BuildingID }).FirstOrDefault();
@@ -637,11 +636,18 @@ namespace RoofSafety.Controllers
                             var imagePartID = newHeaderPart.GetIdOfPart(imgPart);
                             using (var client = new HttpClient())
                             {
-                                var bytes = await client.GetByteArrayAsync("https://www.roofsafetysolutions.com.au/wp-content/uploads/2020/06/roof_safety_logo.png");// ret.Photo);
-                                MemoryStream stream = new MemoryStream(bytes);
-                                imgPart.FeedData(stream);
-                                stream.Close();
-                                stream.Dispose();
+                                try
+                                {
+                                    var bytes = await client.GetByteArrayAsync("https://www.roofsafetysolutions.com.au/wp-content/uploads/2020/06/roof_safety_logo.png");// ret.Photo);
+                                    MemoryStream stream = new MemoryStream(bytes);
+                                    imgPart.FeedData(stream);
+                                    stream.Close();
+                                    stream.Dispose();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.Message);
+                                }
                             }
 
                             var rId = mainPart.GetIdOfPart(newHeaderPart);

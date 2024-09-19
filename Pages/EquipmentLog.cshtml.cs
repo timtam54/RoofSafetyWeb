@@ -220,7 +220,7 @@ namespace RoofSafety.Pages
         }
 
 
-            private void GetData()
+        private void GetData()
         {
             
             if (CliID != null)
@@ -228,10 +228,7 @@ namespace RoofSafety.Pages
                 var bis = (from insp in _context.Inspection join bd in _context.Building on insp.BuildingID equals bd.id where bd.ClientID == CliID select new BuildingInsp { BuildingID = bd.id, BuildingName = bd.BuildingName, InspectionID = insp.id }).ToList();
                 var bilast = bis.GroupBy(i => new { i.BuildingID, i.BuildingName }).Select(g => new BuildingInsp { BuildingID = g.Key.BuildingID, BuildingName = g.Key.BuildingName, InspectionID = g.Max(i => i.InspectionID) }).ToList();
 
-                //   group bd by new { bd.id, bd.BuildingName } into bb select new BuildingLastInsp { BuildingID= bb.Key.id, BuildingName= bb.Key.BuildingName, LastInspectionID= bb.Max(ins.id) as LastInsp })
-                //            var ins = _context.Inspection.Where(i => i.id == ID).FirstOrDefault();
-                // var build = _context.Building.Where(i => i.id == ins.BuildingID).FirstOrDefault();
-                var cli = _context.Client.Where(i => i.id == CliID).FirstOrDefault();
+                 var cli = _context.Client.Where(i => i.id == CliID).FirstOrDefault();
                 Title = "All item for equipment for client " + cli.name;// ins.Status + " " + ins.InspectionDate.ToString("dd-MMM-yyyy") + " " + build?.BuildingName + "@" + build?.Address;
 
                 var mm = (from bil in bilast join ineq in _context.InspEquip on bil.InspectionID equals ineq.InspectionID select ineq).ToList();
