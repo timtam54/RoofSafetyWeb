@@ -34,7 +34,7 @@ namespace RSSAPI.Controllers
             string search = prms[0];
             DateTime frm = Convert.ToDateTime(prms[1]);
             DateTime to = Convert.ToDateTime(prms[2]);
-            string status = prms[3].ToString();
+            string status = prms[3].ToString().ToLower();
             if (search == "~")
                 return await (from insp in _context.Inspection
                               join bd in _context.Building on insp.BuildingID equals bd.id
@@ -42,7 +42,7 @@ namespace RSSAPI.Controllers
                               join cli in _context.Client on bd.ClientID equals cli.id
                               where insp.Status != "X"
                               && insp.InspectionDate >= frm && insp.InspectionDate <= to
-                              && (insp.Status == "P" || insp.Status == "G" || status == "ALL")
+                              && (insp.Status == "P" || insp.Status == "G" || status == "all")
                               orderby insp.InspectionDate descending
                             //  && (bd.BuildingName!.Contains(search) || cli.name!.Contains(search) || insp.Areas!.Contains(search) || bd.Address!.Contains(search))
                               select new InpsectionView { Status = insp.Status, Areas = insp.Areas, id = insp.id, TestingInstruments = insp.TestingInstruments, InspDate = insp.InspectionDate, Address = bd.Address, Inspector = emp.Given + " " + emp.Surname, ClientName = cli.name, Photo = insp.Photo }).ToListAsync();
