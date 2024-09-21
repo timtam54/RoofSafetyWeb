@@ -21,10 +21,6 @@ namespace RSSAPI.Controllers
             _context = context;
         }
 
-
-
-
-
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Building>>> GetBuildings(string id)
         {

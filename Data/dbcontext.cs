@@ -11,6 +11,8 @@ namespace RoofSafety.Data
         {
     
         }
+
+        public DbSet<Status> status { get; set; }
         public DbSet<Settings> settings { get; set; }
         public DbSet<Token> token { get; set; }
         public DbSet<Client> Client { get; set; }

@@ -39,6 +39,9 @@ namespace RoofSafety.Models
         public Guid? XeroID { get; set; }
         
         public DateTime? InvoiceDate { get; set; }
+        public int? TaskTypeID { get; set; }
+
+
     }
 
     //https://localhost:7017/api/inspections

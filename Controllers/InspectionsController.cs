@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -49,23 +44,23 @@ namespace RoofSafety.Controllers
             {
                 ViewBag.Status = "All Inspections";
 
-                ret.Inspections = await _context.Inspection.Where(i=> (search == null || i.Areas.ToLower().Contains(search.ToLower()) || i.Building.BuildingName.ToLower().Contains(search.ToLower()) || i.Inspector.Surname.ToLower().Contains(search.ToLower()) || i.Inspector.Given.ToLower().Contains(search.ToLower()))).OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
+                ret.Inspections = await _context.Inspection.Where(i=>i.TaskTypeID==7 &&  (search == null || i.Areas.ToLower().Contains(search.ToLower()) || i.Building.BuildingName.ToLower().Contains(search.ToLower()) || i.Inspector.Surname.ToLower().Contains(search.ToLower()) || i.Inspector.Given.ToLower().Contains(search.ToLower()))).OrderByDescending(i => i.InspectionDate).Include(i => i.Building).Include(i => i.Inspector).ToListAsync();
             }
             if (sort=="BuildingName")
-            {
-                ret.Inspections = ret.Inspections.OrderBy(i=>i.Building.BuildingName).ToList();
+            { 
+                ret.Inspections = ret.Inspections.Where(i=> i.TaskTypeID == 7 ).OrderBy(i=>i.Building.BuildingName).ToList();
             }
             else if (sort == "Areas")
             {
-                ret.Inspections = ret.Inspections.OrderBy(i => i.Areas).ToList();
+                ret.Inspections = ret.Inspections.Where(i => i.TaskTypeID == 7).OrderBy(i => i.Areas).ToList();
             }
             else if (sort == "Inspector")
             {
-                ret.Inspections = ret.Inspections.OrderBy(i => i.Inspector.Given).ToList();
+                ret.Inspections = ret.Inspections.Where(i => i.TaskTypeID == 7).OrderBy(i => i.Inspector.Given).ToList();
             }
             else //if (sort == "Date" || sort==null)
             {
-                ret.Inspections = ret.Inspections.OrderByDescending(i => i.InspectionDate).ToList();
+                ret.Inspections = ret.Inspections.Where(i => i.TaskTypeID == 7).OrderByDescending(i => i.InspectionDate).ToList();
             }
           
             var ss = await (from ie in _context.InspEquip where ret.Inspections.Select(j => j.id).Contains(ie.InspectionID) group ie by ie.InspectionID into grp select new InspItemCount { InspectionID = grp.Key, Count = grp.Count() }).ToListAsync();
