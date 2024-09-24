@@ -98,8 +98,22 @@ namespace RSSAPI.Controllers
             {
                 return BadRequest();
             }
+            var exis = _context.Inspection.Where(i => i.id == inspection.id).FirstOrDefault();
+            exis.InspectionDate = inspection.InspectionDate;
+            exis.Areas = inspection.Areas;
+            exis.InspectorID = inspection.InspectorID;
+            exis.Inspector2ID = inspection.Inspector2ID;
+            exis.TestingInstruments = inspection.TestingInstruments;
+            exis.Status= inspection.Status;
+            exis.Photo = inspection.Photo;
 
-            _context.Entry(inspection).State = EntityState.Modified;
+            exis.lat = inspection.lat;
+            exis.lon = inspection.lon;
+            exis.finishtime= inspection.finishtime;
+
+
+
+            //            _context.Entry(inspection).State = EntityState.Modified;
 
             try
             {
