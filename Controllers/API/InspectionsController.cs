@@ -99,35 +99,38 @@ namespace RSSAPI.Controllers
                 return BadRequest();
             }
             var exis = _context.Inspection.Where(i => i.id == inspection.id).FirstOrDefault();
-            exis.InspectionDate = inspection.InspectionDate;
-            exis.Areas = inspection.Areas;
-            exis.InspectorID = inspection.InspectorID;
-            exis.Inspector2ID = inspection.Inspector2ID;
-            exis.TestingInstruments = inspection.TestingInstruments;
-            exis.Status= inspection.Status;
-            exis.Photo = inspection.Photo;
-
-            exis.lat = inspection.lat;
-            exis.lon = inspection.lon;
-            exis.finishtime= inspection.finishtime;
-
-
-
-            //            _context.Entry(inspection).State = EntityState.Modified;
-
-            try
+            if (exis != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!inspectionExists(id))
+                exis.InspectionDate = inspection.InspectionDate;
+                exis.Areas = inspection.Areas;
+                exis.InspectorID = inspection.InspectorID;
+                exis.Inspector2ID = inspection.Inspector2ID;
+                exis.TestingInstruments = inspection.TestingInstruments;
+                exis.Status = inspection.Status;
+                exis.Photo = inspection.Photo;
+
+                exis.lat = inspection.lat;
+                exis.lon = inspection.lon;
+                exis.finishtime = inspection.finishtime;
+
+
+
+                //            _context.Entry(inspection).State = EntityState.Modified;
+
+                try
                 {
-                    return NotFound();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!inspectionExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
             return NoContent();

@@ -41,8 +41,8 @@ namespace RoofSafety.Models
         public DateTime? InvoiceDate { get; set; }
         public int? TaskTypeID { get; set; }
 
-        public float? lat { get; set; }
-        public float? lon { get; set; }
+        public double? lat { get; set; }
+        public double? lon { get; set; }
         public DateTime? finishtime { get; set; }
 
 
