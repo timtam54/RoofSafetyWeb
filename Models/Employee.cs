@@ -13,7 +13,7 @@ namespace RoofSafety.Models
         public string? Email { get; set; }
         public string? Password { get; set; }
         public int? Ordr { get; set; }
-
+        public string? iosaccount { get; set; }
     }
 
 
