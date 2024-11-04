@@ -62,7 +62,8 @@
     </table>
     @if (Model.Token.client_secret!=null)
     {
-    <a href="https://login.xero.com/identity/connect/authorize?client_id=@Model.Token.client_id&redirect_uri=@Model.RedirectURL&response_type=code&scope=@Model.Token.scope">
+        <a href="https://login.xero.com/identity/connect/authorize?client_id=@Model.Token.client_id&redirect_uri=@Model.RedirectURL&response_type=code&scope=offline_access accounting.transactions accounting.settings accounting.contacts payroll.timesheets payroll.employees payroll.settings">
+            @Model.Token.scope 
         https://login.xero.com/identity/connect/authorize?client_id=@Model.Token.client_id&redirect_uri=@Model.RedirectURL&response_type=code&scope=@Model.Token.scope
     </a>
     }
@@ -77,6 +78,13 @@
         <td>
 
             <a href="Inspection" class="btn btn-primary">Inspection import</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+
+            <a href="Invoice" class="btn btn-primary">Create Invoice</a>
         </td>
     </tr>
 </table>

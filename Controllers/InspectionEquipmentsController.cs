@@ -365,6 +365,8 @@ namespace RoofSafety.Controllers
         public static string Yellow = "yellow";
         public static string Red = "#FF2C1A";//"#FF5733";//""
         public static string Blue = "#0052FF";//"#0096FF";
+
+        [AllowAnonymous]
         public async Task<ActionResult> EquipForInspectionsAll(int id, string hpw, int scale=90)//0,1,2
         {
             InspectionRpt ret = new InspectionRpt();

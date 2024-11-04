@@ -47,7 +47,7 @@ namespace RoofSafety.Controllers
         }
 
         [AllowAnonymous]
-        public  IActionResult AccessDenied()
+        public IActionResult AccessDenied()
         {
             return View();
         }

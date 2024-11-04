@@ -45,6 +45,8 @@ namespace RoofSafety.Pages
                 }
             }
         }
+
+       
         public ActionResult OnGet(string? code)
         {
             var Email = "timhams@gmail.com";// User.Identity.Name;// _context.Token.FirstOrDefault().email;

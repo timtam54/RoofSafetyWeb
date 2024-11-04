@@ -39,6 +39,8 @@ namespace RoofSafety.Models
         public Guid? XeroID { get; set; }
         
         public DateTime? InvoiceDate { get; set; }
+
+        public decimal? Quote { get; set; }
         public int? TaskTypeID { get; set; }
 
         public double? lat { get; set; }

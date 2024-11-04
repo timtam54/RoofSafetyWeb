@@ -20,17 +20,7 @@ namespace RoofSafety.Pages
         }
         public async Task<ActionResult> OnGet()
         {
-        //    clis = await _context.Client.ToListAsync();
-        //    //return Page();
-        //}
-        //public async Task<ActionResult> OnPost()
-
-        //{ 
             var apiInstance = new AccountingApi();// PayrollAuApi();
-
-            //var ifModifiedSince = DateTime.Parse("2020-02-06T12:17:43.202-08:00");
-            //var where = "StartDate==\"2022-06-09\"";
-
             string accessToken;
             Guid xeroTenantId;
             Xero.NetStandard.OAuth2.Model.Accounting.Contacts Emps = null;
@@ -60,7 +50,6 @@ namespace RoofSafety.Pages
                     return Page();//todotim Json(new { Error = "Authorisation Failed - please try again." });// RedirectToAction("Clients", "Home", new { Error = "Error: " + e.Message });
                 }
             }
-
             UpdateClients(Emps._Contacts.Where(i=>i.Name!=null).ToList());//Xero.NetStandard.OAuth2.Model.PayrollAu.Employees Emps
                                           // return null;//todotim Json(new { Error = "" });
                                           //return RedirectToAction("Clients", "Home", new { Error = "Successfully imported Clients" });
@@ -127,7 +116,7 @@ namespace RoofSafety.Pages
                         tk.access_token = tkn.access_token;
                         ret = tkn.access_token;
                         //tk.DteTme = DateTime.UtcNow;
-                        //todotim     tk.expires_at = tkn.expires_in;
+                        tk.expires_at = tkn.expires_at;
                         tk.jti = tkn.jti;
                         tk.refresh_token = tkn.refresh_token;
                         tk.scope = tkn.scope;
