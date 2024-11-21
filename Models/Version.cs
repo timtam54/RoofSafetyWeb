@@ -21,10 +21,12 @@ namespace RoofSafety.Models
         public string? Author { get; set; }
         public string? Author2 { get; set; }
         public string? Information { get; set; }
-       // public int InspectionID { get; set; }
+
+        public string? NextDue { get; set; }
+        // public int InspectionID { get; set; }
 
         //////
-      //  public int id { get; set; }
+        //  public int id { get; set; }
         public string? Areas { get; set; }
      //   public string? ClientName { get; set; }
      //   public string? Address { get; set; }

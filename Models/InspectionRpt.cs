@@ -10,6 +10,9 @@ namespace RoofSafety.Models
         public List<VersionRpt> Versions { get; set; } 
         public string Title { get; set; }   
         public DateTime InspDate { get; set; }
+        public DateTime? NextDue { get; set; }
+
+
         public string Areas { get; set; }
         public string Callibration { get; set; }
         public string Tests { get; set; }
@@ -23,6 +26,8 @@ namespace RoofSafety.Models
         public string Address { get; set; }
 
         public int id { get; set; }
+
+
 
     }
     public class InspEquipTest

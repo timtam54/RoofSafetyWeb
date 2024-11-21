@@ -55,6 +55,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using System.Drawing.Drawing2D;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Extensions.Azure;
+using static RoofSafety.Pages.EquipmentLogModel;
 //using iText.Kernel.Pdf;
 //using iText.Html2pdf.Attach.Impl.Layout;
 
@@ -376,13 +377,15 @@ namespace RoofSafety.Controllers
             ret.Inspector2 = (from ins in _context.Inspection join emp in _context.Employee on ins.Inspector2ID equals emp.id where ins.id == id select emp.Given + " " + emp.Surname).FirstOrDefault();
             var insp = _context.Inspection.Where(i => i.id == id).FirstOrDefault();
             ret.InspDate = insp.InspectionDate;
+            var building = _context.Building.Where(i => i.id == insp.BuildingID).FirstOrDefault(); 
+            ret.NextDue = insp.InspectionDate.AddMonths((building.InspFreqMonths==null || building.InspFreqMonths==0) ?12:building.InspFreqMonths.Value);
             ret.Areas = insp.Areas;
             ret.id= insp.id;
             ret.Instrument = insp.TestingInstruments;
             ret.Tests = "Test";
             
-            ret.Title = (from bd in _context.Building where bd.id == insp.BuildingID select bd.BuildingName).FirstOrDefault();
-            ret.Address = (from bd in _context.Building where bd.id == insp.BuildingID select bd.Address).FirstOrDefault();
+            ret.Title = building.BuildingName;
+            ret.Address = building.Address;
             ret.Items = (from ie in _context.InspEquip join et in _context.EquipType on ie.EquipTypeID equals et.id where ie.InspectionID == id select new InspEquipTest { Ordr=(ie.Ordr==null)?ie.id:ie.Ordr, ItemNo= ie.SerialNo ,Qty=(ie.Qty==null)?1:ie.Qty.Value, RequiredControls=ie.RequiredControls, Pass=true, Manufacturer =ie.Manufacturer, SNSuffix=ie.SNSuffix, SerialNo=ie.SerialNo, Rating=ie.Rating, Installer=ie.Installer ,EquipName = et.EquipTypeDesc,  Notes = ie.Notes, Location = ie.Location, id = ie.id, EquipType = et, ETID=et.id }).OrderBy(i=>i.Ordr).ToList();//.Include(i => i.EquipType).Include(i => i.Inspection).Include(i => i.EquipType)=efe
     
             int counter = 1;
@@ -392,7 +395,7 @@ namespace RoofSafety.Controllers
                 counter++;
             }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
-            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { Author2=ins.Inspector2ID.ToString(), id = ins.id, Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
+            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { Author2=ins.Inspector2ID.ToString(), id = ins.id,NextDue= ins.InspectionDate.AddMonths((building.InspFreqMonths == null) ? 12 : building.InspFreqMonths.Value).ToString("dd-MM-yyyy"), Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
             //  ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
             foreach (var item in ret.Versions)
             {
@@ -739,6 +742,7 @@ namespace RoofSafety.Controllers
                             tr.Append(CellFont("Author", 32, true));
                             tr.Append(CellFont("Reviewed", 32, true));
                             tr.Append(CellFont("Inspection Date", 32, true));
+                            tr.Append(CellFont("Next Due", 32, true));
 
                             body4.AppendChild(table);
                             int iiii = 0;
@@ -753,6 +757,7 @@ namespace RoofSafety.Controllers
                                 trx.Append(CellFont(item.Author, 28, false));
                                 trx.Append(CellFont(item.Author2, 28, false));
                                 trx.Append(CellFont((item.Information), 28, false));
+                                trx.Append(CellFont((item.NextDue), 28, false));
                             }
                         }
                         Break pgbrk3 = new Break();
@@ -849,6 +854,20 @@ namespace RoofSafety.Controllers
 
 
                                 TableCell tcInspDte = CellFont(ret.InspDate.ToString("dd-MMM-yyyy"), 30, false);
+                                trInsp.Append(tcInspDte);
+                                tableInsp.Append(trInsp);
+
+
+                            }
+                            {
+                                TableRow trInsp = new TableRow();
+
+
+                                TableCell tcInspDteLbl = CellFont("Next Inspection Due:", 30, true);
+                                trInsp.Append(tcInspDteLbl);
+
+
+                                TableCell tcInspDte = CellFont(ret.NextDue.Value.ToString("dd-MMM-yyyy"), 30, false);
                                 trInsp.Append(tcInspDte);
                                 tableInsp.Append(trInsp);
 
