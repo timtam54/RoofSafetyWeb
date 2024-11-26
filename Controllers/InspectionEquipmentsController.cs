@@ -395,7 +395,7 @@ namespace RoofSafety.Controllers
                 counter++;
             }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
-            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { Author2=ins.Inspector2ID.ToString(), id = ins.id,NextDue= ins.InspectionDate.AddMonths((building.InspFreqMonths == null) ? 12 : building.InspFreqMonths.Value).ToString("dd-MM-yyyy"), Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
+            ret.Versions = (from ins in _context.Inspection join emp in _context.Employee on ins.InspectorID equals emp.id where ins.BuildingID == Convert.ToInt32(insp.BuildingID) /*&& ins.id!=insp.id */select new VersionRpt { Author2=ins.Inspector2ID.ToString(), id = ins.id,NextDue= ins.InspectionDate.AddMonths((building.InspFreqMonths == null || building.InspFreqMonths == 0) ? 12 : building.InspFreqMonths.Value).ToString("dd-MM-yyyy"), Information = ins.InspectionDate.ToString("dd-MM-yyyy"), Author = emp.Given + " " + emp.Surname, VersionNo = ins.id, VersionType = (ins.Status == null) ? "New" : ((ins.Status == "A") ? "Active" : "Complete") }).ToList();
             //  ret.Versions = (from vs in _context.Version join emp in _context.Employee on vs.AuthorID equals emp.id where vs.InspectionID == Convert.ToInt32(id) select new VersionRpt { id = vs.id, Information = vs.Information, Author = emp.Given + " " + emp.Surname, VersionNo = vs.VersionNo, VersionType = (vs.VersionType == "FD") ? "First Draft" : "Internal Review" }).ToList();
             foreach (var item in ret.Versions)
             {
@@ -863,7 +863,7 @@ namespace RoofSafety.Controllers
                                 TableRow trInsp = new TableRow();
 
 
-                                TableCell tcInspDteLbl = CellFont("Next Inspection Due:", 30, true);
+                                TableCell tcInspDteLbl = CellFont("Next Due:", 30, true);
                                 trInsp.Append(tcInspDteLbl);
 
 
