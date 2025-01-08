@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure;
-
+﻿
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Build.Construction;
-using Microsoft.CodeAnalysis.RulesetToEditorconfig;
 using Microsoft.EntityFrameworkCore;
 
 using RoofSafety.Data;
@@ -27,12 +17,7 @@ using DocumentFormat.OpenXml.Packaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
-using HtmlToOpenXml;
-using MariGold.OpenXHTML;
-using System.Text;
-using iText.Kernel.Geom;
-using iText.Svg.Renderers.Path.Impl;
-using DocumentFormat.OpenXml.Spreadsheet;
+
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
 using Bold = DocumentFormat.OpenXml.Wordprocessing.Bold;
 using Color = DocumentFormat.OpenXml.Wordprocessing.Color;
@@ -56,6 +41,8 @@ using System.Drawing.Drawing2D;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Extensions.Azure;
 using static RoofSafety.Pages.EquipmentLogModel;
+using System.Reflection.Metadata;
+using System.Drawing.Imaging;
 //using iText.Kernel.Pdf;
 //using iText.Html2pdf.Attach.Impl.Layout;
 
@@ -462,7 +449,6 @@ namespace RoofSafety.Controllers
             ViewBag.BuildingID = xx.ID;
             if (hpw == "w")
             {
-
                 using var memoryStream = new MemoryStream();
                 try
                 {
@@ -470,12 +456,9 @@ namespace RoofSafety.Controllers
                     try
                     {
                         MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-                        mainPart.Document = new Document();
+                        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();// Document();
                         {
                             Body bodyintro = mainPart.Document.AppendChild(new Body());
-
-                 
-
                             Table tableInsp = new Table();
                             TableProperties props = new TableProperties();
                             tableInsp.AppendChild<TableProperties>(props);
@@ -495,13 +478,6 @@ namespace RoofSafety.Controllers
 
                             tcInspDteLbl.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "4500" }));
                          
-                            /*Bold boldinsp = new Bold();
-
-                            boldinsp.Val = OnOffValue.FromBoolean(true);
-
-                            Run runInsp = new Run(new Text(""));
-                            runInsp.AppendChild(boldinsp);
-                            tcInspDteLbl.Append(new Paragraph(runInsp));*/
                             trInsp.Append(tcInspDteLbl);
 
 
@@ -510,12 +486,11 @@ namespace RoofSafety.Controllers
                             // tcInspDte.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6000" }));
 
 
+                            // await InsertImage(tcInspDteLbl, wordDocument, mainPart, "https://rssblob.blob.core.windows.net/rssimage/d4a29b97-e3a6-4013-913d-505f936f73fe.jpg", 48);// "https://rssblob.blob.core.windows.net/rssimage/rsspnggreyvertical70.png",48);
                             await InsertImage(tcInspDteLbl, wordDocument, mainPart, "https://rssblob.blob.core.windows.net/rssimage/rsspnggreyvertical70.png",48);
-                            // trInsp.Append(tcInspDte);
 
                             TableCell tcInspDte2 = new TableCell();
                             tcInspDte2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6000" }));
-
                             var shading = new Shading()
                             {
                                 Color = "Red",
@@ -524,11 +499,7 @@ namespace RoofSafety.Controllers
                             };
                             tcInspDte2.Append(shading);
                             tcInspDte2.Append(ParaLeftSize("36", "Height Safety"));
-
                             tcInspDte2.Append(ParaLeftSize("36", "Audit Report"));
-
-
-
                             tcInspDte2.Append(new Paragraph(new Run(new Text(""))));
                             tcInspDte2.Append(new Paragraph(new Run(new Text(""))));
                             tcInspDte2.Append(new Paragraph(new Run(new Text(""))));
@@ -2313,20 +2284,54 @@ namespace RoofSafety.Controllers
             return xByte;
         }
 
+
         private static async Task InsertImage(TableCell tc1,WordprocessingDocument wordDocument, MainDocumentPart mainPart, string imgurl, int wdth)
         {
             ImagePart imagePart = wordDocument.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
             using (var client = new HttpClient())
             {
-                var bytes = await client.GetByteArrayAsync(imgurl);
+                byte[] bytes = await client.GetByteArrayAsync(imgurl);
                 MemoryStream stream2 = new MemoryStream(bytes);
                 Image img = Image.FromStream(stream2);
+                //get the image orientation or EXIF property of the image
+
+               
+                byte oi;
+                PropertyItem[] propItems = img.PropertyItems;
+
+                // Find the orientation property (ID 0x0112).
+                PropertyItem orientationItem = propItems.FirstOrDefault(p => p.Id == 0x0112);
+
+                if (orientationItem != null)
+                {
+                    // The orientation value is stored in the first byte.
+                    oi= orientationItem.Value[0];
+                }
+                else
+                {
+                    // If the orientation property is not found, return 1 (normal orientation).
+                    oi= 1;
+                }
+                if (oi==6)
+                {
+                    img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+                    using (var ms = new MemoryStream())
+                    {
+                        img.Save(ms, ImageFormat.Png); // You can change the format if needed
+                        bytes= ms.ToArray();
+                    }
+                   // bytes = await client.GetByteArrayAsync(img);
+                    stream2 = new MemoryStream(bytes);
+
+                    // return img;
+                }
                 int wSize = img.Width;
                 int hSize = img.Height;
                 //rezieimage
-//                var imgsmall = ResizeImage(img,new System.Drawing.Size(wSize/4,hSize/4));
+                //                var imgsmall = ResizeImage(img,new System.Drawing.Size(wSize/4,hSize/4));
                 //convert image to byte
-  //              var bytessmall = convertImageToBytes(imgsmall);
+                //              var bytessmall = convertImageToBytes(imgsmall);
                 stream2.Close();
                 stream2.Dispose();
                 MemoryStream stream = new MemoryStream(bytes);// bytes);
@@ -2335,6 +2340,95 @@ namespace RoofSafety.Controllers
                 stream.Dispose();
                 AddImageToCell(tc1, mainPart.GetIdOfPart(imagePart), (decimal)hSize / (decimal)wSize,  wdth);
             }
+        }
+
+        public static int GetImageOrientation(string imagePath)
+        {
+            using (Image image = Image.FromFile(imagePath))
+            {
+                // Get the PropertyItems property from image.
+                PropertyItem[] propItems = image.PropertyItems;
+
+                // Find the orientation property (ID 0x0112).
+                PropertyItem orientationItem = propItems.FirstOrDefault(p => p.Id == 0x0112);
+
+                if (orientationItem != null)
+                {
+                    // The orientation value is stored in the first byte.
+                    return orientationItem.Value[0];
+                }
+                else
+                {
+                    // If the orientation property is not found, return 1 (normal orientation).
+                    return 1;
+                }
+            }
+        }
+
+        private static void AddImageToCell(TableCell cell, string relationshipId)
+        {
+            var element =
+              new Drawing(
+                new DW.Inline(
+                  new DW.Extent() { Cx = 990000L, Cy = 792000L },
+                  new DW.EffectExtent()
+                  {
+                      LeftEdge = 0L,
+                      TopEdge = 0L,
+                      RightEdge = 0L,
+                      BottomEdge = 0L
+                  },
+                  new DW.DocProperties()
+                  {
+                      Id = (UInt32Value)1U,
+                      Name = "Picture 1"
+                  },
+                  new DW.NonVisualGraphicFrameDrawingProperties(
+                      new A.GraphicFrameLocks() { NoChangeAspect = true }),
+                  new A.Graphic(
+                    new A.GraphicData(
+                      new PIC.Picture(
+                        new PIC.NonVisualPictureProperties(
+                          new PIC.NonVisualDrawingProperties()
+                          {
+                              Id = (UInt32Value)0U,
+                              Name = "New Bitmap Image.jpg"
+                          },
+                          new PIC.NonVisualPictureDrawingProperties()),
+                        new PIC.BlipFill(
+                          new A.Blip(
+                            new A.BlipExtensionList(
+                              new A.BlipExtension()
+                              {
+                                  Uri = "{28A0092B-C50C-407E-A947-70E740481C1C}"
+                              })
+                           )
+                          {
+                              Embed = relationshipId,
+                              CompressionState =
+                              A.BlipCompressionValues.Print
+                          },
+                          new A.Stretch(
+                            new A.FillRectangle())),
+                          new PIC.ShapeProperties(
+                            new A.Transform2D(
+                              new A.Offset() { X = 0L, Y = 0L },
+                              new A.Extents() { Cx = 990000L, Cy = 792000L }),
+                            new A.PresetGeometry(
+                              new A.AdjustValueList()
+                            )
+                            { Preset = A.ShapeTypeValues.Rectangle }))
+                    )
+                    { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                )
+                {
+                    DistanceFromTop = (UInt32Value)0U,
+                    DistanceFromBottom = (UInt32Value)0U,
+                    DistanceFromLeft = (UInt32Value)0U,
+                    DistanceFromRight = (UInt32Value)0U
+                });
+
+            cell.Append(new Paragraph(new Run(element)));
         }
         private static void AddImageToCell(TableCell cell, string relationshipId, decimal htw,int wdth)
         {
@@ -2398,10 +2492,7 @@ namespace RoofSafety.Controllers
                     DistanceFromLeft = (UInt32Value)0U,
                     DistanceFromRight = (UInt32Value)0U
                 });
-
-         //   cell.Append(new Paragraph(new Run(element)));
-            cell.Append(//(new Paragraph(new Run(element)));
-
+            cell.Append(
              new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(element))
              {
                  ParagraphProperties = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties()
