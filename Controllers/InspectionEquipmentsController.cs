@@ -999,12 +999,12 @@ namespace RoofSafety.Controllers
                                 TableProperties tblProp = new TableProperties(
                                    fontSizep42,
                                     new TableBorders(
-                                        new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
-                                        new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size =3},
-                                        new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
-                                        new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
-                                        new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 },
-                                        new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 3 }
+                                        new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 5 },
+                                        new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size =5},
+                                        new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 5 },
+                                        new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 5 },
+                                        new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 5 },
+                                        new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 5 }
                                     )
                                 );
                                 // Append the TableProperties object to the empty table.

@@ -167,10 +167,15 @@ namespace RoofSafety.Pages
         public List<Client> clis { get; set; }
         void UpdateClients(List<Xero.NetStandard.OAuth2.Model.Accounting.Contact> Custs)
         {
+
             //DataClasses1DataContext db = new DataClasses1DataContext();
             clis = _context.Client.ToList();
             foreach (Xero.NetStandard.OAuth2.Model.Accounting.Contact item in Custs)
             {
+                if (item.Name.ToLower().Contains("broome") && item.Name.ToLower().Contains("project"))
+                {
+                    Console.WriteLine(item.Name);
+                }
                 if (item.ContactStatus == Xero.NetStandard.OAuth2.Model.Accounting.Contact.ContactStatusEnum.ACTIVE) { 
                     try
                     {
@@ -189,7 +194,15 @@ namespace RoofSafety.Pages
                         //}
 
                         if (cliMatch == null)
+                        {
                             cliMatch = clis.Where(i => i.XeroID == item.ContactID).FirstOrDefault();
+                            if (cliMatch != null)
+                            {
+                                cliMatch.name=item.Name  ;
+                                _context.SaveChanges();
+                               //return;
+                            }
+                        }
                         bool newrec = false;
                         if (cliMatch == null)
                         {
@@ -211,6 +224,7 @@ namespace RoofSafety.Pages
                             }
                             //add new
                         }
+                        
 
                         if (cliMatch.XeroID != item.ContactID || newrec || (cliMatch.ContactName =="" && item.ContactPersons.Count()>0))
                         {
